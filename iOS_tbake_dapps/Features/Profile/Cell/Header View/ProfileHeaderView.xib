@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="LibreFranklin-Medium.ttf">
+            <string>LibreFranklin-Medium</string>
+        </array>
+        <array key="LibreFranklin-SemiBold.ttf">
+            <string>LibreFranklin-SemiBold</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="ProfileHeaderView" customModule="iOS_tbake_dapps" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="68"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WQ7-LT-Xpz">
+                    <rect key="frame" x="5" y="5" width="404" height="58"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="9cd-uh-EQO">
+                            <rect key="frame" x="15" y="10" width="374" height="38"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recent Activity" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O2E-FD-nD6">
+                                    <rect key="frame" x="0.0" y="0.0" width="104" height="38"/>
+                                    <fontDescription key="fontDescription" name="LibreFranklin-SemiBold" family="Libre Franklin" pointSize="14"/>
+                                    <color key="textColor" name="LabelColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Locked Stacking" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="btG-YU-eRJ">
+                                    <rect key="frame" x="264" y="0.0" width="110" height="38"/>
+                                    <fontDescription key="fontDescription" name="LibreFranklin-Medium" family="Libre Franklin" pointSize="14"/>
+                                    <color key="textColor" name="LabelColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstItem="9cd-uh-EQO" firstAttribute="leading" secondItem="WQ7-LT-Xpz" secondAttribute="leading" constant="15" id="6LX-iW-qpb"/>
+                        <constraint firstItem="9cd-uh-EQO" firstAttribute="top" secondItem="WQ7-LT-Xpz" secondAttribute="top" constant="10" id="Lv9-Qc-jeS"/>
+                        <constraint firstAttribute="bottom" secondItem="9cd-uh-EQO" secondAttribute="bottom" constant="10" id="czo-aF-FjZ"/>
+                        <constraint firstAttribute="trailing" secondItem="9cd-uh-EQO" secondAttribute="trailing" constant="15" id="wP9-6c-51M"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="WQ7-LT-Xpz" secondAttribute="bottom" constant="5" id="H1G-Wi-Efk"/>
+                <constraint firstItem="WQ7-LT-Xpz" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="5" id="OIk-En-bp3"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="WQ7-LT-Xpz" secondAttribute="trailing" constant="5" id="Wua-x9-GV0"/>
+                <constraint firstItem="WQ7-LT-Xpz" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="5" id="qJq-UO-Dt9"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="dataLbl" destination="btG-YU-eRJ" id="WYe-bN-jY5"/>
+                <outlet property="parentView" destination="WQ7-LT-Xpz" id="aNr-11-cY5"/>
+                <outlet property="titleLbl" destination="O2E-FD-nD6" id="9DS-y2-F26"/>
+            </connections>
+            <point key="canvasLocation" x="137.68115942028987" y="70.3125"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="LabelColor">
+            <color red="0.3529411764705882" green="0.3529411764705882" blue="0.3529411764705882" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
