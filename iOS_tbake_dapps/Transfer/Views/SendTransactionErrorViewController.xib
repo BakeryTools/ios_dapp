@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="LibreFranklin-Medium.ttf">
+            <string>LibreFranklin-Medium</string>
+        </array>
+        <array key="LibreFranklin-Regular.ttf">
+            <string>LibreFranklin-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SendTransactionErrorViewController" customModule="AlphaWallet" customModuleProvider="target">
+            <connections>
+                <outlet property="cancelBtn" destination="U1s-Vx-zv4" id="reI-9E-Kcu"/>
+                <outlet property="confirmBtn" destination="kf7-oL-bkW" id="YXC-c8-hzD"/>
+                <outlet property="descriptionLbl" destination="1EV-6f-ewG" id="8Wg-Lq-SWe"/>
+                <outlet property="parentView" destination="0HZ-ox-Dei" id="e5q-ht-jrg"/>
+                <outlet property="titleLbl" destination="WMR-bc-Uys" id="rP5-Lc-cxS"/>
+                <outlet property="view" destination="iN0-l3-epB" id="ORw-PU-hQS"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0HZ-ox-Dei">
+                    <rect key="frame" x="0.0" y="623" width="414" height="273"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="aqQ-sx-p7Q">
+                            <rect key="frame" x="0.0" y="3" width="404" height="50"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U1s-Vx-zv4">
+                                    <rect key="frame" x="0.0" y="0.0" width="45" height="50"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="45" id="RiQ-ha-yPq"/>
+                                    </constraints>
+                                    <state key="normal" image="close"/>
+                                </button>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Not enough BNB to pay for fees" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WMR-bc-Uys">
+                                    <rect key="frame" x="50" y="0.0" width="354" height="50"/>
+                                    <fontDescription key="fontDescription" name="LibreFranklin-Medium" family="Libre Franklin" pointSize="16"/>
+                                    <color key="textColor" name="Label Color"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="50" id="DFm-sE-PD1"/>
+                            </constraints>
+                        </stackView>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="ofn-u7-rfy">
+                            <rect key="frame" x="15" y="73" width="384" height="155"/>
+                            <subviews>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="3IR-EF-Vh6">
+                                    <rect key="frame" x="0.0" y="0.0" width="384" height="70"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="41" translatesAutoresizingMaskIntoConstraints="NO" id="Z9o-VB-fs2">
+                                            <rect key="frame" x="0.0" y="0.0" width="384" height="70"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1EV-6f-ewG">
+                                                    <rect key="frame" x="0.0" y="0.0" width="384" height="70"/>
+                                                    <string key="text">Every transaction requires a small amount of %@ (%@) to pay for the fees. You can receive %@ from a different wallet, crypto exchange, or you can buy %@ using the button below.</string>
+                                                    <fontDescription key="fontDescription" name="LibreFranklin-Regular" family="Libre Franklin" pointSize="15"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </stackView>
+                                    </subviews>
+                                </stackView>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FQF-YG-Yut">
+                                    <rect key="frame" x="0.0" y="95" width="384" height="60"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Wq9-Up-7Cy">
+                                            <rect key="frame" x="0.0" y="8" width="384" height="44"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kf7-oL-bkW">
+                                                    <rect key="frame" x="0.0" y="0.0" width="384" height="44"/>
+                                                    <color key="backgroundColor" red="0.62745098040000002" green="0.32549019610000002" blue="0.078431372550000003" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                    <fontDescription key="fontDescription" name="LibreFranklin-Medium" family="Libre Franklin" pointSize="16"/>
+                                                    <state key="normal" title="Confirm">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </state>
+                                                </button>
+                                            </subviews>
+                                        </stackView>
+                                    </subviews>
+                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="60" id="1jw-TP-Ebq"/>
+                                        <constraint firstAttribute="bottom" secondItem="Wq9-Up-7Cy" secondAttribute="bottom" constant="8" id="F1P-Ut-DsB"/>
+                                        <constraint firstItem="Wq9-Up-7Cy" firstAttribute="top" secondItem="FQF-YG-Yut" secondAttribute="top" constant="8" id="Wmg-jW-HQK"/>
+                                        <constraint firstItem="Wq9-Up-7Cy" firstAttribute="leading" secondItem="FQF-YG-Yut" secondAttribute="leading" id="jVv-ud-dsx"/>
+                                        <constraint firstAttribute="trailing" secondItem="Wq9-Up-7Cy" secondAttribute="trailing" id="v7J-ZZ-Z9l"/>
+                                    </constraints>
+                                </view>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="aqQ-sx-p7Q" secondAttribute="trailing" constant="10" id="5l2-U9-TOh"/>
+                        <constraint firstItem="ofn-u7-rfy" firstAttribute="top" secondItem="aqQ-sx-p7Q" secondAttribute="bottom" constant="20" id="EA4-Dl-wiK"/>
+                        <constraint firstItem="ofn-u7-rfy" firstAttribute="leading" secondItem="0HZ-ox-Dei" secondAttribute="leading" constant="15" id="O14-DU-slX"/>
+                        <constraint firstItem="aqQ-sx-p7Q" firstAttribute="top" secondItem="0HZ-ox-Dei" secondAttribute="top" constant="3" id="T6E-Xd-bJL"/>
+                        <constraint firstAttribute="trailing" secondItem="ofn-u7-rfy" secondAttribute="trailing" constant="15" id="V2A-Hh-r9W"/>
+                        <constraint firstAttribute="bottom" secondItem="ofn-u7-rfy" secondAttribute="bottom" constant="45" id="qgw-YB-lbt"/>
+                        <constraint firstItem="aqQ-sx-p7Q" firstAttribute="leading" secondItem="0HZ-ox-Dei" secondAttribute="leading" id="wqk-hK-vKh"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" systemColor="separatorColor"/>
+            <constraints>
+                <constraint firstItem="0HZ-ox-Dei" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="5vn-qE-qna"/>
+                <constraint firstAttribute="bottom" secondItem="0HZ-ox-Dei" secondAttribute="bottom" id="emp-Ne-93U"/>
+                <constraint firstItem="0HZ-ox-Dei" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="tG0-8z-1hl"/>
+            </constraints>
+            <point key="canvasLocation" x="139" y="85"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="close" width="24" height="24"/>
+        <namedColor name="Label Color">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="separatorColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

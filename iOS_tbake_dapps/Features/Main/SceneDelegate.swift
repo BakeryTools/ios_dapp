@@ -6,12 +6,19 @@
 //
 
 import UIKit
-import Network
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    let monitor = NWPathMonitor()
+    private var appCoordinator: AppCoordinator!
+    private let SNSPlatformApplicationArn = "arn:aws:sns:us-west-2:400248756644:app/APNS/AlphaWallet-iOS"
+    private let SNSPlatformApplicationArnSANDBOX = "arn:aws:sns:us-west-2:400248756644:app/APNS_SANDBOX/AlphaWallet-testing"
+    private let identityPoolId = "us-west-2:42f7f376-9a3f-412e-8c15-703b5d50b4e2"
+    private let SNSSecurityTopicEndpoint = "arn:aws:sns:us-west-2:400248756644:security"
+    //This is separate coordinator for the protection of the sensitive information.
+    private lazy var protectionCoordinator: ProtectionCoordinator = {
+        return ProtectionCoordinator()
+    }()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -21,35 +28,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         //setup window scene
         self.window = UIWindow(windowScene: windowScene)
-        
-        // set dark mode according to user preferences
-        let darkMode = UserDefaults.standard.bool(forKey: "darkMode")
-        self.setDarkMode(isDark: darkMode)
-        
-        self.initLaunchPage()
-        
-        //setup for network detection
-        let queue = DispatchQueue.global(qos: .background)
-        monitor.start(queue: queue)
-        
-        //check if user from remote notification
-        let notificationOptions = connectionOptions.notificationResponse
-        
-        if notificationOptions != nil {
-            if userHasLoggedIn() {
-                guard let notification = notificationOptions?.notification.request.content.userInfo as? [String: Any] else { return }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) { //delayed a bit for splash screen
-                    AppDelegate().handleNotification(notificationData: notification)
-                }
-            }
-        }
-        
-        //check if user from universal link
-        if let userActivity = connectionOptions.userActivities.first {
-             DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) { //delayed a bit for splash screen
-                self.scene(scene, continue: userActivity)
-            }
-        }
+    
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -60,24 +39,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
-        // Called when the scene has moved from an inactive state to an active state.
-        // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
+        //Lokalise.shared.checkForUpdates { _, _ in }
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
-        // Called when the scene will move from an active state to an inactive state.
-        // This may occur due to temporary interruptions (ex. an incoming phone call).
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
-        // Called as the scene transitions from the background to the foreground.
-        // Use this method to undo the changes made on entering the background.
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
-        // Called as the scene transitions from the foreground to the background.
-        // Use this method to save data, release shared resources, and store enough scene-specific state information
-        // to restore the scene back to its current state.
     }
     
     
@@ -93,61 +64,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         print("\(String(describing: params))")
     }
     
-    func trackNetworkConnectionStatus() {
-        //check if open app with connection or not
-        if monitor.currentPath.status == .unsatisfied { //if no connection, show no connection nib
-            print("No Connection")
-//            DispatchQueue.main.async {
-//                if let _ = self.getTopMostViewController() as? NoConnection { return } //check if no connection page alrdy displayed
-//                let nib = NoConnection(nibName: "NoConnection", bundle: nil)
-//                nib.modalPresentationStyle = .fullScreen
-//                self.getTopMostViewController()?.present(nib, animated: true, completion: nil)
-//            }
-        }
-        
-        //start monitor for network changes
-        monitor.pathUpdateHandler = { path in
-            if path.status == .unsatisfied {
-                print("No Connection")
-//                DispatchQueue.main.async {
-//                    if let _ = self.getTopMostViewController() as? NoConnection { return } //check if no connection page alrdy displayed
-//                    let nib = NoConnection(nibName: "NoConnection", bundle: nil)
-//                    nib.modalPresentationStyle = .fullScreen
-//                    self.getTopMostViewController()?.present(nib, animated: true, completion: nil)
-//                }
-            }
-        }
-    }
-    
     func setDarkMode(isDark: Bool) {
         self.window?.overrideUserInterfaceStyle = isDark ? .dark : .light
-    }
-    
-    func checkNetworkConnection() {
-        if monitor.currentPath.status == .satisfied {
-            DispatchQueue.main.async {
-                self.getTopMostViewController()?.dismiss(animated: true, completion: nil)
-            }
-        }
-    }
-    
-    func initLaunchPage() {
-        let vc = SplashScreenViewController()
-        self.window?.rootViewController = vc
-        self.window?.makeKeyAndVisible()
-    }
-    
-    func initRootController() {
-
-        self.window?.layer.add(setRippleTransition(), forKey: "")
-        
-        let mainStoryboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        guard let vc = mainStoryboard.instantiateViewController(withIdentifier: "TabBar") as? UITabBarController else { return }
-        vc.selectedIndex = 0
-        self.window?.rootViewController = vc
-        self.window?.makeKeyAndVisible()
-        
-        self.trackNetworkConnectionStatus()
     }
     
     func getTopMostViewController() -> UIViewController? {

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="LibreFranklin-Medium.ttf">
+            <string>LibreFranklin-Medium</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MyDappsViewController" customModule="AlphaWallet" customModuleProvider="target">
+            <connections>
+                <outlet property="bookmarkLbl" destination="rIm-OB-EQm" id="fcw-5k-hPY"/>
+                <outlet property="logoImgView" destination="dWh-vt-46d" id="4Va-XV-eC2"/>
+                <outlet property="tableView" destination="b8Y-2F-JeE" id="zd7-ZD-0Yi"/>
+                <outlet property="view" destination="xrm-Sz-YUE" id="1Gi-Ll-ZXy"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="xrm-Sz-YUE">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="5ef-Qw-GwV">
+                    <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launch_icon" translatesAutoresizingMaskIntoConstraints="NO" id="dWh-vt-46d">
+                            <rect key="frame" x="134.5" y="0.0" width="145" height="145"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="dWh-vt-46d" secondAttribute="height" multiplier="1:1" id="qos-5Z-DAT"/>
+                            </constraints>
+                        </imageView>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="eSR-Gp-CKp">
+                            <rect key="frame" x="0.0" y="155" width="414" height="663"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bookmarks" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rIm-OB-EQm">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="18.5"/>
+                                    <fontDescription key="fontDescription" name="LibreFranklin-Medium" family="Libre Franklin" pointSize="15"/>
+                                    <color key="textColor" red="0.62745098040000002" green="0.32549019610000002" blue="0.078431372550000003" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u3i-di-sxg">
+                                    <rect key="frame" x="0.0" y="26.5" width="414" height="3"/>
+                                    <color key="backgroundColor" red="0.62745098040000002" green="0.32549019610000002" blue="0.078431372550000003" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="3" id="wx1-0D-b1r"/>
+                                    </constraints>
+                                </view>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="86h-3N-WMS">
+                                    <rect key="frame" x="0.0" y="37.5" width="414" height="625.5"/>
+                                    <subviews>
+                                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="b8Y-2F-JeE">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="625.5"/>
+                                            <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        </tableView>
+                                    </subviews>
+                                </stackView>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                </stackView>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_img" translatesAutoresizingMaskIntoConstraints="NO" id="SDR-1e-Fen">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                </imageView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="UE3-DK-x57"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="5ef-Qw-GwV" firstAttribute="leading" secondItem="UE3-DK-x57" secondAttribute="leading" id="27c-rL-fI0"/>
+                <constraint firstItem="UE3-DK-x57" firstAttribute="trailing" secondItem="SDR-1e-Fen" secondAttribute="trailing" id="3R2-Xc-W8l"/>
+                <constraint firstItem="SDR-1e-Fen" firstAttribute="leading" secondItem="UE3-DK-x57" secondAttribute="leading" id="63H-o0-Bpl"/>
+                <constraint firstAttribute="bottom" secondItem="SDR-1e-Fen" secondAttribute="bottom" id="IcB-wY-OQs"/>
+                <constraint firstItem="UE3-DK-x57" firstAttribute="bottom" secondItem="5ef-Qw-GwV" secondAttribute="bottom" id="T3K-my-ogq"/>
+                <constraint firstItem="5ef-Qw-GwV" firstAttribute="top" secondItem="UE3-DK-x57" secondAttribute="top" id="bll-Gk-J2j"/>
+                <constraint firstItem="u3i-di-sxg" firstAttribute="width" secondItem="xrm-Sz-YUE" secondAttribute="width" id="fsl-D7-ebn"/>
+                <constraint firstItem="UE3-DK-x57" firstAttribute="trailing" secondItem="5ef-Qw-GwV" secondAttribute="trailing" id="kNa-Oh-E6Y"/>
+                <constraint firstItem="dWh-vt-46d" firstAttribute="width" secondItem="xrm-Sz-YUE" secondAttribute="width" multiplier="0.35" id="kjd-xX-Flc"/>
+                <constraint firstItem="b8Y-2F-JeE" firstAttribute="width" secondItem="xrm-Sz-YUE" secondAttribute="width" id="xUV-Qb-FmQ"/>
+                <constraint firstItem="SDR-1e-Fen" firstAttribute="top" secondItem="xrm-Sz-YUE" secondAttribute="top" id="z5k-HW-2wm"/>
+            </constraints>
+            <point key="canvasLocation" x="-343" y="-42"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="background_img" width="500" height="751"/>
+        <image name="launch_icon" width="218" height="218"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="LibreFranklin-Medium.ttf">
+            <string>LibreFranklin-Medium</string>
+        </array>
+        <array key="LibreFranklin-Regular.ttf">
+            <string>LibreFranklin-Regular</string>
+        </array>
+        <array key="LibreFranklin-SemiBold.ttf">
+            <string>LibreFranklin-SemiBold</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SendViewController" customModule="AlphaWallet" customModuleProvider="target">
+            <connections>
+                <outlet property="amountErrorLbl" destination="FdB-GY-Xjt" id="pDc-xB-Fpw"/>
+                <outlet property="amountLbl" destination="7rs-8P-Ecf" id="DJC-he-1GE"/>
+                <outlet property="amountTextField" destination="aIc-69-HUG" id="Ulc-sl-9ts"/>
+                <outlet property="recipientAddressErrorLbl" destination="aF0-C7-3Tm" id="aSq-mC-0uw"/>
+                <outlet property="recipientAddressLbl" destination="s30-WB-ETB" id="DD2-7o-86D"/>
+                <outlet property="recipientAddressTextField" destination="yzV-WZ-lYv" id="ZQO-cb-fGy"/>
+                <outlet property="sendBtn" destination="VhC-F8-CRj" id="OVh-0N-HwT"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="qZO-de-WbN">
+                    <rect key="frame" x="15" y="69" width="384" height="176"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="O0M-Th-kbd">
+                            <rect key="frame" x="0.0" y="0.0" width="384" height="75.5"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recipient Address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s30-WB-ETB">
+                                    <rect key="frame" x="0.0" y="0.0" width="384" height="17.5"/>
+                                    <fontDescription key="fontDescription" name="LibreFranklin-Regular" family="Libre Franklin" pointSize="15"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="xDn-eV-mEU">
+                                    <rect key="frame" x="0.0" y="25.5" width="384" height="50"/>
+                                    <subviews>
+                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="yzV-WZ-lYv">
+                                            <rect key="frame" x="0.0" y="0.0" width="384" height="50"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="50" id="pRV-Jq-B1z"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits" returnKeyType="next"/>
+                                        </textField>
+                                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aF0-C7-3Tm">
+                                            <rect key="frame" x="0.0" y="0.0" width="384" height="0.0"/>
+                                            <fontDescription key="fontDescription" name="LibreFranklin-Medium" family="Libre Franklin" pointSize="14"/>
+                                            <color key="textColor" name="danger"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </stackView>
+                            </subviews>
+                        </stackView>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Ofz-61-JG5">
+                            <rect key="frame" x="0.0" y="100.5" width="384" height="75.5"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Amount (Available: 1 BNB)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7rs-8P-Ecf">
+                                    <rect key="frame" x="0.0" y="0.0" width="384" height="17.5"/>
+                                    <fontDescription key="fontDescription" name="LibreFranklin-Regular" family="Libre Franklin" pointSize="15"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="kbY-f5-eIp">
+                                    <rect key="frame" x="0.0" y="25.5" width="384" height="50"/>
+                                    <subviews>
+                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aIc-69-HUG">
+                                            <rect key="frame" x="0.0" y="0.0" width="384" height="50"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits" keyboardType="decimalPad" returnKeyType="done"/>
+                                        </textField>
+                                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Error" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FdB-GY-Xjt">
+                                            <rect key="frame" x="0.0" y="0.0" width="384" height="0.0"/>
+                                            <fontDescription key="fontDescription" name="LibreFranklin-Medium" family="Libre Franklin" pointSize="14"/>
+                                            <color key="textColor" name="danger"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </stackView>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="aIc-69-HUG" firstAttribute="height" secondItem="yzV-WZ-lYv" secondAttribute="height" id="FS8-Sb-8Em"/>
+                    </constraints>
+                </stackView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VhC-F8-CRj">
+                    <rect key="frame" x="15" y="793" width="384" height="44"/>
+                    <color key="backgroundColor" red="0.62745098040000002" green="0.32549019610000002" blue="0.078431372550000003" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="iv9-fs-yxG"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="LibreFranklin-SemiBold" family="Libre Franklin" pointSize="17"/>
+                    <state key="normal" title="Send">
+                        <color key="titleColor" name="white"/>
+                    </state>
+                </button>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_img" translatesAutoresizingMaskIntoConstraints="NO" id="pdZ-8D-9Sh">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                </imageView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="pdZ-8D-9Sh" secondAttribute="trailing" id="7En-Hs-x8H"/>
+                <constraint firstAttribute="bottom" secondItem="pdZ-8D-9Sh" secondAttribute="bottom" id="C7k-43-7fb"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="VhC-F8-CRj" secondAttribute="bottom" constant="25" id="FKK-wI-Hz7"/>
+                <constraint firstItem="VhC-F8-CRj" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="15" id="GJC-q2-NtD"/>
+                <constraint firstItem="qZO-de-WbN" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="15" id="GfS-Q0-dvp"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="VhC-F8-CRj" secondAttribute="trailing" constant="15" id="Hwd-CN-6LG"/>
+                <constraint firstItem="pdZ-8D-9Sh" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="V9q-xQ-ag6"/>
+                <constraint firstItem="qZO-de-WbN" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="25" id="WMw-LP-bXi"/>
+                <constraint firstItem="pdZ-8D-9Sh" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="g0w-T5-Xpy"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="qZO-de-WbN" secondAttribute="trailing" constant="15" id="qV9-cA-6Ro"/>
+            </constraints>
+            <point key="canvasLocation" x="139" y="85"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="background_img" width="500" height="751"/>
+        <namedColor name="danger">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="white">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

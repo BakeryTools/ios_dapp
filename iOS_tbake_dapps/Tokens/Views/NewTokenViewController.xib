@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="LibreFranklin-Medium.ttf">
+            <string>LibreFranklin-Medium</string>
+        </array>
+        <array key="LibreFranklin-Regular.ttf">
+            <string>LibreFranklin-Regular</string>
+        </array>
+        <array key="LibreFranklin-SemiBold.ttf">
+            <string>LibreFranklin-SemiBold</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NewTokenViewController">
+            <connections>
+                <outlet property="contractAddressErrorLbl" destination="oC6-k3-VW3" id="OIx-0o-hZh"/>
+                <outlet property="contractAddressLbl" destination="JEL-9j-bTy" id="DGg-5u-ujy"/>
+                <outlet property="contractAddressTextField" destination="8rt-9V-dof" id="c2p-hA-MlV"/>
+                <outlet property="decimalErrorLbl" destination="vrR-Tx-WDv" id="uzK-PT-afa"/>
+                <outlet property="decimalLbl" destination="mbj-Wk-SRj" id="ele-eF-tlK"/>
+                <outlet property="decimalTextField" destination="iJj-G0-jc4" id="MSm-jh-aR4"/>
+                <outlet property="nameErrorLbl" destination="DXT-4a-Cki" id="2xk-84-EYM"/>
+                <outlet property="nameLbl" destination="g3I-Os-dpT" id="W6R-qp-IxN"/>
+                <outlet property="nameTextField" destination="zoI-1H-25U" id="TLM-Ns-H2D"/>
+                <outlet property="submitBtn" destination="Bj7-5C-DLm" id="aB9-FM-oxU"/>
+                <outlet property="symbolErrorLbl" destination="s9n-aC-bva" id="2Uh-KU-JLN"/>
+                <outlet property="symbolLbl" destination="MpZ-du-Eyj" id="3Ys-Rv-6b6"/>
+                <outlet property="symbolTextField" destination="GIz-pv-c51" id="xfA-xB-Ehy"/>
+                <outlet property="view" destination="iN0-l3-epB" id="f98-AH-dPy"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y58-jO-BjR">
+                    <rect key="frame" x="0.0" y="44" width="414" height="724"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V4u-MQ-lZh">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="407"/>
+                            <subviews>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="i5K-9i-XdJ">
+                                    <rect key="frame" x="15" y="25" width="384" height="362"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ijf-Ya-j2A">
+                                            <rect key="frame" x="0.0" y="0.0" width="384" height="75.5"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Contract Address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JEL-9j-bTy">
+                                                    <rect key="frame" x="0.0" y="0.0" width="384" height="17.5"/>
+                                                    <fontDescription key="fontDescription" name="LibreFranklin-Regular" family="Libre Franklin" pointSize="15"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Token Contract Address" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="8rt-9V-dof">
+                                                    <rect key="frame" x="0.0" y="25.5" width="384" height="50"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="50" id="eeX-R8-hyy"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" textContentType="name"/>
+                                                </textField>
+                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oC6-k3-VW3">
+                                                    <rect key="frame" x="0.0" y="75.5" width="384" height="0.0"/>
+                                                    <fontDescription key="fontDescription" name="LibreFranklin-Medium" family="Libre Franklin" pointSize="14"/>
+                                                    <color key="textColor" name="danger"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </stackView>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="cZc-9F-A17">
+                                            <rect key="frame" x="0.0" y="95.5" width="384" height="75.5"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Symbol" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MpZ-du-Eyj">
+                                                    <rect key="frame" x="0.0" y="0.0" width="384" height="17.5"/>
+                                                    <fontDescription key="fontDescription" name="LibreFranklin-Regular" family="Libre Franklin" pointSize="15"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Token Symbol" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GIz-pv-c51">
+                                                    <rect key="frame" x="0.0" y="25.5" width="384" height="50"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="50" id="xWD-oi-AOw"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next" textContentType="name"/>
+                                                </textField>
+                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s9n-aC-bva">
+                                                    <rect key="frame" x="0.0" y="75.5" width="384" height="0.0"/>
+                                                    <fontDescription key="fontDescription" name="LibreFranklin-Medium" family="Libre Franklin" pointSize="14"/>
+                                                    <color key="textColor" name="danger"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </stackView>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="f6u-L9-Zt7">
+                                            <rect key="frame" x="0.0" y="191" width="384" height="75.5"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Decimals" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mbj-Wk-SRj">
+                                                    <rect key="frame" x="0.0" y="0.0" width="384" height="17.5"/>
+                                                    <fontDescription key="fontDescription" name="LibreFranklin-Regular" family="Libre Franklin" pointSize="15"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Token Decimals" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="iJj-G0-jc4">
+                                                    <rect key="frame" x="0.0" y="25.5" width="384" height="50"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="50" id="jME-2z-tMC"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="words" keyboardType="decimalPad" returnKeyType="next" textContentType="name"/>
+                                                </textField>
+                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vrR-Tx-WDv">
+                                                    <rect key="frame" x="0.0" y="75.5" width="384" height="0.0"/>
+                                                    <fontDescription key="fontDescription" name="LibreFranklin-Medium" family="Libre Franklin" pointSize="14"/>
+                                                    <color key="textColor" name="danger"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </stackView>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="5IF-mF-anr">
+                                            <rect key="frame" x="0.0" y="286.5" width="384" height="75.5"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g3I-Os-dpT">
+                                                    <rect key="frame" x="0.0" y="0.0" width="384" height="17.5"/>
+                                                    <fontDescription key="fontDescription" name="LibreFranklin-Regular" family="Libre Franklin" pointSize="15"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Token Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zoI-1H-25U">
+                                                    <rect key="frame" x="0.0" y="25.5" width="384" height="50"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="50" id="vcW-Qc-cNa"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="done" textContentType="name"/>
+                                                </textField>
+                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DXT-4a-Cki">
+                                                    <rect key="frame" x="0.0" y="75.5" width="384" height="0.0"/>
+                                                    <fontDescription key="fontDescription" name="LibreFranklin-Medium" family="Libre Franklin" pointSize="14"/>
+                                                    <color key="textColor" name="danger"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </stackView>
+                                    </subviews>
+                                </stackView>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <constraints>
+                                <constraint firstItem="i5K-9i-XdJ" firstAttribute="top" secondItem="V4u-MQ-lZh" secondAttribute="top" constant="25" id="grb-YU-hCo"/>
+                                <constraint firstAttribute="bottom" secondItem="i5K-9i-XdJ" secondAttribute="bottom" constant="20" id="lTP-WX-M0C"/>
+                                <constraint firstAttribute="trailing" secondItem="i5K-9i-XdJ" secondAttribute="trailing" constant="15" id="qEz-Qn-eS5"/>
+                                <constraint firstItem="i5K-9i-XdJ" firstAttribute="leading" secondItem="V4u-MQ-lZh" secondAttribute="leading" constant="15" id="rnN-b4-bHO"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="V4u-MQ-lZh" firstAttribute="bottom" secondItem="qY5-Dn-0ob" secondAttribute="bottom" id="4ON-zT-E8i"/>
+                        <constraint firstItem="V4u-MQ-lZh" firstAttribute="trailing" secondItem="qY5-Dn-0ob" secondAttribute="trailing" id="71a-bf-HgG"/>
+                        <constraint firstItem="V4u-MQ-lZh" firstAttribute="top" secondItem="qY5-Dn-0ob" secondAttribute="top" id="97f-3Z-Yop"/>
+                        <constraint firstItem="V4u-MQ-lZh" firstAttribute="width" secondItem="OVK-oc-pZD" secondAttribute="width" id="FfL-bR-kvU"/>
+                        <constraint firstItem="V4u-MQ-lZh" firstAttribute="height" secondItem="OVK-oc-pZD" secondAttribute="height" priority="250" id="XN5-qk-Rij"/>
+                        <constraint firstItem="qY5-Dn-0ob" firstAttribute="leading" secondItem="V4u-MQ-lZh" secondAttribute="leading" id="gsh-C2-bbU"/>
+                    </constraints>
+                    <viewLayoutGuide key="contentLayoutGuide" id="qY5-Dn-0ob"/>
+                    <viewLayoutGuide key="frameLayoutGuide" id="OVK-oc-pZD"/>
+                </scrollView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bj7-5C-DLm">
+                    <rect key="frame" x="15" y="793" width="384" height="44"/>
+                    <color key="backgroundColor" red="0.62745098040000002" green="0.32549019610000002" blue="0.078431372550000003" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="Mvy-tC-yo0"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="LibreFranklin-SemiBold" family="Libre Franklin" pointSize="17"/>
+                    <state key="normal" title="Button">
+                        <color key="titleColor" name="white"/>
+                    </state>
+                </button>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_img" translatesAutoresizingMaskIntoConstraints="NO" id="xyy-I7-4Fz">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                </imageView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="xyy-I7-4Fz" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="0P1-aO-62b"/>
+                <constraint firstItem="y58-jO-BjR" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="2mE-FX-WiZ"/>
+                <constraint firstItem="Bj7-5C-DLm" firstAttribute="top" secondItem="y58-jO-BjR" secondAttribute="bottom" constant="25" id="3RN-SK-kQn"/>
+                <constraint firstAttribute="bottom" secondItem="xyy-I7-4Fz" secondAttribute="bottom" id="6ch-5E-4jv"/>
+                <constraint firstItem="y58-jO-BjR" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="D0J-Cf-eSZ"/>
+                <constraint firstItem="Bj7-5C-DLm" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="15" id="DiJ-yR-krj"/>
+                <constraint firstItem="xyy-I7-4Fz" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="EoQ-1A-qgP"/>
+                <constraint firstItem="xyy-I7-4Fz" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="QkM-Dg-7UD"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Bj7-5C-DLm" secondAttribute="trailing" constant="15" id="UX1-Wi-Ar7"/>
+                <constraint firstItem="y58-jO-BjR" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="VU9-NT-TW4"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Bj7-5C-DLm" secondAttribute="bottom" constant="25" id="ZhV-gg-HX7"/>
+            </constraints>
+            <point key="canvasLocation" x="137.68115942028987" y="84.375"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="background_img" width="500" height="751"/>
+        <namedColor name="danger">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="white">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

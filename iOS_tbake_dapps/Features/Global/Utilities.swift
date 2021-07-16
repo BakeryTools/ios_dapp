@@ -7,14 +7,6 @@
 import UIKit
 
 //MARK:- Global Function
-func getMainViewController() -> MainViewController? {
-    if let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainViewController {
-        return tabBarController
-    }
-    
-    return nil
-}
-
 func setRippleTransition() -> CATransition {
     let animation = CATransition()
     animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)
@@ -80,35 +72,32 @@ func isJailbrokenCanOpen(path: String) -> Bool {
     return true
 }
 
-func isFirstTime() -> Bool {
-    return !UserPrefs.isFirstTime.boolValue
-}
 
-func checkAppUpdate(_ completion: @escaping ()->Void) {
-    let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-    let bundleId = Bundle.main.infoDictionary!["CFBundleIdentifier"] as! String
-    let jsonUrlString = "https://itunes.apple.com/id/lookup?bundleId=\(bundleId)"
-    
-    WebService().getData(jsonUrlString){ data in
-        do {
-            let data = try JSONDecoder().decode(AppVersionParent.self, from: data)
-            
-            if data.results?.count ?? 0 > 0 {
-                let appVersion = data.results?[0].version ?? ""
-                
-                //orderedAscending = < targetVersion (1.0.0 & 1.0.1)
-                //orderedDescending = > targetVersion (1.1.0 & 1.0.10)
-                if currentVersion?.compare(appVersion, options: .numeric) == .orderedAscending {
-                    completion()
-                }
-            }
-            
-        }catch let error {
-            print(error)
-            
-        }
-    }
-}
+//func checkAppUpdate(_ completion: @escaping ()->Void) {
+//    let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+//    let bundleId = Bundle.main.infoDictionary!["CFBundleIdentifier"] as! String
+//    let jsonUrlString = "https://itunes.apple.com/id/lookup?bundleId=\(bundleId)"
+//
+//    WebService().getData(jsonUrlString){ data in
+//        do {
+//            let data = try JSONDecoder().decode(AppVersionParent.self, from: data)
+//
+//            if data.results?.count ?? 0 > 0 {
+//                let appVersion = data.results?[0].version ?? ""
+//
+//                //orderedAscending = < targetVersion (1.0.0 & 1.0.1)
+//                //orderedDescending = > targetVersion (1.1.0 & 1.0.10)
+//                if currentVersion?.compare(appVersion, options: .numeric) == .orderedAscending {
+//                    completion()
+//                }
+//            }
+//
+//        }catch let error {
+//            print(error)
+//
+//        }
+//    }
+//}
 
 //MARK:- End Global Function
 
@@ -118,14 +107,10 @@ func getDeviceId() -> String {
     return UIDevice.current.identifierForVendor?.uuidString ?? ""
 }
 
-func getNotificationBadge() -> Int {
-    return UserPrefs.notificationCount.intValue
+func getUserHasBackup() -> Bool {
+    return UserDefaults.standard.bool(forKey: "userHasBackup")
 }
 
-func userHasLoggedIn() -> Bool {
-    return UserPrefs.isLoggedIn.boolValue
-}
-
-func getUserToken() -> String {
-    return UserPrefs.userToken.stringValue
+func setUserHasBackup(_ value: Bool) {
+    UserDefaults.standard.set(value, forKey: "userHasBackup")
 }
