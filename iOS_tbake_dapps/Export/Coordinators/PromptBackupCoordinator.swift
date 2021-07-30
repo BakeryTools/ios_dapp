@@ -4,13 +4,13 @@ import Foundation
 import UIKit
 import BigInt
 
-protocol PromptBackupCoordinatorProminentPromptDelegate: class {
+protocol PromptBackupCoordinatorProminentPromptDelegate: AnyObject {
     var viewControllerToShowBackupLaterAlert: UIViewController { get }
 
     func updatePrompt(inCoordinator coordinator: PromptBackupCoordinator)
 }
 
-protocol PromptBackupCoordinatorSubtlePromptDelegate: class {
+protocol PromptBackupCoordinatorSubtlePromptDelegate: AnyObject {
     var viewControllerToShowBackupLaterAlert: UIViewController { get }
 
     func updatePrompt(inCoordinator coordinator: PromptBackupCoordinator)
@@ -86,7 +86,7 @@ class PromptBackupCoordinator: Coordinator {
         let addressesAlreadyPromptedForBackup = config.oldWalletAddressesAlreadyPromptedForBackUp
         var walletsBackupState: WalletsBackupState = .init()
         for eachAlreadyBackedUp in addressesAlreadyPromptedForBackup {
-            guard let walletAddress = AlphaWallet.Address(string: eachAlreadyBackedUp) else { continue }
+            guard let walletAddress = TBakeWallet.Address(string: eachAlreadyBackedUp) else { continue }
             walletsBackupState.prompt[walletAddress] = nil
             //We'll just take the last backed up time as when this migration runs
             walletsBackupState.backupState[walletAddress] = .init(shownNativeCryptoCurrencyReceivedPrompt: true, timeToShowIntervalPassedPrompt: nil, shownNativeCryptoCurrencyDollarValueExceedThresholdPrompt: true, lastBackedUpTime: Date(), isImported: false)
@@ -376,7 +376,7 @@ extension PromptBackupCoordinator: PromptBackupWalletViewDelegate {
 
     func didChooseBackup(inView view: PromptBackupWalletView) {
         guard let nc = viewControllerToShowBackupLaterAlert(forView: view)?.navigationController else { return }
-        let coordinator = BackupCoordinator(navigationController: nc, keystore: keystore, account: wallet.address, analyticsCoordinator: analyticsCoordinator)
+        let coordinator = BackupCoordinator(navigationController: nc, keystore: keystore, account: wallet.address, walletAccount: wallet, analyticsCoordinator: analyticsCoordinator)
         coordinator.delegate = self
         coordinator.start()
         addCoordinator(coordinator)
@@ -388,7 +388,7 @@ extension PromptBackupCoordinator: BackupCoordinatorDelegate {
         removeCoordinator(coordinator)
     }
 
-    func didFinish(account: AlphaWallet.Address, in coordinator: BackupCoordinator) {
+    func didFinish(walletAccount: Wallet, account: TBakeWallet.Address, in coordinator: BackupCoordinator) {
         removeCoordinator(coordinator)
         markBackupDone()
         showHideCurrentPrompt()

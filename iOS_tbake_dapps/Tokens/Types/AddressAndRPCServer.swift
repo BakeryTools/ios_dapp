@@ -8,6 +8,6 @@
 import UIKit
 
 struct AddressAndRPCServer: Hashable, Codable {
-    let address: AlphaWallet.Address
+    let address: TBakeWallet.Address
     let server: RPCServer
 }

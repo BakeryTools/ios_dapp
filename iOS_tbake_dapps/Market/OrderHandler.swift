@@ -7,7 +7,7 @@ public struct Order {
     var price: BigUInt
     var indices: [UInt16]
     var expiry: BigUInt
-    var contractAddress: AlphaWallet.Address
+    var contractAddress: TBakeWallet.Address
     var count: BigUInt
     var nonce: BigUInt
     var tokenIds: [BigUInt]?
@@ -55,7 +55,7 @@ public class OrderHandler {
         self.keystore = keystore
     }
 
-    func signOrders(orders: [Order], account: AlphaWallet.Address, tokenType: TokenType) throws -> [SignedOrder] {
+    func signOrders(orders: [Order], account: TBakeWallet.Address, tokenType: TokenType) throws -> [SignedOrder] {
         let messages = createMessagesFromOrders(orders: orders, tokenType: tokenType)
         return try! bulkSignOrders(messages: messages, account: account, orders: orders)
     }
@@ -71,7 +71,7 @@ public class OrderHandler {
                         tokenIds: order.tokenIds ?? [BigUInt](),
                         contractAddress: order.contractAddress
                 )
-                messages.append(Data(bytes: message))
+                messages.append(Data(message))
             }
         case .erc875:
             for order in orders {
@@ -81,7 +81,7 @@ public class OrderHandler {
                         indices: order.indices,
                         contractAddress: order.contractAddress
                 )
-                messages.append(Data(bytes: message))
+                messages.append(Data(message))
             }
         case .erc721, .nativeCryptocurrency, .erc20:
             break
@@ -89,7 +89,7 @@ public class OrderHandler {
         return messages
     }
 
-    private func bulkSignOrders(messages: [Data], account: AlphaWallet.Address, orders: [Order]) throws -> [SignedOrder] {
+    private func bulkSignOrders(messages: [Data], account: TBakeWallet.Address, orders: [Order]) throws -> [SignedOrder] {
         var signedOrders = [SignedOrder]()
         let signatures = try! keystore.signMessageBulk(messages, for: account).dematerialize()
         for i in 0..<signatures.count {
@@ -107,7 +107,7 @@ public class OrderHandler {
             price: BigUInt,
             expiryBuffer: BigUInt,
             indices: [UInt16],
-            contractAddress: AlphaWallet.Address
+            contractAddress: TBakeWallet.Address
     ) -> [UInt8] {
         let arrayLength: Int = 84 + indices.count * 2
         var buffer = [UInt8]()
@@ -127,7 +127,7 @@ public class OrderHandler {
             price: BigUInt,
             expiryBuffer: BigUInt,
             tokenIds: [BigUInt],
-            contractAddress: AlphaWallet.Address
+            contractAddress: TBakeWallet.Address
     ) -> [UInt8] {
         let arrayLength: Int = 84 + tokenIds.count * 32
         var buffer = [UInt8]()

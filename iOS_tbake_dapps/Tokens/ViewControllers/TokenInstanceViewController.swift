@@ -3,7 +3,7 @@
 import Foundation
 import UIKit
 
-protocol TokenInstanceViewControllerDelegate: class, CanOpenURL {
+protocol TokenInstanceViewControllerDelegate: AnyObject, CanOpenURL {
     func didPressRedeem(token: TokenObject, tokenHolder: TokenHolder, in viewController: TokenInstanceViewController)
     func didPressSell(tokenHolder: TokenHolder, for paymentFlow: PaymentFlow, in viewController: TokenInstanceViewController)
     func didPressTransfer(token: TokenObject, tokenHolder: TokenHolder, forPaymentFlow paymentFlow: PaymentFlow, in viewController: TokenInstanceViewController)
@@ -30,7 +30,7 @@ class TokenInstanceViewController: UIViewController, TokenVerifiableStatusViewCo
     var server: RPCServer {
         return tokenObject.server
     }
-    var contract: AlphaWallet.Address {
+    var contract: TBakeWallet.Address {
         return tokenObject.contractAddress
     }
     let assetDefinitionStore: AssetDefinitionStore

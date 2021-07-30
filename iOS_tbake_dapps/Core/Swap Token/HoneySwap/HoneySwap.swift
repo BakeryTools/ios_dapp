@@ -1,6 +1,6 @@
 //
 //  HoneySwap.swift
-//  AlphaWallet
+//  TBakeWallet
 //
 //  Created by Vladyslav Shepitko on 19.02.2021.
 //
@@ -66,8 +66,8 @@ class HoneySwap: TokenActionsProvider, SwapTokenURLProviderType {
             static let output = "outputCurrency"
         }
 
-        case inputOutput(from: AlphaWallet.Address, to: AddressOrEnsName)
-        case input(AlphaWallet.Address)
+        case inputOutput(from: TBakeWallet.Address, to: AddressOrEnsName)
+        case input(TBakeWallet.Address)
         case none
 
         var urlQueryItems: [URLQueryItem] {
@@ -110,6 +110,8 @@ extension UITraitCollection {
             case .dark:
                 return .dark
             case .light, .unspecified:
+                return .light
+            @unknown default:
                 return .light
             }
         } else {

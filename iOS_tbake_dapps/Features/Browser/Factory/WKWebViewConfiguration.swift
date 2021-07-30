@@ -11,7 +11,7 @@ enum WebViewType {
 
 extension WKWebViewConfiguration {
 
-    static func make(forType type: WebViewType, address: AlphaWallet.Address, in messageHandler: WKScriptMessageHandler) -> WKWebViewConfiguration {
+    static func make(forType type: WebViewType, address: TBakeWallet.Address, in messageHandler: WKScriptMessageHandler) -> WKWebViewConfiguration {
         let webViewConfig = WKWebViewConfiguration()
         var js = ""
 
@@ -67,7 +67,7 @@ extension WKWebViewConfiguration {
         return webViewConfig
     }
 
-    fileprivate static func javaScriptForDappBrowser(server: RPCServer, address: AlphaWallet.Address) -> String {
+    fileprivate static func javaScriptForDappBrowser(server: RPCServer, address: TBakeWallet.Address) -> String {
         return """
                //Space is needed here because it is sometimes cut off by websites. 
                
@@ -150,7 +150,7 @@ extension WKWebViewConfiguration {
              """
     }
 
-    fileprivate static func javaScriptForTokenScriptRenderer(address: AlphaWallet.Address) -> String {
+    fileprivate static func javaScriptForTokenScriptRenderer(address: TBakeWallet.Address) -> String {
         return """
                window.web3CallBacks = {}
                window.tokenScriptCallBacks = {}

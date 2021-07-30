@@ -11,7 +11,7 @@ struct TokenInstanceAction {
         case nftRedeem
         case nftSell
         case nonFungibleTransfer
-        case tokenScript(contract: AlphaWallet.Address, title: String, viewHtml: (html: String, style: String), attributes: [AttributeId: AssetAttribute], transactionFunction: FunctionOrigin?, selection: TokenScriptSelection?)
+        case tokenScript(contract: TBakeWallet.Address, title: String, viewHtml: (html: String, style: String), attributes: [AttributeId: AssetAttribute], transactionFunction: FunctionOrigin?, selection: TokenScriptSelection?)
         case swap(service: SwapTokenURLProviderType)
         case xDaiBridge
         case buy(service: BuyTokenURLProviderType)
@@ -79,7 +79,7 @@ struct TokenInstanceAction {
             return transactionFunction
         }
     }
-    var contract: AlphaWallet.Address? {
+    var contract: TBakeWallet.Address? {
         switch type {
         case .erc20Send, .erc20Receive, .swap, .xDaiBridge, .buy:
             return nil
@@ -112,7 +112,7 @@ struct TokenInstanceAction {
         }
     }
 
-    func activeExcludingSelection(selectedTokenHolders: [TokenHolder], forWalletAddress walletAddress: AlphaWallet.Address, fungibleBalance: BigInt? = nil) -> TokenScriptSelection? {
+    func activeExcludingSelection(selectedTokenHolders: [TokenHolder], forWalletAddress walletAddress: TBakeWallet.Address, fungibleBalance: BigInt? = nil) -> TokenScriptSelection? {
         switch type {
         case .erc20Send, .erc20Receive, .swap, .xDaiBridge, .buy:
             return nil

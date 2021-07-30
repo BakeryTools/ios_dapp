@@ -8,11 +8,13 @@ class LockCreatePasscodeViewController: LockPasscodeViewController {
 		return model as? LockCreatePasscodeViewModel
 	}()
 	private var firstPasscode: String?
+    
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		title = lockCreatePasscodeViewModel?.title
 		lockView.lockTitle.text = lockCreatePasscodeViewModel?.initialLabelText
 	}
+    
 	override func enteredPasscode(_ passcode: String) {
 		super.enteredPasscode(passcode)
 		if let first = firstPasscode {

@@ -12,7 +12,7 @@ enum SignMessageType {
     case eip712v3And4(EIP712TypedData)
 }
 
-protocol SignMessageCoordinatorDelegate: class {
+protocol SignMessageCoordinatorDelegate: AnyObject {
     func coordinator(_ coordinator: SignMessageCoordinator, didSign result: ResultResult<Data, KeystoreError>.t)
     func didCancel(in coordinator: SignMessageCoordinator)
 }
@@ -21,7 +21,7 @@ class SignMessageCoordinator: Coordinator {
     private let analyticsCoordinator: AnalyticsCoordinator
     private let presentationNavigationController: UINavigationController
     private let keystore: Keystore
-    private let account: AlphaWallet.Address
+    private let account: TBakeWallet.Address
     private var message: SignMessageType
     private let source: Analytics.SignMessageRequestSource
 
@@ -43,7 +43,7 @@ class SignMessageCoordinator: Coordinator {
         return controller
     }()
 
-    init(analyticsCoordinator: AnalyticsCoordinator, navigationController: UINavigationController, keystore: Keystore, account: AlphaWallet.Address, message: SignMessageType, source: Analytics.SignMessageRequestSource) {
+    init(analyticsCoordinator: AnalyticsCoordinator, navigationController: UINavigationController, keystore: Keystore, account: TBakeWallet.Address, message: SignMessageType, source: Analytics.SignMessageRequestSource) {
         self.analyticsCoordinator = analyticsCoordinator
         self.presentationNavigationController = navigationController
         self.keystore = keystore
@@ -53,9 +53,8 @@ class SignMessageCoordinator: Coordinator {
     }
 
     func start() {
-        guard let keyWindow = UIApplication.shared.keyWindow else { return }
         analyticsCoordinator.log(navigation: Analytics.Navigation.signMessageRequest, properties: [Analytics.Properties.source.rawValue: source.rawValue, Analytics.Properties.messageType.rawValue: mapMessageToAnalyticsType(message).rawValue])
-        if let controller = keyWindow.rootViewController?.presentedViewController {
+        if let controller = getKeyWindow()?.rootViewController?.presentedViewController {
             controller.present(navigationController, animated: false)
         } else {
             presentationNavigationController.present(navigationController, animated: false)

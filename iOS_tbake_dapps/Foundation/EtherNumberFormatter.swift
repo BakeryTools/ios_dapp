@@ -84,7 +84,7 @@ final class EtherNumberFormatter {
     ///   - decimals: decimal places used for scaling values.
     /// - Returns: `BigInt` representation.
     func number(from string: String, decimals: Int) -> BigInt? {
-        guard let index = string.index(where: { String($0) == decimalSeparator }) ?? string.index(where: { String($0) == EtherNumberFormatter.decimalPoint }) else {
+        guard let index = string.firstIndex(where: { String($0) == decimalSeparator }) ?? string.firstIndex(where: { String($0) == EtherNumberFormatter.decimalPoint }) else {
             // No fractional part
             return BigInt(string).flatMap({ $0 * BigInt(10).power(decimals) })
         }
@@ -174,7 +174,7 @@ final class EtherNumberFormatter {
         }
 
         // Remove extra zeros after the decimal point.
-        if let lastNonZeroIndex = string.reversed().index(where: { $0 != "0" })?.base {
+        if let lastNonZeroIndex = string.reversed().firstIndex(where: { $0 != "0" })?.base {
             let numberOfZeros = string.distance(from: string.startIndex, to: lastNonZeroIndex)
             if numberOfZeros > minimumFractionDigits {
                 let newEndIndex = string.index(string.startIndex, offsetBy: numberOfZeros - minimumFractionDigits)

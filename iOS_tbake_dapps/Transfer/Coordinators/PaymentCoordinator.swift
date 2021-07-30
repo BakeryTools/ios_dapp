@@ -3,7 +3,7 @@
 import Foundation
 import UIKit
 
-protocol PaymentCoordinatorDelegate: class, CanOpenURL {
+protocol PaymentCoordinatorDelegate: AnyObject, CanOpenURL {
     func didFinish(_ result: ConfirmResult, in coordinator: PaymentCoordinator)
     func didCancel(in coordinator: PaymentCoordinator)
 }
@@ -123,7 +123,7 @@ extension PaymentCoordinator: RequestCoordinatorDelegate {
 }
 
 extension PaymentCoordinator: CanOpenURL {
-    func didPressViewContractWebPage(forContract contract: AlphaWallet.Address, server: RPCServer, in viewController: UIViewController) {
+    func didPressViewContractWebPage(forContract contract: TBakeWallet.Address, server: RPCServer, in viewController: UIViewController) {
         delegate?.didPressViewContractWebPage(forContract: contract, server: server, in: viewController)
     }
 

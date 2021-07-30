@@ -6,7 +6,7 @@ import BigInt
 import PromiseKit
 import WebKit
 
-protocol TokenInstanceWebViewDelegate: class {
+protocol TokenInstanceWebViewDelegate: AnyObject {
     //TODO not good. But quick and dirty to ship
     func navigationControllerFor(tokenInstanceWebView: TokenInstanceWebView) -> UINavigationController?
     func shouldClose(tokenInstanceWebView: TokenInstanceWebView)
@@ -486,7 +486,7 @@ extension TokenInstanceWebView {
         }
     }
 
-    func signMessage(with type: SignMessageType, account: AlphaWallet.Address, callbackID: Int) {
+    func signMessage(with type: SignMessageType, account: TBakeWallet.Address, callbackID: Int) {
         guard let navigationController = delegate?.navigationControllerFor(tokenInstanceWebView: self) else { return }
         let keystore = try! EtherKeystore(analyticsCoordinator: analyticsCoordinator)
         firstly {

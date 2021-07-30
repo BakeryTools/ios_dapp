@@ -255,7 +255,7 @@ struct AssetFunctionCall: Equatable, Hashable {
     }
 
     let server: RPCServer
-    let contract: AlphaWallet.Address
+    let contract: TBakeWallet.Address
     let functionName: String
     let inputs: [Argument]
     let output: ReturnType
@@ -271,7 +271,7 @@ struct AssetFunctionCall: Equatable, Hashable {
         return lhs.contract == rhs.contract && lhs.functionName == rhs.functionName && lhs.inputs == rhs.inputs && lhs.output.type == rhs.output.type && lhs.argumentsDescription == rhs.argumentsDescription && lhs.server.chainID == rhs.server.chainID
     }
 
-    init(server: RPCServer, contract: AlphaWallet.Address, functionName: String, inputs: [Argument], output: ReturnType, arguments: [AnyObject]) {
+    init(server: RPCServer, contract: TBakeWallet.Address, functionName: String, inputs: [Argument], output: ReturnType, arguments: [AnyObject]) {
         self.server = server
         self.contract = contract
         self.functionName = functionName

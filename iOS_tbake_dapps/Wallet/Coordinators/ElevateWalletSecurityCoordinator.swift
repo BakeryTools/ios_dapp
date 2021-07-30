@@ -3,9 +3,9 @@
 import Foundation
 import UIKit
 
-protocol ElevateWalletSecurityCoordinatorDelegate: class {
-    func didLockWalletSuccessfully(forAccount account: AlphaWallet.Address, inCoordinator coordinator: ElevateWalletSecurityCoordinator)
-    func didCancelLock(forAccount account: AlphaWallet.Address, inCoordinator coordinator: ElevateWalletSecurityCoordinator)
+protocol ElevateWalletSecurityCoordinatorDelegate: AnyObject {
+    func didLockWalletSuccessfully(forAccount account: TBakeWallet.Address, inCoordinator coordinator: ElevateWalletSecurityCoordinator)
+    func didCancelLock(forAccount account: TBakeWallet.Address, inCoordinator coordinator: ElevateWalletSecurityCoordinator)
 }
 
 class ElevateWalletSecurityCoordinator: Coordinator {
@@ -19,14 +19,14 @@ class ElevateWalletSecurityCoordinator: Coordinator {
         controller.delegate = self
         return controller
     }()
-    private let account: AlphaWallet.Address
+    private let account: TBakeWallet.Address
     private let keystore: Keystore
 
     let navigationController: UINavigationController
     var coordinators: [Coordinator] = []
     weak var delegate: ElevateWalletSecurityCoordinatorDelegate?
 
-    init(navigationController: UINavigationController = UINavigationController(), keystore: Keystore, account: AlphaWallet.Address) {
+    init(navigationController: UINavigationController = UINavigationController(), keystore: Keystore, account: TBakeWallet.Address) {
         self.navigationController = navigationController
         self.keystore = keystore
         self.account = account

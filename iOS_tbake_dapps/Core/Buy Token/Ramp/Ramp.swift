@@ -89,7 +89,7 @@ private struct Asset: Codable {
     }
 
     let symbol: String
-    let address: AlphaWallet.Address?
+    let address: TBakeWallet.Address?
     let name: String
     let decimals: Int
 
@@ -97,7 +97,7 @@ private struct Asset: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         if let value = try? container.decode(String.self, forKey: .address) {
-            address = AlphaWallet.Address(string: value)
+            address = TBakeWallet.Address(string: value)
         } else {
             address = .none
         }

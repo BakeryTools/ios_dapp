@@ -30,10 +30,10 @@ class LockView: UIView {
 		characterView.translatesAutoresizingMaskIntoConstraints = false
 	}
 	private func configLabel() {
-		lockTitle.font = Fonts.light(size: 20)
+        lockTitle.font = Screen.TokenCard.Font.title
 		lockTitle.textAlignment = .center
 		lockTitle.translatesAutoresizingMaskIntoConstraints = false
-		lockTitle.textColor = Colors.appText
+        lockTitle.textColor = Screen.TokenCard.Color.title
 	}
 	private func applyConstraints() {
 		characterView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true

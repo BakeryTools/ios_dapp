@@ -6,8 +6,8 @@ import PromiseKit
 
 protocol EventsActivityDataStoreProtocol {
     func getRecentEvents() -> [EventActivity]
-    func getMatchingEventsSortedByBlockNumber(forContract contract: AlphaWallet.Address, tokenContract: AlphaWallet.Address, server: RPCServer, eventName: String) -> Promise <EventActivityInstance?>
-    func add(events: [EventActivityInstance], forTokenContract contract: AlphaWallet.Address) -> Promise<Void>
+    func getMatchingEventsSortedByBlockNumber(forContract contract: TBakeWallet.Address, tokenContract: TBakeWallet.Address, server: RPCServer, eventName: String) -> Promise <EventActivityInstance?>
+    func add(events: [EventActivityInstance], forTokenContract contract: TBakeWallet.Address) -> Promise<Void>
 }
 
 class EventsActivityDataStore: EventsActivityDataStoreProtocol {
@@ -20,7 +20,7 @@ class EventsActivityDataStore: EventsActivityDataStoreProtocol {
         self.realm = realm
     }
 
-    func getMatchingEventsSortedByBlockNumber(forContract contract: AlphaWallet.Address, tokenContract: AlphaWallet.Address, server: RPCServer, eventName: String) -> Promise <EventActivityInstance?> {
+    func getMatchingEventsSortedByBlockNumber(forContract contract: TBakeWallet.Address, tokenContract: TBakeWallet.Address, server: RPCServer, eventName: String) -> Promise <EventActivityInstance?> {
 
         return Promise { seal in
             let objects = realm.threadSafe.objects(EventActivity.self)
@@ -36,7 +36,7 @@ class EventsActivityDataStore: EventsActivityDataStoreProtocol {
         }
     }
 
-    func getEvents(forContract contract: AlphaWallet.Address, forEventName eventName: String, filter: String, server: RPCServer) -> [EventActivity] {
+    func getEvents(forContract contract: TBakeWallet.Address, forEventName eventName: String, filter: String, server: RPCServer) -> [EventActivity] {
         Array(realm.objects(EventActivity.self)
                 .filter("contract = '\(contract.eip55String)'")
                 .filter("chainId = \(server.chainID)")
@@ -57,7 +57,7 @@ class EventsActivityDataStore: EventsActivityDataStoreProtocol {
         }
     }
 
-    func add(events: [EventActivityInstance], forTokenContract contract: AlphaWallet.Address) -> Promise<Void> {
+    func add(events: [EventActivityInstance], forTokenContract contract: TBakeWallet.Address) -> Promise<Void> {
         if events.isEmpty {
             return .value(())
         } else {

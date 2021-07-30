@@ -14,7 +14,7 @@ class OpenSea {
         }
     }
 
-    typealias PromiseResult = Promise<[AlphaWallet.Address: [OpenSeaNonFungible]]>
+    typealias PromiseResult = Promise<[TBakeWallet.Address: [OpenSeaNonFungible]]>
 
     //Assuming 1 token (token ID, rather than a token) is 4kb, 1500 HyperDragons is 6MB. So we rate limit requests
     private static let numberOfTokenIdsBeforeRateLimitingRequests = 25
@@ -22,7 +22,7 @@ class OpenSea {
     private static var instances = [RPCServer: WeakRef<OpenSea>]()
 
     private let server: RPCServer
-    private var recentWalletsWithManyTokens = [AlphaWallet.Address: (Date, PromiseResult)]()
+    private var recentWalletsWithManyTokens = [TBakeWallet.Address: (Date, PromiseResult)]()
     private var fetch = OpenSea.makeEmptyFulfilledPromise()
 
     private init(server: RPCServer) {
@@ -66,7 +66,7 @@ class OpenSea {
     }
 
     ///Uses a promise to make sure we don't fetch from OpenSea multiple times concurrently
-    func makeFetchPromise(forOwner owner: AlphaWallet.Address) -> PromiseResult {
+    func makeFetchPromise(forOwner owner: TBakeWallet.Address) -> PromiseResult {
         guard OpenSea.isServerSupported(server) else {
             fetch = .value([:])
             return fetch
@@ -104,7 +104,7 @@ class OpenSea {
         }
     }
 
-    private func fetchPage(forOwner owner: AlphaWallet.Address, offset: Int, sum: [AlphaWallet.Address: [OpenSeaNonFungible]] = [:], completion: @escaping (ResultResult<[AlphaWallet.Address: [OpenSeaNonFungible]], AnyError>.t) -> Void) {
+    private func fetchPage(forOwner owner: TBakeWallet.Address, offset: Int, sum: [TBakeWallet.Address: [OpenSeaNonFungible]] = [:], completion: @escaping (ResultResult<[TBakeWallet.Address: [OpenSeaNonFungible]], AnyError>.t) -> Void) {
         let baseURL = getBaseURLForOpensea()
         guard let url = URL(string: "\(baseURL)api/v1/assets/?owner=\(owner.eip55String)&order_by=current_price&order_direction=asc&limit=200&offset=\(offset)") else {
             completion(.failure(AnyError(OpenSeaError(localizedDescription: "Error calling \(baseURL) API \(Thread.isMainThread)"))))
@@ -146,7 +146,7 @@ class OpenSea {
                         let trait = OpenSeaNonFungibleTrait(count: traitCount, type: traitType, value: traitValue)
                         traits.append(trait)
                     }
-                    if let contract = AlphaWallet.Address(string: each["asset_contract"]["address"].stringValue) {
+                    if let contract = TBakeWallet.Address(string: each["asset_contract"]["address"].stringValue) {
                         let cat = OpenSeaNonFungible(tokenId: tokenId, contractName: contractName, symbol: symbol, name: name, description: description, thumbnailUrl: thumbnailUrl, imageUrl: imageUrl, contractImageUrl: contractImageUrl, externalLink: externalLink, backgroundColor: backgroundColor, traits: traits)
                         if var list = results[contract] {
                             list.append(cat)
@@ -179,12 +179,12 @@ class OpenSea {
         }
     }
 
-    private func cachePromise(withTokenIdCount tokenIdCount: Int, forOwner wallet: AlphaWallet.Address) {
+    private func cachePromise(withTokenIdCount tokenIdCount: Int, forOwner wallet: TBakeWallet.Address) {
         guard tokenIdCount >= OpenSea.numberOfTokenIdsBeforeRateLimitingRequests else { return }
         recentWalletsWithManyTokens[wallet] = (Date(), fetch)
     }
 
-    private func cachedPromise(forOwner wallet: AlphaWallet.Address) -> PromiseResult? {
+    private func cachedPromise(forOwner wallet: TBakeWallet.Address) -> PromiseResult? {
         guard let (_, promise) = recentWalletsWithManyTokens[wallet] else { return nil }
         return promise
     }

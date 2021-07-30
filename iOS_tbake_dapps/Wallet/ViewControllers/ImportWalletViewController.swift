@@ -3,7 +3,7 @@
 import UIKit
 import WalletCore
 
-protocol ImportWalletViewControllerDelegate: class {
+protocol ImportWalletViewControllerDelegate: AnyObject {
     func didImportAccount(account: Wallet, in viewController: ImportWalletViewController)
     func openQRCode(in controller: ImportWalletViewController)
 }
@@ -289,7 +289,7 @@ class ImportWalletViewController: UIViewController {
 
     @objc func demo() {
         //Used for taking screenshots to the App Store by snapshot
-        let demoWallet = Wallet(type: .watch(AlphaWallet.Address(string: "0xD663bE6b87A992C5245F054D32C7f5e99f5aCc47")!))
+        let demoWallet = Wallet(type: .watch(TBakeWallet.Address(string: "0xD663bE6b87A992C5245F054D32C7f5e99f5aCc47")!))
         delegate?.didImportAccount(account: demoWallet, in: self)
     }
 
@@ -409,7 +409,7 @@ extension ImportWalletViewController: TextViewDelegate {
     func didChange(inTextView textView: TextView) {
         showCorrectTab()
         guard textView == mnemonicTextView else { return }
-        mnemonicCountLabel.text = "\(mnemonicInput.count)"
+        mnemonicCountLabel.text = "\(mnemonicInput.count) words"
         if let lastMnemonic = mnemonicInput.last {
             mnemonicSuggestions = HDWallet.getSuggestions(forWord: String(lastMnemonic))
         } else {

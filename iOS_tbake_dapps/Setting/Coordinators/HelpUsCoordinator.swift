@@ -20,12 +20,13 @@ class HelpUsCoordinator: Coordinator {
     }
 
     func start() {
-        switch appTracker.launchCountForCurrentBuild {
-        case 6 where !appTracker.completedRating:
-            rateUs()
-        case 12 where !appTracker.completedSharing:
-            wellDone()
-        default: break
+        switch hideShakeNib() {
+        case true:
+            break
+        default:
+            DispatchQueue.main.async {
+                self.presentShakeShakeNib()
+            }
         }
     }
 
@@ -33,39 +34,12 @@ class HelpUsCoordinator: Coordinator {
         SKStoreReviewController.requestReview()
         appTracker.completedRating = true
     }
-
-    private func wellDone() {
-        let controller = WellDoneViewController()
-        controller.navigationItem.title = viewModel.title
-        controller.navigationItem.leftBarButtonItem = UIBarButtonItem(title: R.string.localizable.done(), style: .done, target: self, action: #selector(dismiss))
-        controller.delegate = self
-        let nav = UINavigationController(rootViewController: controller)
-        nav.makePresentationFullScreenForiOS13Migration()
-        navigationController.present(nav, animated: true, completion: nil)
-    }
-
-    @objc private func dismiss() {
-        navigationController.dismiss(animated: true, completion: nil)
-    }
-
-    func presentSharing(in viewController: UIViewController, from sender: UIView) {
-        let activityViewController = UIActivityViewController(
-            activityItems: viewModel.activityItems,
-            applicationActivities: nil
-        )
-        activityViewController.popoverPresentationController?.sourceView = sender
-        activityViewController.popoverPresentationController?.sourceRect = sender.centerRect
-        viewController.present(activityViewController, animated: true, completion: nil)
+    
+    private func presentShakeShakeNib() {
+        let nib = ShakeShakeViewController(nibName: "ShakeShakeViewController", bundle: nil)
+        nib.modalPresentationStyle = .overCurrentContext
+        nib.modalTransitionStyle = .crossDissolve
+        navigationController.present(nib, animated: true, completion: nil)
     }
 }
 
-extension HelpUsCoordinator: WellDoneViewControllerDelegate {
-    func didPress(action: WellDoneAction, sender: UIView, in viewController: WellDoneViewController) {
-        switch action {
-        case .other:
-            presentSharing(in: viewController, from: sender)
-        }
-
-        appTracker.completedSharing = true
-    }
-}

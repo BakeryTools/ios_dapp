@@ -3,7 +3,7 @@
 import UIKit
 import PromiseKit
 
-protocol ServersCoordinatorDelegate: class {
+protocol ServersCoordinatorDelegate: AnyObject {
     func didSelectServer(server: RPCServerOrAuto, in coordinator: ServersCoordinator)
     func didSelectDismiss(in coordinator: ServersCoordinator)
 }
@@ -36,7 +36,7 @@ class ServersCoordinator: Coordinator {
             .mumbai_testnet,
             .optimistic,
             .optimisticKovan,
-        ] + RPCServer.servers
+        ] + RPCServer.customServers
     }
 
     private let viewModel: ServersViewModel

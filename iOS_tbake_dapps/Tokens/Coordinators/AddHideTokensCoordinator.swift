@@ -45,10 +45,12 @@ class AddHideTokensCoordinator: Coordinator {
             filterTokensCoordinator: filterTokensCoordinator,
             singleChainTokenCoordinators: singleChainTokenCoordinators
         )
-    }
+    } 
 
     func start() {
         viewController.delegate = self
+        viewController.navigationItem.largeTitleDisplayMode = .never
+        viewController.hidesBottomBarWhenPushed = true
         navigationController.pushViewController(viewController, animated: true)
 
         popularTokensCollection.fetchTokens().done { [weak self] tokens in

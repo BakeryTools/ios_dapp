@@ -4,7 +4,7 @@ import Foundation
 import RealmSwift
 
 class LocalizedOperationObject: Object {
-    //TODO good to have getters/setter computed properties for `from` and `to` too that is typed AlphaWallet.Address. But have to be careful and check if they can be empty or "0x"
+    //TODO good to have getters/setter computed properties for `from` and `to` too that is typed TBakeWallet.Address. But have to be careful and check if they can be empty or "0x"
     @objc dynamic var from: String = ""
     @objc dynamic var to: String = ""
     @objc dynamic var contract: String? = .none
@@ -18,7 +18,7 @@ class LocalizedOperationObject: Object {
     convenience init(
         from: String,
         to: String,
-        contract: AlphaWallet.Address?,
+        contract: TBakeWallet.Address?,
         type: String,
         value: String,
         tokenId: String,
@@ -55,13 +55,13 @@ class LocalizedOperationObject: Object {
         return OperationType(string: type)
     }
 
-    var contractAddress: AlphaWallet.Address? {
-        return contract.flatMap { AlphaWallet.Address(uncheckedAgainstNullAddress: $0) }
+    var contractAddress: TBakeWallet.Address? {
+        return contract.flatMap { TBakeWallet.Address(uncheckedAgainstNullAddress: $0) }
     }
 }
 
 struct LocalizedOperationObjectInstance {
-    //TODO good to have getters/setter computed properties for `from` and `to` too that is typed AlphaWallet.Address. But have to be careful and check if they can be empty or "0x"
+    //TODO good to have getters/setter computed properties for `from` and `to` too that is typed TBakeWallet.Address. But have to be careful and check if they can be empty or "0x"
     var from: String = ""
     var to: String = ""
     var contract: String? = .none
@@ -87,7 +87,7 @@ struct LocalizedOperationObjectInstance {
     init(
         from: String,
         to: String,
-        contract: AlphaWallet.Address?,
+        contract: TBakeWallet.Address?,
         type: String,
         value: String,
         tokenId: String,
@@ -110,16 +110,16 @@ struct LocalizedOperationObjectInstance {
         return OperationType(string: type)
     }
 
-    var contractAddress: AlphaWallet.Address? {
-        return contract.flatMap { AlphaWallet.Address(uncheckedAgainstNullAddress: $0) }
+    var contractAddress: TBakeWallet.Address? {
+        return contract.flatMap { TBakeWallet.Address(uncheckedAgainstNullAddress: $0) }
     }
 
-    func isSend(from: AlphaWallet.Address) -> Bool {
+    func isSend(from: TBakeWallet.Address) -> Bool {
         guard operationType.isTransfer else { return false }
         return from.sameContract(as: self.from)
     }
 
-    func isReceived(by to: AlphaWallet.Address) -> Bool {
+    func isReceived(by to: TBakeWallet.Address) -> Bool {
         guard operationType.isTransfer else { return false }
         return to.sameContract(as: self.to)
     }

@@ -8,7 +8,7 @@
 import UIKit
 import PromiseKit
 
-protocol WalletConnectToSessionCoordinatorDelegate: class {
+protocol WalletConnectToSessionCoordinatorDelegate: AnyObject {
     func coordinator(_ coordinator: WalletConnectToSessionCoordinator, didCompleteWithConnection result: WalletConnectServer.ConnectionChoice)
 }
 
@@ -48,7 +48,7 @@ class WalletConnectToSessionCoordinator: Coordinator {
     }
 
     func start() {
-        guard let keyWindow = UIApplication.shared.keyWindow else { return }
+        guard let keyWindow = getKeyWindow() else { return }
         analyticsCoordinator.log(navigation: Analytics.Navigation.walletConnect)
 
         if let controller = keyWindow.rootViewController?.presentedViewController {

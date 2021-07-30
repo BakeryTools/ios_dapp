@@ -3,7 +3,7 @@
 import UIKit
 import AssistantKit
 
-extension AlphaWallet {
+extension TBakeWallet {
     typealias Device = AssistantKit.Device
     typealias Screen = AssistantKit.Screen
 }

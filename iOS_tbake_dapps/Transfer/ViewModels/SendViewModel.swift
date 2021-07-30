@@ -16,7 +16,7 @@ struct SendViewModel {
         self.storage = storage
     }
 
-    var destinationAddress: AlphaWallet.Address {
+    var destinationAddress: TBakeWallet.Address {
         return transactionType.contract
     }
 

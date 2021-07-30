@@ -19,7 +19,7 @@ public indirect enum ABIValue: Equatable {
     case address(Address)
 
     //TODO eventually replace `address` with this
-    case address2(AlphaWallet.Address)
+    case address2(TBakeWallet.Address)
 
     /// Boolean
     case bool(Bool)
@@ -139,7 +139,7 @@ public indirect enum ABIValue: Equatable {
             self = .int(bits: bits, value)
         case (.address, let address as Address):
             self = .address(address)
-        case (.address, let address as AlphaWallet.Address):
+        case (.address, let address as TBakeWallet.Address):
             self = .address2(address)
         case (.bool, let value as Bool):
             self = .bool(value)
@@ -156,7 +156,7 @@ public indirect enum ABIValue: Equatable {
         case (.dynamicBytes, let data as Data):
             self = .dynamicBytes(data)
         case (.dynamicBytes, let string as String):
-            self = .dynamicBytes(string.data(using: .utf8) ?? Data(bytes: Array(string.utf8)))
+            self = .dynamicBytes(string.data(using: .utf8) ?? Data(Array(string.utf8)))
         case (.string, let string as String):
             self = .string(string)
         case (.dynamicArray(let type), let array as [Any]):

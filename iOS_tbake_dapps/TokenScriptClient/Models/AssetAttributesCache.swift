@@ -7,8 +7,8 @@ private typealias ContractTokenIdsAttributeValues = [TokenId: [AttributeId: Cach
 
 class AssetAttributesCache {
     private var resolvedAttributesData: AssetAttributesCacheData
-    private var functionOriginAttributes: [AlphaWallet.Address: [AttributeId: AssetAttribute]] = .init()
-    private var functionOriginSubscribables: [AlphaWallet.Address: [TokenId: [AttributeId: Subscribable<AssetInternalValue>]]] = .init()
+    private var functionOriginAttributes: [TBakeWallet.Address: [AttributeId: AssetAttribute]] = .init()
+    private var functionOriginSubscribables: [TBakeWallet.Address: [TokenId: [AttributeId: Subscribable<AssetInternalValue>]]] = .init()
 
     weak var assetDefinitionStore: AssetDefinitionStore?
 
@@ -29,7 +29,7 @@ class AssetAttributesCache {
         }
     }
 
-    func cache(attribute: AssetAttribute, attributeId: AttributeId, value: AssetInternalValue, forContract contract: AlphaWallet.Address, tokenId: TokenId) {
+    func cache(attribute: AssetAttribute, attributeId: AttributeId, value: AssetInternalValue, forContract contract: TBakeWallet.Address, tokenId: TokenId) {
         var contractData: ContractTokenIdsAttributeValues = resolvedAttributesData[contract] ?? .init()
         defer { resolvedAttributesData[contract] = contractData }
         let cachedAttribute = CachedAssetAttribute(type: .token, id: attributeId, value: value)
@@ -38,7 +38,7 @@ class AssetAttributesCache {
         tokenIdData[attributeId] = cachedAttribute
     }
 
-    func cache(attributes: [AttributeId: AssetAttribute], values: [AttributeId: AssetInternalValue], forContract contract: AlphaWallet.Address, tokenId: TokenId) {
+    func cache(attributes: [AttributeId: AssetAttribute], values: [AttributeId: AssetInternalValue], forContract contract: TBakeWallet.Address, tokenId: TokenId) {
         if functionOriginAttributes[contract] == nil {
             functionOriginAttributes[contract] = attributes
         }
@@ -84,7 +84,7 @@ class AssetAttributesCache {
         contractData[tokenId] = Dictionary(tokenValues) { _, new in new }
     }
 
-    func getValues(forContract contractAddress: AlphaWallet.Address, tokenId: TokenId) -> [AttributeId: AssetInternalValue]? {
+    func getValues(forContract contractAddress: TBakeWallet.Address, tokenId: TokenId) -> [AttributeId: AssetInternalValue]? {
         //Explicitly typed so AppCode knows
         guard let values: [AttributeId: CachedAssetAttribute] = resolvedAttributesData[contractAddress]?[tokenId] else { return nil }
         let results = values.mapValues { $0.value }
@@ -102,9 +102,9 @@ class AssetAttributesCache {
 }
 
 struct AssetAttributesCacheData: Codable {
-    private var contracts = [AlphaWallet.Address: ContractTokenIdsAttributeValues]()
+    private var contracts = [TBakeWallet.Address: ContractTokenIdsAttributeValues]()
 
-    fileprivate subscript(contract: AlphaWallet.Address) -> ContractTokenIdsAttributeValues? {
+    fileprivate subscript(contract: TBakeWallet.Address) -> ContractTokenIdsAttributeValues? {
         get {
             return contracts[contract]
         }
@@ -113,7 +113,7 @@ struct AssetAttributesCacheData: Codable {
         }
     }
 
-    mutating func remove(contract: AlphaWallet.Address) {
+    mutating func remove(contract: TBakeWallet.Address) {
         contracts.removeValue(forKey: contract)
     }
 }

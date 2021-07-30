@@ -59,6 +59,13 @@
 "LoadingDots" = "Loading...";
 "Next" = "Next";
 "OK" = "OK";
+"send.bug.by.shake" = "You can shake-shake to submit bug to our developer.";
+"send.bug.details" = "Bug Details";
+"please.elaborate.bug" = "Please elaborate the details of bug that you found.";
+"report.a.bug" = "Report A Bug";
+"shake.detected" = "Shake detected!";
+"would.you.like.report.a.bug" = "Would you like to report a bug?";
+"under.construction" = "Sorry, this feature is under construction";
 "Password" = "Password";
 "Refresh" = "Refresh";
 "request.addressCopied.title" = "Address copied";
@@ -252,6 +259,8 @@
 "lock.enter.passcode.view.model.initial" = "Enter your passcode.";
 "lock.enter.passcode.view.model.touch.id" = "Logging in with Touch ID";
 "lock.enter.passcode.view.model.try.after.one.minute" = "Try after 1 minute.";
+"authentication.error" = "Authentication Error";
+"passcode.not.set" = "Passcode is not set on the device. Please set the passcode in order to use this feature.";
 "Name" = "Name";
 "send.action.copy.transaction.title" = "Copy Transaction ID";
 "send.action.transaction.sent" = "Transaction Sent!";
@@ -602,7 +611,7 @@ You can check the latest gas price on gasnow.org";
 "transactionConfirmation.Send.Section.TokenId.title" = "Token";
 "transactionConfirmation.authorisation.reason" = "Authorize to confirm transaction";
 "transactionConfirmation.keystore.accessKey.sign" = "Accessing to perform transfer";
-"transactionConfirmation.fee.footerText" = "The higher the fee, the better chances and faster your transaction will go through. Fees are based on current Ethereum blockchain network load.";
+"transactionConfirmation.fee.footerText" = "The higher the fee, the better chances and faster your transaction will go through.";
 "walletConnect.title" = "WalletConnect";
 "walletConnect.statusPlaceholder" = "Status";
 "walletConnect.status.online" = "Online";
@@ -655,3 +664,5 @@ You can check the latest gas price on gasnow.org";
 "addrpcServer.chainIdAlreadySupported" = "Already supported. Enable this server instead";
 "addrpcServer.rpcUrl.placeholder" = "New RPC Network";
 "addrpcServer.blockExplorerUrl.placeholder" = "Block Explorer";
+
+"wallet.summary.today" = "%@ Today";

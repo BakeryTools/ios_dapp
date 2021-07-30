@@ -156,7 +156,7 @@ struct TokenViewControllerViewModel {
         })
     }
 
-    var destinationAddress: AlphaWallet.Address {
+    var destinationAddress: TBakeWallet.Address {
         return transactionType.contract
     }
 

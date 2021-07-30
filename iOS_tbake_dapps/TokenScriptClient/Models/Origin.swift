@@ -92,7 +92,7 @@ enum Origin {
         self = .tokenId(.init(originElement: tokenIdElement, xmlContext: xmlContext, bitmask: bitmask, bitShift: bitShift, asType: asType))
     }
 
-    init?(forEthereumFunctionElement ethereumFunctionElement: XMLElement, root: XMLDocument, attributeName: AttributeId, originContract: AlphaWallet.Address, xmlContext: XmlContext) {
+    init?(forEthereumFunctionElement ethereumFunctionElement: XMLElement, root: XMLDocument, attributeName: AttributeId, originContract: TBakeWallet.Address, xmlContext: XmlContext) {
         let bitmask = XMLHandler.getBitMask(fromTokenIdElement: ethereumFunctionElement) ?? TokenScript.defaultBitmask
         let bitShift = Origin.bitShiftCount(forBitMask: bitmask)
         guard let result = FunctionOrigin(forEthereumFunctionCallElement: ethereumFunctionElement, root: root, attributeName: attributeName, originContract: originContract, xmlContext: xmlContext, bitmask: bitmask, bitShift: bitShift) else { return nil }
@@ -106,7 +106,7 @@ enum Origin {
         self = .userEntry(.init(originElement: userEntryElement, xmlContext: xmlContext, attributeId: attributeName, asType: asType, bitmask: bitmask, bitShift: bitShift))
     }
 
-    init?(forEthereumEventElement eventElementOrigin: XMLElement, asnModuleNamedTypeElement: XMLElement, contract: AlphaWallet.Address, xmlContext: XmlContext) {
+    init?(forEthereumEventElement eventElementOrigin: XMLElement, asnModuleNamedTypeElement: XMLElement, contract: TBakeWallet.Address, xmlContext: XmlContext) {
         guard let eventFilter = XMLHandler.getEventFilter(fromEthereumEventElement: eventElementOrigin) else { return nil }
         guard let eventDefinition = XMLHandler.getEventDefinition(contract: contract, asnModuleNamedTypeElement: asnModuleNamedTypeElement, xmlContext: xmlContext) else { return nil }
         let eventParameterName = XMLHandler.getEventParameterName(fromEthereumEventElement: eventElementOrigin)

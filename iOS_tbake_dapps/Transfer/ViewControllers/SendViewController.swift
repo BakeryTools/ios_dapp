@@ -9,9 +9,9 @@ import PromiseKit
 import BigInt
 import MBProgressHUD
 
-protocol SendViewControllerDelegate: class, CanOpenURL {
+protocol SendViewControllerDelegate: AnyObject, CanOpenURL {
     func didPressConfirm(transaction: UnconfirmedTransaction, in viewController: SendViewController, amount: String, shortValue: String?)
-    func lookup(contract: AlphaWallet.Address, in viewController: SendViewController, completion: @escaping (ContractData) -> Void)
+    func lookup(contract: TBakeWallet.Address, in viewController: SendViewController, completion: @escaping (ContractData) -> Void)
     func openQRCode(in controller: SendViewController)
 }
 
@@ -28,7 +28,7 @@ class SendViewController: UIViewController {
     private var viewModel: SendViewModel
     private var balanceViewModel: BalanceBaseViewModel?
     private let session: WalletSession
-    private let account: AlphaWallet.Address
+    private let account: TBakeWallet.Address
     private let ethPrice: Subscribable<Double>
     private let assetDefinitionStore: AssetDefinitionStore
     private var currentSubscribableKeyForNativeCryptoCurrencyBalance: Subscribable<BalanceBaseViewModel>.SubscribableKey?
@@ -50,7 +50,7 @@ class SendViewController: UIViewController {
     init(
             session: WalletSession,
             storage: TokensDataStore,
-            account: AlphaWallet.Address,
+            account: TBakeWallet.Address,
             transactionType: TransactionType,
             cryptoPrice: Subscribable<Double>,
             assetDefinitionStore: AssetDefinitionStore
@@ -143,8 +143,8 @@ class SendViewController: UIViewController {
         maxButton.addTarget(self, action: #selector(self.allFundsSelected(_:)), for: .touchUpInside)
         maxButton.titleLabel?.font = DataEntry.Font.accessory
         maxButton.setTitleColor(DataEntry.Color.icon, for: .normal)
-        maxButton.setBackgroundColor(.clear, forState: .normal)
         maxButton.backgroundColor = Colors.backgroundClear
+        maxButton.tintColor = .none
 
         return maxButton
     }
@@ -166,6 +166,7 @@ class SendViewController: UIViewController {
         pasteButton.titleLabel?.font = DataEntry.Font.accessory
         pasteButton.setTitleColor(DataEntry.Color.icon, for: .normal)
         pasteButton.backgroundColor = Colors.backgroundClear
+        pasteButton.tintColor = .none
         pasteButton.setBackgroundColor(.clear, forState: .normal)
         
         let stackView = [
@@ -273,7 +274,7 @@ class SendViewController: UIViewController {
                 self.amountErrorLbl.text = viewModel.amountErrorLbl
                 return
             }
-            guard let recipient = AlphaWallet.Address(string: input) else {
+            guard let recipient = TBakeWallet.Address(string: input) else {
                 self.recipientAddressErrorLbl.isHidden = false
                 self.recipientAddressErrorLbl.text = viewModel.recipientErrorLbl
                 return
@@ -405,7 +406,7 @@ class SendViewController: UIViewController {
         return amountString.flatMap { BigInt($0) }
     }
 
-    private func configureFor(contract: AlphaWallet.Address, recipient: AddressOrEnsName?, amount: BigInt?, shouldConfigureBalance: Bool = true) {
+    private func configureFor(contract: TBakeWallet.Address, recipient: AddressOrEnsName?, amount: BigInt?, shouldConfigureBalance: Bool = true) {
         guard let tokenObject = storage.token(forContract: contract) else { return }
         let amount = amount.flatMap { EtherNumberFormatter.plain.string(from: $0, decimals: tokenObject.decimals) }
         let transactionType: TransactionType

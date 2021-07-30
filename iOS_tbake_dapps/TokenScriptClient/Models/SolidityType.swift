@@ -41,7 +41,7 @@ enum SolidityType: String {
         case .address:
             return originalValue
         case .string(let value):
-            return AlphaWallet.Address(string: value).flatMap { .address($0) }
+            return TBakeWallet.Address(string: value).flatMap { .address($0) }
         case .int:
             return nil
         case .uint:

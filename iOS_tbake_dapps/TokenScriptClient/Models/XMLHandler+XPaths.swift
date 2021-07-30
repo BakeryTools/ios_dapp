@@ -106,7 +106,7 @@ extension XMLHandler {
         return eventParameterName
     }
 
-    static func getEventDefinition(contract: AlphaWallet.Address, asnModuleNamedTypeElement: XMLElement, xmlContext: XmlContext) -> EventDefinition? {
+    static func getEventDefinition(contract: TBakeWallet.Address, asnModuleNamedTypeElement: XMLElement, xmlContext: XmlContext) -> EventDefinition? {
         guard let eventName = asnModuleNamedTypeElement["name"] else { return nil }
         //Should remove the second XPath and only keep the first, with "type". https://github.com/AlphaWallet/alpha-wallet-ios/pull/1971#discussion_r445407138
         let parameters = asnModuleNamedTypeElement.xpath("type/sequence/element|sequence/element", namespaces: xmlContext.namespaces).compactMap { each -> EventParameter? in
@@ -231,8 +231,8 @@ extension XMLHandler {
         actionElement.at_xpath("exclude".addToXPath(namespacePrefix: xmlContext.namespacePrefix), namespaces: xmlContext.namespaces)?["selection"] ?? actionElement["exclude"]
     }
 
-    static func getRecipientAddress(fromEthereumFunctionElement ethereumFunctionElement: XMLElement, xmlContext: XmlContext) -> AlphaWallet.Address? {
-        return ethereumFunctionElement.at_xpath("ethereum:to", namespaces: xmlContext.namespaces)?.text.flatMap { AlphaWallet.Address(string: $0.trimmed) }
+    static func getRecipientAddress(fromEthereumFunctionElement ethereumFunctionElement: XMLElement, xmlContext: XmlContext) -> TBakeWallet.Address? {
+        return ethereumFunctionElement.at_xpath("ethereum:to", namespaces: xmlContext.namespaces)?.text.flatMap { TBakeWallet.Address(string: $0.trimmed) }
     }
 
     static func getTokenScriptTokenViewContents(fromViewElement element: XMLElement, xmlContext: XmlContext, xhtmlNamespacePrefix: String) -> (style: String, script: String, body: String) {

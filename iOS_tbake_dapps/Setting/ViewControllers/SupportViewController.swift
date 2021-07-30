@@ -7,48 +7,41 @@
 
 import UIKit
 
-protocol SupportViewControllerDelegate: class, CanOpenURL {
+protocol SupportViewControllerDelegate: AnyObject, CanOpenURL {
 
 }
 
 class SupportViewController: UIViewController {
+    @IBOutlet weak var tableView: UITableView!
+    
     private let analyticsCoordinator: AnalyticsCoordinator
     private lazy var viewModel: SupportViewModel = SupportViewModel()
-    private let tableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .plain)
-        tableView.tableFooterView = UIView.tableFooterToRemoveEmptyCellSeparators()
-        tableView.register(SettingViewHeader.self, forHeaderFooterViewReuseIdentifier: SettingViewHeader.reusableIdentifier)
-        tableView.register(SettingTableViewCell.self)
-        tableView.separatorStyle = .singleLine
-        tableView.backgroundColor = GroupedTable.Color.background
 
-        return tableView
-    }()
     weak var delegate: SupportViewControllerDelegate?
-
-    override func loadView() {
-        view = tableView
-    }
 
     init(analyticsCoordinator: AnalyticsCoordinator) {
         self.analyticsCoordinator = analyticsCoordinator
         super.init(nibName: nil, bundle: nil)
-
-        tableView.dataSource = self
-        tableView.delegate = self
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        print("SupportViewController")
         title = viewModel.title
-        view.backgroundColor = Screen.Setting.Color.background
-        navigationItem.largeTitleDisplayMode = .never
-        tableView.backgroundColor = GroupedTable.Color.background
+        self.setupTableView()
     }
 
     required init?(coder aDecoder: NSCoder) {
         return nil
+    }
+    
+    private func setupTableView() {
+        self.tableView.tableFooterView = UIView.tableFooterToRemoveEmptyCellSeparators()
+        self.tableView.register(SettingTableViewCell.self)
+        self.tableView.separatorStyle = .singleLine
+        self.tableView.dataSource = self
+        self.tableView.delegate = self
     }
 }
 
@@ -68,7 +61,7 @@ extension SupportViewController: UITableViewDataSource {
 
 extension SupportViewController: CanOpenURL {
 
-    func didPressViewContractWebPage(forContract contract: AlphaWallet.Address, server: RPCServer, in viewController: UIViewController) {
+    func didPressViewContractWebPage(forContract contract: TBakeWallet.Address, server: RPCServer, in viewController: UIViewController) {
         delegate?.didPressViewContractWebPage(forContract: contract, server: server, in: viewController)
     }
 
@@ -105,26 +98,18 @@ extension SupportViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch viewModel.rows[indexPath.row] {
-        case .faq:
-            logAccessFaq()
-            openURL(.faq)
-        case .telegramPublic:
-            logAccessTelegramPublic()
-            openURL(.telegramPublic)
-        case .telegramCustomer:
-            logAccessTelegramCustomerSupport()
-            openURL(.telegramCustomer)
+        case .website:
+            openURL(.website)
+        case .telegramAnnouncement:
+            openURL(.telegramAnnouncement)
+        case .telegramGroup:
+            openURL(.telegramGroup)
         case .twitter:
-            logAccessTwitter()
             openURL(.twitter)
-        case .reddit:
-            logAccessReddit()
-            openURL(.reddit)
-        case .facebook:
-            logAccessFacebook()
-            openURL(.facebook)
-        case .blog:
-            break
+        case .medium:
+            openURL(.medium)
+        case .github:
+            openURL(.github)
         }
     }
 

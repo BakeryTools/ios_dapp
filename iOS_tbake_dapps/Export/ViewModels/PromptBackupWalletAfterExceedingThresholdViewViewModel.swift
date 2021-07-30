@@ -4,7 +4,7 @@ import Foundation
 import UIKit
 
 struct PromptBackupWalletAfterExceedingThresholdViewViewModel: PromptBackupWalletViewModel {
-    let walletAddress: AlphaWallet.Address
+    let walletAddress: TBakeWallet.Address
     let dollarValueInUsd: Double
 
     var backgroundColor: UIColor {

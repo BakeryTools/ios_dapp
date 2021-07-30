@@ -9,11 +9,11 @@ struct DecodedFunctionCall {
     enum FunctionType {
 //NOTE: Not sure if we need these functions
 //        case erc20TotalSupply
-//        case erc20BalanceOf(address: AlphaWallet.Address)
-//        case erc20Allowance(address: AlphaWallet.Address, address: AlphaWallet.Address)
-//        case erc20TransferFrom(address: AlphaWallet.Address, address: AlphaWallet.Address, value: BigUInt)
-        case erc20Transfer(recipient: AlphaWallet.Address, value: BigUInt)
-        case erc20Approve(spender: AlphaWallet.Address, value: BigUInt)
+//        case erc20BalanceOf(address: TBakeWallet.Address)
+//        case erc20Allowance(address: TBakeWallet.Address, address: TBakeWallet.Address)
+//        case erc20TransferFrom(address: TBakeWallet.Address, address: TBakeWallet.Address, value: BigUInt)
+        case erc20Transfer(recipient: TBakeWallet.Address, value: BigUInt)
+        case erc20Approve(spender: TBakeWallet.Address, value: BigUInt)
         case nativeCryptoTransfer(value: BigUInt)
         case others
     }
@@ -26,7 +26,7 @@ struct DecodedFunctionCall {
     let type: FunctionType
 
     init?(data: Data) {
-        guard let decoded = DecodedFunctionCall.decode(data: data, abi: AlphaWallet.Ethereum.ABI.ERC20) else { return nil }
+        guard let decoded = DecodedFunctionCall.decode(data: data, abi: TBakeWallet.Ethereum.ABI.ERC20) else { return nil }
         self = decoded
     }
 

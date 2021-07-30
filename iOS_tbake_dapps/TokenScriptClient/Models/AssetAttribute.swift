@@ -79,7 +79,7 @@ struct AssetAttribute {
         }
     }
 
-    init?(attribute: XMLElement, xmlContext: XmlContext, root: XMLDocument, tokenContract: AlphaWallet.Address, server: RPCServerOrAny, contractNamesAndAddresses: [String: [(AlphaWallet.Address, RPCServer)]]) {
+    init?(attribute: XMLElement, xmlContext: XmlContext, root: XMLDocument, tokenContract: TBakeWallet.Address, server: RPCServerOrAny, contractNamesAndAddresses: [String: [(TBakeWallet.Address, RPCServer)]]) {
         guard let syntaxElement = XMLHandler.getSyntaxElement(fromAttributeTypeElement: attribute, xmlContext: xmlContext),
               let rawValue = syntaxElement.text,
               let syntax = AssetAttributeSyntax(rawValue: rawValue) else { return nil }
@@ -100,7 +100,7 @@ struct AssetAttribute {
                   let eventName = ethereumEventElement["type"],
                   let eventContractName = ethereumEventElement["contract"],
                   let eventSourceContractElement = XMLHandler.getContractElementByName(contractName: eventContractName, fromRoot: root, xmlContext: xmlContext),
-                  let contract = XMLHandler.getAddressElements(fromContractElement: eventSourceContractElement, xmlContext: xmlContext).first?.text.flatMap({ AlphaWallet.Address(string: $0.trimmed) }),
+                  let contract = XMLHandler.getAddressElements(fromContractElement: eventSourceContractElement, xmlContext: xmlContext).first?.text.flatMap({ TBakeWallet.Address(string: $0.trimmed) }),
                   let asnModuleNamedTypeElement = XMLHandler.getAsnModuleNamedTypeElement(fromRoot: root, xmlContext: xmlContext, forTypeName: eventName),
                   attribute["name"] != nil {
             let possibleOrigin = Origin(forEthereumEventElement: ethereumEventElement, asnModuleNamedTypeElement: asnModuleNamedTypeElement, contract: contract, xmlContext: xmlContext)
@@ -125,7 +125,7 @@ struct AssetAttribute {
         self.mapping = origin.extractMapping()
     }
 
-    private static func getContract(fromEthereumFunctionElement ethereumFunctionElement: XMLElement, forTokenContract contract: AlphaWallet.Address, server: RPCServerOrAny, contractNamesAndAddresses: [String: [(AlphaWallet.Address, RPCServer)]]) -> AlphaWallet.Address? {
+    private static func getContract(fromEthereumFunctionElement ethereumFunctionElement: XMLElement, forTokenContract contract: TBakeWallet.Address, server: RPCServerOrAny, contractNamesAndAddresses: [String: [(TBakeWallet.Address, RPCServer)]]) -> TBakeWallet.Address? {
         if let functionOriginContractName = ethereumFunctionElement["contract"].nilIfEmpty {
             return XMLHandler.getNonTokenHoldingContract(byName: functionOriginContractName, server: server, fromContractNamesAndAddresses: contractNamesAndAddresses)
         } else {

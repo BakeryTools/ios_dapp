@@ -8,7 +8,7 @@
 import UIKit
 
 struct RenameWalletViewModel {
-    let account: AlphaWallet.Address
+    let account: TBakeWallet.Address
 
     var title: String {
         return R.string.localizable.settingsWalletRename()
@@ -22,7 +22,7 @@ struct RenameWalletViewModel {
         return R.string.localizable.walletRenameEnterNameTitle()
     }
 
-    init(account: AlphaWallet.Address) {
+    init(account: TBakeWallet.Address) {
         self.account = account
     }
 }

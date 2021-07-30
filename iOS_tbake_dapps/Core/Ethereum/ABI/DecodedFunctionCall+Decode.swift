@@ -1,6 +1,6 @@
 //
 //  DecodedFunctionCall+Decode.swift
-//  AlphaWallet
+//  TBakeWallet
 //
 //  Created by Vladyslav Shepitko on 11.05.2021.
 //
@@ -86,9 +86,9 @@ extension ABIType {
 extension DecodedFunctionCall.FunctionType {
     init(name: String, arguments: [(type: ABIType, value: AnyObject)]) {
         if name == DecodedFunctionCall.erc20Transfer.name, let address: EthereumAddress = arguments.get(type: .address, atIndex: 0), let value: BigUInt = arguments.get(type: .uint(bits: 256), atIndex: 1) {
-            self = .erc20Transfer(recipient: AlphaWallet.Address.ethereumAddress(eip55String: address.address), value: value)
+            self = .erc20Transfer(recipient: TBakeWallet.Address.ethereumAddress(eip55String: address.address), value: value)
         } else if name == DecodedFunctionCall.erc20Approve.name, let address: EthereumAddress = arguments.get(type: .address, atIndex: 0), let value: BigUInt = arguments.get(type: .uint(bits: 256), atIndex: 1) {
-            self = .erc20Approve(spender: AlphaWallet.Address.ethereumAddress(eip55String: address.address), value: value)
+            self = .erc20Approve(spender: TBakeWallet.Address.ethereumAddress(eip55String: address.address), value: value)
         } else {
             self = .others
         }

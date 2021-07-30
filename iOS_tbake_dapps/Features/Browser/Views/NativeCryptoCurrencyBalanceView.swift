@@ -13,7 +13,7 @@ class NativeCryptoCurrencyBalanceView: UIView {
         }
     }
     private let rightMargin: CGFloat
-    private var balances: [AlphaWallet.Address: Balance] = [:]
+    private var balances: [TBakeWallet.Address: Balance] = [:]
     //TODO should let someone else fetch the balance instead of doing it here
     private lazy var balanceCoordinator = GetNativeCryptoCurrencyBalanceCoordinator(forServer: server)
     private let label = UILabel()

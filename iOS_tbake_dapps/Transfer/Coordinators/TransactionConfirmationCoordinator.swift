@@ -1,6 +1,6 @@
 //
 //  TransactionConfirmationCoordinator.swift
-//  AlphaWallet
+//  TBakeWallet
 //
 //  Created by Vladyslav Shepitko on 14.08.2020.
 //
@@ -11,7 +11,7 @@ import PromiseKit
 import Result
 
 enum TransactionConfirmationConfiguration {
-    case tokenScriptTransaction(confirmType: ConfirmType, contract: AlphaWallet.Address, keystore: Keystore, functionCallMetaData: DecodedFunctionCall, ethPrice: Subscribable<Double>)
+    case tokenScriptTransaction(confirmType: ConfirmType, contract: TBakeWallet.Address, keystore: Keystore, functionCallMetaData: DecodedFunctionCall, ethPrice: Subscribable<Double>)
     case dappTransaction(confirmType: ConfirmType, keystore: Keystore, ethPrice: Subscribable<Double>)
     case walletConnect(confirmType: ConfirmType, keystore: Keystore, ethPrice: Subscribable<Double>)
     case sendFungiblesTransaction(confirmType: ConfirmType, keystore: Keystore, assetDefinitionStore: AssetDefinitionStore, amount: FungiblesTransactionAmount, ethPrice: Subscribable<Double>)
@@ -59,7 +59,7 @@ enum ConfirmResult {
     case sentRawTransaction(id: String, original: String)
 }
 
-protocol TransactionConfirmationCoordinatorDelegate: class, CanOpenURL {
+protocol TransactionConfirmationCoordinatorDelegate: AnyObject, CanOpenURL {
     func coordinator(_ coordinator: TransactionConfirmationCoordinator, didCompleteTransaction result: TransactionConfirmationResult)
     func coordinator(_ coordinator: TransactionConfirmationCoordinator, didFailTransaction error: AnyError)
     func didClose(in coordinator: TransactionConfirmationCoordinator)

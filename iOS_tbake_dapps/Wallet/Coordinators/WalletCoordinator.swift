@@ -136,7 +136,7 @@ extension WalletCoordinator: ImportWalletViewControllerDelegate {
 
 extension WalletCoordinator: QRCodeResolutionCoordinatorDelegate {
 
-    func coordinator(_ coordinator: QRCodeResolutionCoordinator, didResolveAddress address: AlphaWallet.Address, action: ScanQRCodeAction) {
+    func coordinator(_ coordinator: QRCodeResolutionCoordinator, didResolveAddress address: TBakeWallet.Address, action: ScanQRCodeAction) {
         removeCoordinator(coordinator)
 
 //        importWalletViewController?.set(tabSelection: .watch)

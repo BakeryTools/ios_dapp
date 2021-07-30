@@ -101,6 +101,10 @@ class FilterTokensCoordinator {
                     return true
                 } else if contract1 == nativeCryptoAddressInDatabase {
                     return false
+                } else if contract0 == "0x26D6e280F9687c463420908740AE59f712419147" { //Danial
+                    return true
+                } else if contract1 == "0x26D6e280F9687c463420908740AE59f712419147" {
+                    return false
                 } else if $0.server != $1.server {
                     return $0.server.displayOrderPriority < $1.server.displayOrderPriority
                 } else {

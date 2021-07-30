@@ -5,7 +5,7 @@ import BigInt
 import PromiseKit
 import web3swift
 
-protocol EventSourceCoordinatorForActivitiesDelegate: class {
+protocol EventSourceCoordinatorForActivitiesDelegate: AnyObject {
     func didUpdate(inCoordinator coordinator: EventSourceCoordinatorForActivities)
 }
 
@@ -38,7 +38,7 @@ class EventSourceCoordinatorForActivities {
         }
     }
 
-    func fetchEvents(contract: AlphaWallet.Address, tokenType: TokenType, rpcServer: RPCServer) -> [Promise<Void>] {
+    func fetchEvents(contract: TBakeWallet.Address, tokenType: TokenType, rpcServer: RPCServer) -> [Promise<Void>] {
         let xmlHandler = XMLHandler(contract: contract, tokenType: tokenType, assetDefinitionStore: assetDefinitionStore)
         guard xmlHandler.hasAssetDefinition else { return [] }
         return xmlHandler.activityCards.compactMap {
@@ -77,7 +77,7 @@ class EventSourceCoordinatorForActivities {
         })
     }
 
-    typealias EnabledTokenAddreses = [(contract: AlphaWallet.Address, tokenType: TokenType, server: RPCServer)]
+    typealias EnabledTokenAddreses = [(contract: TBakeWallet.Address, tokenType: TokenType, server: RPCServer)]
     private func tokensForEnabledRPCServers() -> Promise<EnabledTokenAddreses> {
         return Promise { seal in
             let tokensStoragesForEnabledServers = self.config.enabledServers.map { self.tokensStorages[$0] }
@@ -92,7 +92,7 @@ class EventSourceCoordinatorForActivities {
         }
     }
 
-    private func fetchEvents(tokenContract: AlphaWallet.Address, server: RPCServer, card: TokenScriptCard) -> Promise<Void>? {
+    private func fetchEvents(tokenContract: TBakeWallet.Address, server: RPCServer, card: TokenScriptCard) -> Promise<Void>? {
         let eventOrigin = card.eventOrigin
         let (filterName, filterValue) = eventOrigin.eventFilter
         let filterParam = eventOrigin.parameters.filter {
@@ -141,7 +141,7 @@ class EventSourceCoordinatorForActivities {
         })
     }
 
-    private func convertEventToDatabaseObject(_ event: EventParserResultProtocol, date: Date, filterParam: [(filter: [EventFilterable], textEquivalent: String)?], eventOrigin: EventOrigin, tokenContract: AlphaWallet.Address, server: RPCServer) -> EventActivityInstance? {
+    private func convertEventToDatabaseObject(_ event: EventParserResultProtocol, date: Date, filterParam: [(filter: [EventFilterable], textEquivalent: String)?], eventOrigin: EventOrigin, tokenContract: TBakeWallet.Address, server: RPCServer) -> EventActivityInstance? {
         guard let blockNumber = event.eventLog?.blockNumber else { return nil }
         guard let logIndex = event.eventLog?.logIndex else { return nil }
         guard let transactionHash = event.eventLog?.transactionHash else { return nil }

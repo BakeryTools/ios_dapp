@@ -11,7 +11,7 @@ class GetIsERC875ContractCoordinator {
     }
 
     func getIsERC875Contract(
-        for contract: AlphaWallet.Address,
+        for contract: TBakeWallet.Address,
         completion: @escaping (Result<Bool, AnyError>) -> Void
     ) {
         let function = GetIsERC875()

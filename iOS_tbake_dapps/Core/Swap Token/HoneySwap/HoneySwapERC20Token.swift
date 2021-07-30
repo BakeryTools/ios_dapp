@@ -30,10 +30,10 @@ extension HoneySwap {
 
         let symbol: String
         let name: String
-        let address: AlphaWallet.Address
+        let address: TBakeWallet.Address
         let decimal: Int
 
-        init(symbol: String, name: String, address: AlphaWallet.Address, decimal: Int) {
+        init(symbol: String, name: String, address: TBakeWallet.Address, decimal: Int) {
             self.symbol = symbol
             self.name = name
             self.address = address
@@ -45,7 +45,7 @@ extension HoneySwap {
 
             let addressValue = try container.decode(String.self, forKey: .address)
 
-            if let value = AlphaWallet.Address(uncheckedAgainstNullAddress: addressValue) {
+            if let value = TBakeWallet.Address(uncheckedAgainstNullAddress: addressValue) {
                 address = value
                 symbol = try container.decode(String.self, forKey: .symbol)
                 name = try container.decode(String.self, forKey: .name)

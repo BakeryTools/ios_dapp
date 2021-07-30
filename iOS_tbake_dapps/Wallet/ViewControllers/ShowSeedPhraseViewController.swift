@@ -7,8 +7,8 @@ protocol ShowSeedPhraseViewControllerDelegate: AnyObject {
     var contextToShowSeedPhrase: LAContext { get }
     var isInactiveBecauseWeAccessingBiometrics: Bool { get set }
 
-    func didTapTestSeedPhrase(for account: AlphaWallet.Address, inViewController viewController: ShowSeedPhraseViewController)
-    func biometricsFailed(for account: AlphaWallet.Address, inViewController viewController: ShowSeedPhraseViewController)
+    func didTapTestSeedPhrase(for account: TBakeWallet.Address, inViewController viewController: ShowSeedPhraseViewController)
+    func biometricsFailed(for account: TBakeWallet.Address, inViewController viewController: ShowSeedPhraseViewController)
 }
 
 //We must be careful to no longer show the seed phrase and remove it from memory when this screen is hidden because another VC is displayed over it or because the device is locked
@@ -26,7 +26,7 @@ class ShowSeedPhraseViewController: UIViewController {
         }
     }
     private let keystore: Keystore
-    private let account: AlphaWallet.Address
+    private let account: TBakeWallet.Address
     private let roundedBackground = RoundedBackground()
     private let subtitleLabel = UILabel()
     private let errorLabel = UILabel()
@@ -79,7 +79,7 @@ class ShowSeedPhraseViewController: UIViewController {
     }
     weak var delegate: ShowSeedPhraseViewControllerDelegate?
 
-    init(keystore: Keystore, account: AlphaWallet.Address, viewModel: ShowSeedPhraseViewModel = .init(words: [])) {
+    init(keystore: Keystore, account: TBakeWallet.Address, viewModel: ShowSeedPhraseViewModel = .init(words: [])) {
         self.keystore = keystore
         self.account = account
         self.viewModel = viewModel

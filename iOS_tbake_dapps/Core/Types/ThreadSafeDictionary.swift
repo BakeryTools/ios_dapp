@@ -1,10 +1,3 @@
-//
-//  ThreadSafeDictionary.swift
-//  AlphaWallet
-//
-//  Created by Vladyslav Shepitko on 27.05.2021.
-//
-
 import UIKit
 
 class ThreadSafeDictionary<Key: Hashable, Value> {

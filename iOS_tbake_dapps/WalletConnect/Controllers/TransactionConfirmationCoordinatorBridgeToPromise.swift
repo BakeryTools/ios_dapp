@@ -35,7 +35,7 @@ private class TransactionConfirmationCoordinatorBridgeToPromise {
         }.cauterize()
     }
 
-    func promise(account: AlphaWallet.Address, transaction: UnconfirmedTransaction, configuration: TransactionConfirmationConfiguration, source: Analytics.TransactionConfirmationSource) -> Promise<ConfirmResult> {
+    func promise(account: TBakeWallet.Address, transaction: UnconfirmedTransaction, configuration: TransactionConfirmationConfiguration, source: Analytics.TransactionConfirmationSource) -> Promise<ConfirmResult> {
         let confirmationCoordinator = TransactionConfirmationCoordinator(presentingViewController: navigationController, session: session, transaction: transaction, configuration: configuration, analyticsCoordinator: analyticsCoordinator)
 
         confirmationCoordinator.delegate = self
@@ -74,7 +74,7 @@ extension TransactionConfirmationCoordinatorBridgeToPromise: TransactionConfirma
 }
 
 extension TransactionConfirmationCoordinatorBridgeToPromise: CanOpenURL {
-    func didPressViewContractWebPage(forContract contract: AlphaWallet.Address, server: RPCServer, in viewController: UIViewController) {
+    func didPressViewContractWebPage(forContract contract: TBakeWallet.Address, server: RPCServer, in viewController: UIViewController) {
         coordinator.didPressViewContractWebPage(forContract: contract, server: server, in: viewController)
     }
 
@@ -109,7 +109,7 @@ extension UIViewController {
 extension TransactionConfirmationCoordinator {
 
     //session contains account already
-    static func promise(_ navigationController: UINavigationController, session: WalletSession, coordinator: Coordinator & CanOpenURL, account: AlphaWallet.Address, transaction: UnconfirmedTransaction, configuration: TransactionConfirmationConfiguration, analyticsCoordinator: AnalyticsCoordinator, source: Analytics.TransactionConfirmationSource) -> Promise<ConfirmResult> {
+    static func promise(_ navigationController: UINavigationController, session: WalletSession, coordinator: Coordinator & CanOpenURL, account: TBakeWallet.Address, transaction: UnconfirmedTransaction, configuration: TransactionConfirmationConfiguration, analyticsCoordinator: AnalyticsCoordinator, source: Analytics.TransactionConfirmationSource) -> Promise<ConfirmResult> {
         let bridge = TransactionConfirmationCoordinatorBridgeToPromise(navigationController, session: session, coordinator: coordinator, analyticsCoordinator: analyticsCoordinator)
         return bridge.promise(account: account, transaction: transaction, configuration: configuration, source: source)
     }

@@ -3,9 +3,9 @@
 import Foundation
 import UIKit
 
-protocol AssetDefinitionStoreCoordinatorDelegate: class {
+protocol AssetDefinitionStoreCoordinatorDelegate: AnyObject {
     func show(error: Error, for viewController: AssetDefinitionStoreCoordinator)
-    func addedTokenScript(forContract contract: AlphaWallet.Address, forServer server: RPCServer, destinationFileInUse: Bool, filename: String)
+    func addedTokenScript(forContract contract: TBakeWallet.Address, forServer server: RPCServer, destinationFileInUse: Bool, filename: String)
 }
 
 struct SchemaCheckError: LocalizedError {

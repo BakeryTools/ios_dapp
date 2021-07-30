@@ -25,7 +25,7 @@ struct UserEntryOrigin {
     func extractValue(fromUserEntry userEntry: String) -> AssetInternalValue? {
         switch asType {
         case .address:
-            return AlphaWallet.Address(string: userEntry.trimmed).flatMap { .address($0) }
+            return TBakeWallet.Address(string: userEntry.trimmed).flatMap { .address($0) }
         case .uint:
             guard let userEntryNumber = BigUInt(userEntry, radix: 16) else { return BigUInt(userEntry).flatMap { .uint($0) } }
             let number: BigUInt = (bitmask & userEntryNumber) >> bitShift
@@ -33,7 +33,7 @@ struct UserEntryOrigin {
         case .utf8:
             return .string(userEntry)
         case .bytes:
-            guard let userEntryNumber = BigUInt(userEntry, radix: 16) else { return .bytes(Data(bytes: userEntry.drop0x.hexToBytes)) }
+            guard let userEntryNumber = BigUInt(userEntry, radix: 16) else { return .bytes(Data(userEntry.drop0x.hexToBytes)) }
             let number: BigUInt = (bitmask & userEntryNumber) >> bitShift
             return .bytes(number.serialize())
         case .e18:

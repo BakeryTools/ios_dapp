@@ -2,7 +2,7 @@
 
 import UIKit
 
-protocol TransferTokenCardQuantitySelectionViewControllerDelegate: class, CanOpenURL {
+protocol TransferTokenCardQuantitySelectionViewControllerDelegate: AnyObject, CanOpenURL {
     func didSelectQuantity(token: TokenObject, tokenHolder: TokenHolder, in viewController: TransferTokensCardQuantitySelectionViewController)
     func didPressViewInfo(in viewController: TransferTokensCardQuantitySelectionViewController)
 }
@@ -17,7 +17,7 @@ class TransferTokensCardQuantitySelectionViewController: UIViewController, Token
     private var viewModel: TransferTokensCardQuantitySelectionViewModel
     private let token: TokenObject
 
-    var contract: AlphaWallet.Address {
+    var contract: TBakeWallet.Address {
         return token.contractAddress
     }
     var server: RPCServer {

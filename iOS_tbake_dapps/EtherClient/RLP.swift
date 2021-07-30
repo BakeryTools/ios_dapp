@@ -59,7 +59,7 @@ public struct RLP {
     static func encodeBigUInt(_ number: BigUInt) -> Data? {
         let encoded = number.serialize()
         if encoded.isEmpty {
-            return Data(bytes: [0x80])
+            return Data([0x80])
         }
         return encodeData(encoded)
     }

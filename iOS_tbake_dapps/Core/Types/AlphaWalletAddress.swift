@@ -6,16 +6,16 @@ import TrustKeystore
 import WalletCore
 
 ///Use an enum as a namespace until Swift has proper namespaces
-public enum AlphaWallet {}
+public enum TBakeWallet {}
 
-extension AlphaWallet.Address {
+extension TBakeWallet.Address {
     private class TheadSafeAddressCache {
-        private var cache: [String: AlphaWallet.Address] = .init()
+        private var cache: [String: TBakeWallet.Address] = .init()
         private let accessQueue = DispatchQueue(label: "SynchronizedArrayAccess", attributes: .concurrent)
 
-        subscript(key: String) -> AlphaWallet.Address? {
+        subscript(key: String) -> TBakeWallet.Address? {
             get {
-                var element: AlphaWallet.Address?
+                var element: TBakeWallet.Address?
                 accessQueue.sync {
                     element = cache[key]
                 }
@@ -32,7 +32,7 @@ extension AlphaWallet.Address {
 }
 
 //TODO move this to a standard alone internal Pod with 0 external dependencies so main app and TokenScript can use it?
-extension AlphaWallet {
+extension TBakeWallet {
     public enum Address: Hashable, Codable {
         //Computing EIP55 is really slow. Cache needed when we need to create many addresses, like parsing a whole lot of Ethereum event logs
         //there is cases when cache accessing from different treads, fro this case we need to use sync access for it
@@ -106,26 +106,26 @@ extension AlphaWallet {
             return eip55String.drop0x.lowercased() == contract.drop0x.lowercased()
         }
 
-        func sameContract(as contract: AlphaWallet.Address) -> Bool {
+        func sameContract(as contract: TBakeWallet.Address) -> Bool {
             return eip55String == contract.eip55String
         }
     }
 }
 
-extension AlphaWallet.Address {
-    public static func == (lsh: AlphaWallet.Address, rhs: AlphaWallet.Address) -> Bool {
+extension TBakeWallet.Address {
+    public static func == (lsh: TBakeWallet.Address, rhs: TBakeWallet.Address) -> Bool {
         return lsh.sameContract(as: rhs)
     }
 }
 
-extension AlphaWallet.Address: CustomStringConvertible {
+extension TBakeWallet.Address: CustomStringConvertible {
     //TODO should not be using this in production code
     public var description: String {
         return eip55String
     }
 }
 
-extension AlphaWallet.Address: CustomDebugStringConvertible {
+extension TBakeWallet.Address: CustomDebugStringConvertible {
     public var debugDescription: String {
         switch self {
         case .ethereumAddress(let eip55String):
@@ -134,17 +134,17 @@ extension AlphaWallet.Address: CustomDebugStringConvertible {
     }
 }
 
-extension AlphaWallet.Address {
-    private static func deriveEthereumAddress(fromPublicKey publicKey: Data) -> AlphaWallet.Address {
+extension TBakeWallet.Address {
+    private static func deriveEthereumAddress(fromPublicKey publicKey: Data) -> TBakeWallet.Address {
         precondition(publicKey.count == 65, "Expect 64-byte public key")
         precondition(publicKey[0] == 4, "Invalid public key")
         let sha3 = publicKey[1...].sha3(.keccak256)
         let eip55String = sha3[12..<32].hex()
-        return AlphaWallet.Address(string: eip55String)!
+        return TBakeWallet.Address(string: eip55String)!
     }
 }
 
-extension AlphaWallet.Address {
+extension TBakeWallet.Address {
     var isLegacy875Contract: Bool {
         let contractString = eip55String
         return Constants.legacy875Addresses.contains { $0.sameContract(as: contractString) }
@@ -164,7 +164,7 @@ extension AlphaWallet.Address {
     }
 }
 
-extension AlphaWallet.Address {
+extension TBakeWallet.Address {
     //Produces this format: 0x1234...5678
     var truncateMiddle: String {
         let address = eip55String

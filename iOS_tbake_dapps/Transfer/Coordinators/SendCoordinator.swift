@@ -6,7 +6,7 @@ import BigInt
 import PromiseKit
 import Result
 
-protocol SendCoordinatorDelegate: class, CanOpenURL {
+protocol SendCoordinatorDelegate: AnyObject, CanOpenURL {
     func didFinish(_ result: ConfirmResult, in coordinator: SendCoordinator)
     func didCancel(in coordinator: SendCoordinator)
 }
@@ -14,14 +14,13 @@ protocol SendCoordinatorDelegate: class, CanOpenURL {
 class SendCoordinator: Coordinator {
     private let transactionType: TransactionType
     private let session: WalletSession
-    private let account: AlphaWallet.Address
+    private let account: TBakeWallet.Address
     private let keystore: Keystore
     private let storage: TokensDataStore
     private let ethPrice: Subscribable<Double>
     private let tokenHolders: [TokenHolder]!
     private let assetDefinitionStore: AssetDefinitionStore
     private let analyticsCoordinator: AnalyticsCoordinator
-    private var transactionConfirmationResult: TransactionConfirmationResult = .noData
 
     lazy var sendViewController: SendViewController = {
         return makeSendViewController()
@@ -37,7 +36,7 @@ class SendCoordinator: Coordinator {
             session: WalletSession,
             keystore: Keystore,
             storage: TokensDataStore,
-            account: AlphaWallet.Address,
+            account: TBakeWallet.Address,
             ethPrice: Subscribable<Double>,
             tokenHolders: [TokenHolder] = [],
             assetDefinitionStore: AssetDefinitionStore,
@@ -126,7 +125,7 @@ extension SendCoordinator: SendViewControllerDelegate {
         coordinator.start(fromSource: .sendFungible)
     }
 
-    func lookup(contract: AlphaWallet.Address, in viewController: SendViewController, completion: @escaping (ContractData) -> Void) {
+    func lookup(contract: TBakeWallet.Address, in viewController: SendViewController, completion: @escaping (ContractData) -> Void) {
         fetchContractDataFor(address: contract, storage: storage, assetDefinitionStore: assetDefinitionStore, completion: completion)
     }
 }
@@ -139,17 +138,22 @@ extension SendCoordinator: TransactionConfirmationCoordinatorDelegate {
 
     func coordinator(_ coordinator: TransactionConfirmationCoordinator, didCompleteTransaction result: TransactionConfirmationResult) {
         coordinator.close { [weak self] in
-            guard let strongSelf = self else { return }
+            guard let self = self else { return }
 
-            strongSelf.removeCoordinator(coordinator)
+            self.removeCoordinator(coordinator)
+            
+            switch result {
+            case .confirmationResult(let result):
+                self.delegate?.didFinish(result, in: self)
+            case .noData:
+                break
+            }
 
-            strongSelf.transactionConfirmationResult = result
-
-            let coordinator = TransactionInProgressCoordinator(presentingViewController: strongSelf.navigationController)
-            coordinator.delegate = strongSelf
-            strongSelf.addCoordinator(coordinator)
-
-            coordinator.start()
+//            let coordinator = TransactionInProgressCoordinator(presentingViewController: strongSelf.navigationController)
+//            coordinator.delegate = strongSelf
+//            strongSelf.addCoordinator(coordinator)
+//
+//            coordinator.start()
         }
     }
 
@@ -161,17 +165,12 @@ extension SendCoordinator: TransactionConfirmationCoordinatorDelegate {
 extension SendCoordinator: TransactionInProgressCoordinatorDelegate {
 
     func transactionInProgressDidDismiss(in coordinator: TransactionInProgressCoordinator) {
-        switch transactionConfirmationResult {
-        case .confirmationResult(let result):
-            delegate?.didFinish(result, in: self)
-        case .noData:
-            break
-        }
+       //do nothing
     }
 }
 
 extension SendCoordinator: CanOpenURL {
-    func didPressViewContractWebPage(forContract contract: AlphaWallet.Address, server: RPCServer, in viewController: UIViewController) {
+    func didPressViewContractWebPage(forContract contract: TBakeWallet.Address, server: RPCServer, in viewController: UIViewController) {
         delegate?.didPressViewContractWebPage(forContract: contract, server: server, in: viewController)
     }
 

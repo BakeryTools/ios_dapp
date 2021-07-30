@@ -8,61 +8,13 @@ import web3swift
 
 //TODO wrap callSmartContract() and cache into a type
 // swiftlint:disable private_over_fileprivate
-fileprivate var smartContractCallsCache = ThreadSafeContractCallsCache()
-fileprivate var web3s = ThreadSafeWeb3sCache()
+fileprivate var smartContractCallsCache = ThreadSafeDictionary<String, (promise: Promise<[String: Any]>, timestamp: Date)>()
+fileprivate var web3s = ThreadSafeDictionary<RPCServer, [TimeInterval: web3]>()
 // swiftlint:enable private_over_fileprivate
 
 func clearSmartContractCallsCache() {
     web3s.removeAll()
     smartContractCallsCache.removeAll()
-}
-
-private class ThreadSafeWeb3sCache {
-    fileprivate var cache = [RPCServer: [TimeInterval: web3]]()
-    private let queue = DispatchQueue(label: "SynchronizedArrayAccess", attributes: .concurrent)
-
-    subscript(server: RPCServer) -> [TimeInterval: web3]? {
-        get {
-            var element: [TimeInterval: web3]?
-            queue.sync {
-                element = cache[server]
-            }
-            return element
-        }
-        set {
-            queue.async(flags: .barrier) {
-                self.cache[server] = newValue
-            }
-        }
-    }
-
-    func removeAll() {
-        cache.removeAll()
-    }
-}
-
-private class ThreadSafeContractCallsCache {
-    fileprivate var cache = [String: (promise: Promise<[String: Any]>, timestamp: Date)]()
-    private let queue = DispatchQueue(label: "SynchronizedArrayAccess", attributes: .concurrent)
-
-    subscript(key: String) -> (promise: Promise<[String: Any]>, timestamp: Date)? {
-        get {
-            var element: (promise: Promise<[String: Any]>, timestamp: Date)?
-            queue.sync {
-                element = cache[key]
-            }
-            return element
-        }
-        set {
-            queue.async(flags: .barrier) {
-                self.cache[key] = newValue
-            }
-        }
-    }
-
-    func removeAll() {
-        cache.removeAll()
-    }
 }
 
 func getCachedWeb3(forServer server: RPCServer, timeout: TimeInterval) throws -> web3 {
@@ -91,7 +43,7 @@ func getCachedWeb3(forServer server: RPCServer, timeout: TimeInterval) throws ->
 }
 
 private let callSmartContractQueue = DispatchQueue(label: "com.callSmartContractQueue.updateQueue")
-func callSmartContract(withServer server: RPCServer, contract: AlphaWallet.Address, functionName: String, abiString: String, parameters: [AnyObject] = [AnyObject](), timeout: TimeInterval? = nil) -> Promise<[String: Any]> {
+func callSmartContract(withServer server: RPCServer, contract: TBakeWallet.Address, functionName: String, abiString: String, parameters: [AnyObject] = [AnyObject](), timeout: TimeInterval? = nil) -> Promise<[String: Any]> {
     let timeout: TimeInterval = 60
     //We must include the ABI string in the key because the order of elements in a dictionary when serialized in the string is not ordered. Parameters (which is ordered) should ensure it's the same function
     let cacheKey = "\(contract).\(functionName) \(parameters) \(server.chainID)"
@@ -134,7 +86,7 @@ func callSmartContract(withServer server: RPCServer, contract: AlphaWallet.Addre
             //callPromise() creates a promise. It doesn't "call" a promise. Bad name
             promiseCreator.callPromise(options: nil).done(on: .main) { d in
                 seal.fulfill(d)
-            }.catch(on: .main) { e in
+            }.catch(on: .main) { e in //Danial
                 seal.reject(e)
             }
         }
@@ -146,7 +98,7 @@ func callSmartContract(withServer server: RPCServer, contract: AlphaWallet.Addre
 
 func getEventLogs(
         withServer server: RPCServer,
-        contract: AlphaWallet.Address,
+        contract: TBakeWallet.Address,
         eventName: String,
         abiString: String,
         filter: EventFilter,
@@ -165,5 +117,5 @@ func getEventLogs(
         }
 
         return contractInstance.getIndexedEventsPromise(eventName: eventName, filter: filter)
-    } 
+    }
 }

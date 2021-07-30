@@ -400,7 +400,7 @@ extension TransactionConfirmationViewModel {
             }
         }
 
-        private let address: AlphaWallet.Address
+        private let address: TBakeWallet.Address
         private let configurator: TransactionConfigurator
         private var configurationTitle: String {
             configurator.selectedConfigurationType.title
@@ -427,7 +427,7 @@ extension TransactionConfirmationViewModel {
         }
         let session: WalletSession
 
-        init(address: AlphaWallet.Address, configurator: TransactionConfigurator, functionCallMetaData: DecodedFunctionCall, ethPrice: Subscribable<Double>) {
+        init(address: TBakeWallet.Address, configurator: TransactionConfigurator, functionCallMetaData: DecodedFunctionCall, ethPrice: Subscribable<Double>) {
             self.address = address
             self.configurator = configurator
             self.functionCallMetaData = functionCallMetaData

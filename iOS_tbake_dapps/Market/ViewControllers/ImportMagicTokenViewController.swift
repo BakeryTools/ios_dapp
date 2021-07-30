@@ -3,7 +3,7 @@
 import UIKit
 import Alamofire
 
-protocol ImportMagicTokenViewControllerDelegate: class, CanOpenURL {
+protocol ImportMagicTokenViewControllerDelegate: AnyObject, CanOpenURL {
     func didPressDone(in viewController: ImportMagicTokenViewController)
     func didPressImport(in viewController: ImportMagicTokenViewController)
 }
@@ -19,7 +19,7 @@ class ImportMagicTokenViewController: UIViewController, OptionalTokenVerifiableS
     private let header = TokensCardViewControllerTitleHeader()
     lazy private var tokenCardRowView = TokenCardRowView(analyticsCoordinator: analyticsCoordinator, server: server, tokenView: .viewIconified, assetDefinitionStore: assetDefinitionStore)
     private let statusLabel = UILabel()
-    private let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
+    private let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
     private var costStackView: UIStackView?
     private let ethCostLabelLabel = UILabel()
     private let ethCostLabel = UILabel()
@@ -32,7 +32,7 @@ class ImportMagicTokenViewController: UIViewController, OptionalTokenVerifiableS
     let assetDefinitionStore: AssetDefinitionStore
     weak var delegate: ImportMagicTokenViewControllerDelegate?
 
-    var contract: AlphaWallet.Address? {
+    var contract: TBakeWallet.Address? {
         didSet {
             guard url != nil else { return }
             updateNavigationRightBarButtons(withTokenScriptFileStatus: tokenScriptFileStatus, hasShowInfoButton: false)

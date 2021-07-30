@@ -18,10 +18,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     private var appCoordinator: AppCoordinator!
-    private let SNSPlatformApplicationArn = "arn:aws:sns:us-west-2:400248756644:app/APNS/AlphaWallet-iOS"
-    private let SNSPlatformApplicationArnSANDBOX = "arn:aws:sns:us-west-2:400248756644:app/APNS_SANDBOX/AlphaWallet-testing"
-    private let identityPoolId = "us-west-2:42f7f376-9a3f-412e-8c15-703b5d50b4e2"
-    private let SNSSecurityTopicEndpoint = "arn:aws:sns:us-west-2:400248756644:security"
+    private let SNSPlatformApplicationArn = "" //"arn:aws:sns:us-west-2:400248756644:app/APNS/AlphaWallet-iOS"
+    private let SNSPlatformApplicationArnSANDBOX =  "" //"arn:aws:sns:us-west-2:400248756644:app/APNS_SANDBOX/AlphaWallet-testing"
+    private let identityPoolId = "" //"us-west-2:42f7f376-9a3f-412e-8c15-703b5d50b4e2"
+    private let SNSSecurityTopicEndpoint = ""//"arn:aws:sns:us-west-2:400248756644:security"
     //This is separate coordinator for the protection of the sensitive information.
     private lazy var protectionCoordinator: ProtectionCoordinator = {
         return ProtectionCoordinator()
@@ -32,6 +32,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.shouldResignOnTouchOutside = true
         
+        IQKeyboardManager.shared.disabledTouchResignedClasses.append(LockPasscodeViewController.self)
+        IQKeyboardManager.shared.disabledToolbarClasses.append(LockPasscodeViewController.self)
+        
+        
         window = UIWindow(frame: UIScreen.main.bounds)
         //Necessary to make UIAlertController have the correct tint colors, despite already doing: `UIWindow.appearance().tintColor = Colors.appTint`
         window?.tintColor = Colors.appTint
@@ -39,6 +43,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // set dark mode according to user preferences
         let darkMode = UserDefaults.standard.bool(forKey: "darkMode")
         self.setDarkMode(isDark: darkMode)
+        
+        // Shake to share report
+        let appName = Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String
+        let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+        let deviceVersion = UIDevice.current.systemVersion
+        let deviceModel = UIDevice.modelName
+        let mobileId = UIDevice.current.identifierForVendor?.uuidString
+        
+        BugShaker.configure(to: ["a.danial0606@gmail.com"], subject: "BakeryTools iOS App Bug Report / Feedback", body: """
+            <strong>App Version:</strong> \(appName ?? "") (v\(appVersion ?? ""))<br/>
+            <strong>iOS Version:</strong> \(deviceVersion)<br/>
+            <strong>Device Model:</strong> \(deviceModel)<br/>
+            <strong>Mobile ID:</strong> \(mobileId ?? "")<br/>
+            """
+        )
 
         do {
             //NOTE: we move AnalyticsService creation from AppCoordinator.init method to allow easily replace

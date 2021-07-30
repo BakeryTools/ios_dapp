@@ -330,7 +330,7 @@ struct TokenScriptFilterParser {
         private let values: [AttributeId: AssetAttributeSyntaxValue]
         private var tokens: [Lexer.Token]
 
-        static func valuesWithImplicitValues(_ values: [AttributeId: AssetAttributeSyntaxValue], ownerAddress: AlphaWallet.Address, symbol: String, fungibleBalance: BigInt?) -> [AttributeId: AssetAttributeSyntaxValue] {
+        static func valuesWithImplicitValues(_ values: [AttributeId: AssetAttributeSyntaxValue], ownerAddress: TBakeWallet.Address, symbol: String, fungibleBalance: BigInt?) -> [AttributeId: AssetAttributeSyntaxValue] {
             let todayString = GeneralisedTime().formatAsGeneralisedTime.substring(to: 8)
             var implicitValues: [AttributeId: AssetAttributeSyntaxValue] = [
                 "symbol": .init(syntax: .directoryString, value: .string(symbol)),
@@ -496,7 +496,7 @@ struct TokenScriptFilterParser {
 
     let expression: String
 
-    func parse(withValues values: [AttributeId: AssetAttributeSyntaxValue], ownerAddress: AlphaWallet.Address, symbol: String, fungibleBalance: BigInt?) -> Bool {
+    func parse(withValues values: [AttributeId: AssetAttributeSyntaxValue], ownerAddress: TBakeWallet.Address, symbol: String, fungibleBalance: BigInt?) -> Bool {
         let tokens = Lexer().tokenize(expression: expression)
         let values = Parser.valuesWithImplicitValues(values, ownerAddress: ownerAddress, symbol: symbol, fungibleBalance: fungibleBalance)
         return Parser(tokens: tokens, values: values).parse()

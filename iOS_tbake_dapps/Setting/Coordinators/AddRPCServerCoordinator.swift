@@ -7,9 +7,9 @@
 
 import UIKit
 
-protocol AddRPCServerCoordinatorDelegate: class {
+protocol AddRPCServerCoordinatorDelegate: AnyObject {
     func didDismiss(in coordinator: AddRPCServerCoordinator)
-    func restartToAddEnableAAndSwitchBrowserToServer(in coordinator: AddRPCServerCoordinator)
+    func restartToAddEnableAndSwitchBrowserToServer(in coordinator: AddRPCServerCoordinator)
 }
 
 class AddRPCServerCoordinator: NSObject, Coordinator {
@@ -65,7 +65,7 @@ extension AddRPCServerCoordinator: AddRPCServerViewControllerDelegate {
 
 extension AddRPCServerCoordinator: AddCustomChainDelegate {
     func notifyAddCustomChainQueuedSuccessfully(in addCustomChain: AddCustomChain) {
-        delegate?.restartToAddEnableAAndSwitchBrowserToServer(in: self)
+        delegate?.restartToAddEnableAndSwitchBrowserToServer(in: self)
         //Note necessary to pop the navigation controller since we are restarting the UI
     }
 

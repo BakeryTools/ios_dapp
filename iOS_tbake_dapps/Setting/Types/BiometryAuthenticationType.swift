@@ -27,6 +27,8 @@ enum BiometryAuthenticationType {
             return .touchID
         case .faceID:
             return .faceID
+        @unknown default:
+            return .none
         }
     }
 }

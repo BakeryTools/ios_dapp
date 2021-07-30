@@ -1,5 +1,3 @@
-// Copyright © 2018 Stormbird PTE. LTD.
-
 import Foundation
 import BigInt
 import PromiseKit
@@ -11,18 +9,16 @@ enum TokenError: Error {
     case failedToFetch
 }
 
-protocol TokensDataStoreDelegate: class {
+protocol TokensDataStoreDelegate: AnyObject {
     func didUpdate(result: ResultResult<TokensViewModel, TokenError>.t, refreshImmediately: Bool)
 }
 
-protocol TokensDataStorePriceDelegate: class {
+protocol TokensDataStorePriceDelegate: AnyObject {
     func updatePrice(forTokenDataStore tokensDataStore: TokensDataStore)
 }
 
 // swiftlint:disable type_body_length
 class TokensDataStore {
-    typealias ContractAndJson = (contract: AlphaWallet.Address, json: String)
-
     static let fetchContractDataTimeout = TimeInterval(4)
 
     //Unlike `SessionManager.default`, this doesn't add default HTTP headers. It looks like POAP token URLs (e.g. https://api.poap.xyz/metadata/2503/278569) don't like them and return `406` in the JSON. It's strangely not responsible when curling, but only when running in the app
@@ -220,7 +216,7 @@ class TokensDataStore {
         refreshBalance()
     }
 
-    func getContractName(for address: AlphaWallet.Address,
+    func getContractName(for address: TBakeWallet.Address,
                          completion: @escaping (ResultResult<String, AnyError>.t) -> Void) {
         withRetry(times: numberOfTimesToRetryFetchContractData) { [weak self] triggerRetry in
             guard let strongSelf = self else { return }
@@ -237,7 +233,7 @@ class TokensDataStore {
         }
     }
 
-    func getContractSymbol(for address: AlphaWallet.Address,
+    func getContractSymbol(for address: TBakeWallet.Address,
                            completion: @escaping (ResultResult<String, AnyError>.t) -> Void) {
         withRetry(times: numberOfTimesToRetryFetchContractData) { [weak self] triggerRetry in
             guard let strongSelf = self else { return }
@@ -254,7 +250,7 @@ class TokensDataStore {
         }
     }
 
-    func getDecimals(for address: AlphaWallet.Address,
+    func getDecimals(for address: TBakeWallet.Address,
                      completion: @escaping (ResultResult<UInt8, AnyError>.t) -> Void) {
         withRetry(times: numberOfTimesToRetryFetchContractData) { [weak self] triggerRetry in
             guard let strongSelf = self else { return }
@@ -271,7 +267,7 @@ class TokensDataStore {
         }
     }
 
-    func getContractName(for address: AlphaWallet.Address) -> Promise<String> {
+    func getContractName(for address: TBakeWallet.Address) -> Promise<String> {
         Promise { seal in
             getContractName(for: address) { (result) in
                 switch result {
@@ -284,7 +280,7 @@ class TokensDataStore {
         }
     }
 
-    func getContractSymbol(for address: AlphaWallet.Address) -> Promise<String> {
+    func getContractSymbol(for address: TBakeWallet.Address) -> Promise<String> {
         Promise { seal in
             getContractSymbol(for: address) { result in
                 switch result {
@@ -297,7 +293,7 @@ class TokensDataStore {
         }
     }
 
-    func getDecimals(for address: AlphaWallet.Address) -> Promise<UInt8> {
+    func getDecimals(for address: TBakeWallet.Address) -> Promise<UInt8> {
         Promise { seal in
             getDecimals(for: address) { result in
                 switch result {
@@ -310,7 +306,7 @@ class TokensDataStore {
         }
     }
 
-    func getTokenType(for address: AlphaWallet.Address) -> Promise<TokenType> {
+    func getTokenType(for address: TBakeWallet.Address) -> Promise<TokenType> {
         Promise { seal in
             getTokenType(for: address) { tokenType in
                 seal.fulfill(tokenType)
@@ -318,7 +314,7 @@ class TokensDataStore {
         }
     }
 
-    func getERC20Balance(for address: AlphaWallet.Address, completion: @escaping (ResultResult<BigInt, AnyError>.t) -> Void) {
+    func getERC20Balance(for address: TBakeWallet.Address, completion: @escaping (ResultResult<BigInt, AnyError>.t) -> Void) {
         withRetry(times: numberOfTimesToRetryFetchContractData) { [weak self] triggerRetry in
             guard let strongSelf = self else { return }
             strongSelf.getERC20BalanceCoordinator.getBalance(for: strongSelf.account.address, contract: address) { result in
@@ -334,7 +330,7 @@ class TokensDataStore {
         }
     }
 
-    func getERC875Balance(for address: AlphaWallet.Address,
+    func getERC875Balance(for address: TBakeWallet.Address,
                           completion: @escaping (ResultResult<[String], AnyError>.t) -> Void) {
         withRetry(times: numberOfTimesToRetryFetchContractData) { [weak self] triggerRetry in
             guard let strongSelf = self else { return }
@@ -351,7 +347,7 @@ class TokensDataStore {
         }
     }
 
-    func getERC721ForTicketsBalance(for address: AlphaWallet.Address,
+    func getERC721ForTicketsBalance(for address: TBakeWallet.Address,
                                     completion: @escaping (ResultResult<[String], AnyError>.t) -> Void) {
         withRetry(times: numberOfTimesToRetryFetchContractData) { [weak self] triggerRetry in
             guard let strongSelf = self else { return }
@@ -369,7 +365,7 @@ class TokensDataStore {
     }
 
     //TODO should callers call tokenURI and so on, instead?
-    func getERC721Balance(for address: AlphaWallet.Address, completion: @escaping (ResultResult<[String], AnyError>.t) -> Void) {
+    func getERC721Balance(for address: TBakeWallet.Address, completion: @escaping (ResultResult<[String], AnyError>.t) -> Void) {
         withRetry(times: numberOfTimesToRetryFetchContractData) { [weak self] triggerRetry in
             guard let strongSelf = self else { return }
             strongSelf.getERC721BalanceCoordinator.getERC721TokenBalance(for: strongSelf.account.address, contract: address) { result in
@@ -394,7 +390,7 @@ class TokensDataStore {
         return openSea.makeFetchPromise(forOwner: account.address)
     }
 
-    func getTokenType(for address: AlphaWallet.Address,
+    func getTokenType(for address: TBakeWallet.Address,
                       completion: @escaping (TokenType) -> Void) {
         var knownToBeNotERC721 = false
         var knownToBeNotERC875 = false
@@ -462,13 +458,13 @@ class TokensDataStore {
         }
     }
 
-    func tokenThreadSafe(forContract contract: AlphaWallet.Address) -> TokenObject? {
+    func tokenThreadSafe(forContract contract: TBakeWallet.Address) -> TokenObject? {
         realm.threadSafe.objects(TokenObject.self)
                 .filter("contract = '\(contract.eip55String)'")
                 .filter("chainId = \(chainId)").first
     }
 
-    func token(forContract contract: AlphaWallet.Address) -> TokenObject? {
+    func token(forContract contract: TBakeWallet.Address) -> TokenObject? {
         realm.objects(TokenObject.self)
                 .filter("contract = '\(contract.eip55String)'")
                 .filter("chainId = \(chainId)").first
@@ -560,7 +556,7 @@ class TokensDataStore {
         }.cauterize()
     }
 
-    private func updateNonOpenSeaNonFungiblesBalance(erc721ContractsNotFoundInOpenSea contracts: [AlphaWallet.Address], tokens: [TokenObject]) {
+    private func updateNonOpenSeaNonFungiblesBalance(erc721ContractsNotFoundInOpenSea contracts: [TBakeWallet.Address], tokens: [TokenObject]) {
         let promises = contracts.map { updateNonOpenSeaNonFungiblesBalance(contract: $0, tokens: tokens) }
         firstly {
             when(resolved: promises)
@@ -569,32 +565,21 @@ class TokensDataStore {
         }
     }
 
-    private func updateNonOpenSeaNonFungiblesBalance(contract: AlphaWallet.Address, tokens: [TokenObject]) -> Promise<Void> {
+    private func updateNonOpenSeaNonFungiblesBalance(contract: TBakeWallet.Address, tokens: [TokenObject]) -> Promise<Void> {
         guard let erc721TokenIdsFetcher = erc721TokenIdsFetcher else { return Promise { _ in } }
         return firstly {
             erc721TokenIdsFetcher.tokenIdsForErc721Token(contract: contract, inAccount: account.address)
-        }.then {  tokenIds -> Promise<[ContractAndJson]> in
-            let guarantees: [Guarantee<ContractAndJson>] = tokenIds.map { self.fetchNonFungibleJson(forTokenId: $0, address: contract, tokens: tokens) }
+        }.then { tokenIds -> Promise<[String]> in
+            let guarantees: [Guarantee<String>] = tokenIds.map { self.fetchNonFungibleJson(forTokenId: $0, address: contract, tokens: tokens) }
             return when(fulfilled: guarantees)
-        }.done { listOfContractAndJsonResult in
-            var contractsAndJsons: [AlphaWallet.Address: [String]] = .init()
-            for each in listOfContractAndJsonResult {
-                if var listOfJson = contractsAndJsons[each.contract] {
-                    listOfJson.append(each.json)
-                    contractsAndJsons[each.contract] = listOfJson
-                } else {
-                    contractsAndJsons[each.contract] = [each.json]
-                }
-            }
-            for (contract, jsons) in contractsAndJsons {
-                guard let tokenObject = tokens.first(where: { $0.contractAddress.sameContract(as: contract) }) else { continue }
-                self.update(token: tokenObject, action: .nonFungibleBalance(jsons))
-            }
+        }.done { jsons in
+            guard let tokenObject = tokens.first(where: { $0.contractAddress.sameContract(as: contract) }) else { return }
+            self.update(token: tokenObject, action: .nonFungibleBalance(jsons))
         }.asVoid()
     }
 
-    private func fetchNonFungibleJson(forTokenId tokenId: String, address: AlphaWallet.Address, tokens: [TokenObject]) -> Guarantee<ContractAndJson> {
-        return firstly {
+    private func fetchNonFungibleJson(forTokenId tokenId: String, address: TBakeWallet.Address, tokens: [TokenObject]) -> Guarantee<String> {
+        firstly {
             Erc721Contract(server: server).getErc721TokenUri(for: tokenId, contract: address)
         }.then {
             self.fetchTokenJson(forTokenId: tokenId, uri: $0, address: address, tokens: tokens)
@@ -609,11 +594,11 @@ class TokensDataStore {
                 jsonDictionary["thumbnailUrl"] = ""
                 jsonDictionary["externalLink"] = ""
             }
-            return .value((contract: address, json: jsonDictionary.rawString()!))
+            return .value(jsonDictionary.rawString()!)
         }
     }
 
-    private func fetchTokenJson(forTokenId tokenId: String, uri originalUri: URL, address: AlphaWallet.Address, tokens: [TokenObject]) -> Promise<ContractAndJson> {
+    private func fetchTokenJson(forTokenId tokenId: String, uri originalUri: URL, address: TBakeWallet.Address, tokens: [TokenObject]) -> Promise<String> {
         struct Error: Swift.Error {
         }
         let uri = originalUri.rewrittenIfIpfs
@@ -638,7 +623,7 @@ class TokensDataStore {
                         jsonDictionary["externalLink"] = JSON(jsonDictionary["home_url"].string ?? jsonDictionary["external_url"].string ?? "")
                     }
                     if let jsonString = jsonDictionary.rawString() {
-                        return (contract: address, json: jsonString)
+                        return jsonString
                     } else {
                         throw Error()
                     }
@@ -649,7 +634,7 @@ class TokensDataStore {
         }
     }
 
-    private func updateOpenSeaNonFungiblesBalanceAndAttributes(contractToOpenSeaNonFungibles: [AlphaWallet.Address: [OpenSeaNonFungible]], tokens: [TokenObject]) {
+    private func updateOpenSeaNonFungiblesBalanceAndAttributes(contractToOpenSeaNonFungibles: [TBakeWallet.Address: [OpenSeaNonFungible]], tokens: [TokenObject]) {
         for (contract, openSeaNonFungibles) in contractToOpenSeaNonFungibles {
             var listOfJson = [String]()
             var anyNonFungible: OpenSeaNonFungible?
@@ -867,7 +852,7 @@ class TokensDataStore {
     }
 
     ///Note that it's possible for a contract to have the same tokenId repeated
-    func update(contract: AlphaWallet.Address, tokenId: String, action: TokenBalanceUpdateAction) {
+    func update(contract: TBakeWallet.Address, tokenId: String, action: TokenBalanceUpdateAction) {
         guard let token = token(forContract: contract) else { return }
         let tokenIdInt = BigUInt(tokenId.drop0x, radix: 16)
         let balances = token.balance.filter { BigUInt($0.balance.drop0x, radix: 16) == tokenIdInt }
@@ -888,7 +873,7 @@ class TokensDataStore {
         }
     }
 
-    func jsonAttributeValue(forContract contract: AlphaWallet.Address, tokenId: String, attributeId: String) -> Any? {
+    func jsonAttributeValue(forContract contract: TBakeWallet.Address, tokenId: String, attributeId: String) -> Any? {
         guard let token = token(forContract: contract) else { return nil }
         let tokenIdInt = BigUInt(tokenId.drop0x, radix: 16)
         guard let balance = token.balance.first(where: { BigUInt($0.balance.drop0x, radix: 16) == tokenIdInt }) else { return nil }
@@ -924,6 +909,11 @@ class TokensDataStore {
         //We should make sure that timer is invalidate.
         pricesTimer.invalidate()
         ethTimer.invalidate()
+    }
+
+    func writeJsonForTransactions(toUrl url: URL) {
+        guard let transactionStorage = erc721TokenIdsFetcher as? TransactionsStorage else { return }
+        transactionStorage.writeJsonForTransactions(toUrl: url)
     }
 }
 // swiftlint:enable type_body_length

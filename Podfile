@@ -1,5 +1,7 @@
 # Uncomment the next line to define a global platform for your project
 platform :ios, '12.0'
+inhibit_all_warnings!
+source 'https://cdn.cocoapods.org/'
 
 target 'iOS_tbake_dapps' do
   # Comment the next line if you don't want to use dynamic frameworks
@@ -29,8 +31,8 @@ target 'iOS_tbake_dapps' do
   pod 'MBProgressHUD'
   pod 'StatefulViewController'
 
-  pod 'QRCodeReaderViewController', :git=>'https://github.com/AlphaWallet/QRCodeReaderViewController.git', :commit=>'30d1a2a7d167d0d207ae0ae3a4d81bcf473d7a65'
-  pod 'KeychainSwift', :git=>'https://github.com/AlphaWallet/keychain-swift.git', :commit=> 'b797d40a9d08ec509db4335140cf2259b226e6a2'
+  pod 'QRCodeReaderViewController', :git=>'https://github.com/danial09606/QRCodeReaderViewController.git', :commit=>'30d1a2a7d167d0d207ae0ae3a4d81bcf473d7a65'
+  pod 'KeychainSwift', :git=>'https://github.com/danial09606/keychain-swift.git', :commit=> 'b797d40a9d08ec509db4335140cf2259b226e6a2'
   pod 'SwiftLint'
   pod 'SeedStackViewController'
   pod 'RealmSwift', '5.5.1'
@@ -38,11 +40,11 @@ target 'iOS_tbake_dapps' do
   pod 'JavaScriptKit'
   pod 'CryptoSwift', '~> 1.0'
   pod 'SwiftyXMLParser', :git => 'https://github.com/yahoojapan/SwiftyXMLParser.git'
-  pod 'AlphaWalletWeb3Provider', :git=>'https://github.com/AlphaWallet/AlphaWallet-web3-provider', :commit => '308dbd3c7f70487b90aabdeef8641b7ad959c26f'
-  pod 'TrezorCrypto', :git=>'https://github.com/AlphaWallet/trezor-crypto-ios.git', :commit => '50c16ba5527e269bbc838e80aee5bac0fe304cc7'
-  pod 'TrustKeystore', :git => 'https://github.com/alpha-wallet/trust-keystore.git', :commit => 'c0bdc4f6ffc117b103e19d17b83109d4f5a0e764'
+  pod 'AlphaWalletWeb3Provider', :git=>'https://github.com/danial09606/AlphaWallet-web3-provider.git', :commit => '308dbd3c7f70487b90aabdeef8641b7ad959c26f'
+  pod 'TrezorCrypto', :git=>'https://github.com/danial09606/trezor-crypto-ios.git', :commit => '50c16ba5527e269bbc838e80aee5bac0fe304cc7'
+  pod 'TrustKeystore', :git => 'https://github.com/danial09606/latest-keystore-snapshot.git', :commit => 'c0bdc4f6ffc117b103e19d17b83109d4f5a0e764'
   pod 'SwiftyJSON'
-  pod 'web3swift', :git => 'https://github.com/AlphaWallet/web3swift.git', :commit=> 'cce12b1c421f18b5768e5249a8343932737a51fe'
+  pod 'web3swift', :git => 'https://github.com/danial09606/web3swift.git', :commit=> 'cce12b1c421f18b5768e5249a8343932737a51fe'
   pod 'SAMKeychain'
   pod 'PromiseKit/CorePromise'
   pod 'PromiseKit/Alamofire'
@@ -80,20 +82,9 @@ post_install do |installer|
         config.build_settings['SWIFT_VERSION'] = '4.2'
       end
     end
-    
+
     target.build_configurations.each do |config|
-      if ['Kingfisher'].include? target.name
-        #no op
-      else
-        #xCode 12 requires minimum IPHONEOS_DEPLOYMENT_TARGET 9.0
-        if config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] <= '8.0'
-          config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.0';
-        end
-      end
-      #WalletConnectSwift requires minimum deploy target 11.0
-      if ['WalletConnectSwift'].include? target.name
-        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '11.0';
-      end
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '11.0';
     end
   end
 end

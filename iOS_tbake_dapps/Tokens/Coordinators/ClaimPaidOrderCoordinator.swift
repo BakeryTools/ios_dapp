@@ -8,7 +8,7 @@ import BigInt
 import Result
 import TrustKeystore
 
-protocol ClaimOrderCoordinatorDelegate: class, CanOpenURL {
+protocol ClaimOrderCoordinatorDelegate: AnyObject, CanOpenURL {
     func coordinator(_ coordinator: ClaimPaidOrderCoordinator, didFailTransaction error: AnyError)
     func didClose(in coordinator: ClaimPaidOrderCoordinator)
     func coordinator(_ coordinator: ClaimPaidOrderCoordinator, didCompleteTransaction result: TransactionConfirmationResult)
@@ -89,8 +89,8 @@ class ClaimPaidOrderCoordinator: Coordinator {
                              v: UInt8,
                              r: String,
                              s: String,
-                             contractAddress: AlphaWallet.Address,
-                             recipient: AlphaWallet.Address,
+                             contractAddress: TBakeWallet.Address,
+                             recipient: TBakeWallet.Address,
                              completion: @escaping (Swift.Result<Data, AnyError>) -> Void
         ) {
         if let tokenIds = signedOrder.order.tokenIds, !tokenIds.isEmpty {
@@ -113,7 +113,7 @@ class ClaimPaidOrderCoordinator: Coordinator {
                                    v: UInt8,
                                    r: String,
                                    s: String,
-                                   contractAddress: AlphaWallet.Address,
+                                   contractAddress: TBakeWallet.Address,
                                    completion: @escaping (Swift.Result<Data, AnyError>) -> Void) {
         do {
             let parameters: [Any] = [expiry, indices.map({ BigUInt($0) }), BigUInt(v), Data(_hex: r), Data(_hex: s)]
@@ -144,7 +144,7 @@ class ClaimPaidOrderCoordinator: Coordinator {
                                       v: UInt8,
                                       r: String,
                                       s: String,
-                                      recipient: AlphaWallet.Address,
+                                      recipient: TBakeWallet.Address,
                                       completion: @escaping (Swift.Result<Data, AnyError>) -> Void) {
 
         do {
@@ -170,7 +170,7 @@ class ClaimPaidOrderCoordinator: Coordinator {
             v: UInt8,
             r: String,
             s: String,
-            recipient: AlphaWallet.Address,
+            recipient: TBakeWallet.Address,
             completion: @escaping (Swift.Result<Data, AnyError>) -> Void
     ) {
         do {
@@ -223,7 +223,7 @@ extension ClaimPaidOrderCoordinator: TransactionConfirmationCoordinatorDelegate 
 }
 
 extension ClaimPaidOrderCoordinator: CanOpenURL {
-    func didPressViewContractWebPage(forContract contract: AlphaWallet.Address, server: RPCServer, in viewController: UIViewController) {
+    func didPressViewContractWebPage(forContract contract: TBakeWallet.Address, server: RPCServer, in viewController: UIViewController) {
         delegate?.didPressViewContractWebPage(forContract: contract, server: server, in: viewController)
     }
 

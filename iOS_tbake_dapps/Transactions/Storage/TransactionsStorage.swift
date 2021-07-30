@@ -3,8 +3,8 @@ import BigInt
 import RealmSwift
 import PromiseKit
 
-protocol TransactionsStorageDelegate: class {
-    func didAddTokensWith(contracts: [AlphaWallet.Address], inTransactionsStorage: TransactionsStorage)
+protocol TransactionsStorageDelegate: AnyObject {
+    func didAddTokensWith(contracts: [TBakeWallet.Address], inTransactionsStorage: TransactionsStorage)
 }
 
 class TransactionsStorage {
@@ -57,7 +57,7 @@ class TransactionsStorage {
                 .isEmpty
     }
 
-    private func addTokensWithContractAddresses(fromTransactions transactions: [Transaction], contractsAndTokenTypes: [AlphaWallet.Address: TokenType], realm: Realm) {
+    private func addTokensWithContractAddresses(fromTransactions transactions: [Transaction], contractsAndTokenTypes: [TBakeWallet.Address: TokenType], realm: Realm) {
         let tokens = self.tokens(from: transactions, contractsAndTokenTypes: contractsAndTokenTypes)
         delegate?.didAddTokensWith(contracts: Array(Set(tokens.map { $0.address })), inTransactionsStorage: self)
         if !tokens.isEmpty {
@@ -65,7 +65,7 @@ class TransactionsStorage {
         }
     }
 
-    private func addTokensWithContractAddresses(fromTransactions transactions: [Transaction], contractsAndTokenTypes: [AlphaWallet.Address: TokenType]) {
+    private func addTokensWithContractAddresses(fromTransactions transactions: [Transaction], contractsAndTokenTypes: [TBakeWallet.Address: TokenType]) {
         let tokens = self.tokens(from: transactions, contractsAndTokenTypes: contractsAndTokenTypes)
         delegate?.didAddTokensWith(contracts: Array(Set(tokens.map { $0.address })), inTransactionsStorage: self)
         if !tokens.isEmpty {
@@ -73,7 +73,7 @@ class TransactionsStorage {
         }
     }
 
-    func add(transactions: [Transaction], transactionsToPullContractsFrom: [Transaction], contractsAndTokenTypes: [AlphaWallet.Address: TokenType]) {
+    func add(transactions: [Transaction], transactionsToPullContractsFrom: [Transaction], contractsAndTokenTypes: [TBakeWallet.Address: TokenType]) {
         guard !transactions.isEmpty else { return }
         let transactionsToCommit = filterTransactionsToNotOverrideERC20Transactions(transactions, realm: realm)
         realm.beginWrite()
@@ -153,7 +153,7 @@ class TransactionsStorage {
         }
     }
 
-    func add(transactions: [TransactionInstance], transactionsToPullContractsFrom: [TransactionInstance], contractsAndTokenTypes: [AlphaWallet.Address: TokenType]) {
+    func add(transactions: [TransactionInstance], transactionsToPullContractsFrom: [TransactionInstance], contractsAndTokenTypes: [TBakeWallet.Address: TokenType]) {
 
         guard !transactions.isEmpty else { return }
 
@@ -194,7 +194,7 @@ class TransactionsStorage {
         return items
     }
 
-    private func tokens(from transactions: [Transaction], contractsAndTokenTypes: [AlphaWallet.Address: TokenType]) -> [TokenUpdate] {
+    private func tokens(from transactions: [Transaction], contractsAndTokenTypes: [TBakeWallet.Address: TokenType]) -> [TokenUpdate] {
         let tokens: [TokenUpdate] = transactions.flatMap { transaction -> [TokenUpdate] in
             let tokenUpdates: [TokenUpdate] = transaction.localizedOperations.compactMap { operation in
                 guard let contract = operation.contractAddress else { return nil }
@@ -263,10 +263,20 @@ class TransactionsStorage {
             realm.delete(realm.objects(Transaction.self))
         }
     }
+
+    func writeJsonForTransactions(toUrl url: URL) {
+        do {
+            let data = try functional.generateJsonForTransactions(transactionStorage: self, toUrl: url)
+            try data.write(to: url)
+            NSLog("Written transactions for \(server) to JSON to: \(url.absoluteString)")
+        } catch {
+            NSLog("Error writing transactions for \(server) to JSON: \(url.absoluteString) error: \(error)")
+        }
+    }
 }
 
 extension TransactionsStorage: Erc721TokenIdsFetcher {
-    func tokenIdsForErc721Token(contract: AlphaWallet.Address, inAccount account: AlphaWallet.Address) -> Promise<[String]> {
+    func tokenIdsForErc721Token(contract: TBakeWallet.Address, inAccount account: TBakeWallet.Address) -> Promise<[String]> {
         Promise { seal in
             //Important to sort ascending to figure out ownership from transfers in and out
             //TODO is this really slow? getting all transactions, right?
@@ -278,7 +288,9 @@ extension TransactionsStorage: Erc721TokenIdsFetcher {
             for each in operations {
                 let tokenId = each.tokenId
                 guard !tokenId.isEmpty else { continue }
-                if account.sameContract(as: each.from) {
+                if account.sameContract(as: each.from) && account.sameContract(as: each.to) {
+                    //no-op
+                } else if account.sameContract(as: each.from) {
                     tokenIds.remove(tokenId)
                 } else if account.sameContract(as: each.to) {
                     tokenIds.insert(tokenId)
@@ -288,5 +300,34 @@ extension TransactionsStorage: Erc721TokenIdsFetcher {
             }
             seal.fulfill(Array(tokenIds))
         }
+    }
+}
+
+extension TransactionsStorage {
+    class functional {}
+}
+
+extension TransactionsStorage.functional {
+    static func generateJsonForTransactions(transactionStorage: TransactionsStorage, toUrl url: URL) throws -> Data {
+        struct Operation: Encodable {
+            let from: String
+            let to: String
+            let contract: String
+            let tokenId: String
+        }
+        struct Transaction: Encodable {
+            let transactionHash: String
+            let operations: [Operation]
+        }
+
+        let transactions = transactionStorage.objects.sorted(byKeyPath: "date", ascending: true)
+        let transactionsToWrite: [Transaction] = transactions.map { eachTransaction in
+            let operations = eachTransaction.localizedOperations
+            let operationsToWrite: [Operation] = operations.map { eachOp in
+                .init(from: eachOp.from, to: eachOp.to, contract: eachOp.contractAddress?.eip55String ?? "", tokenId: eachOp.tokenId)
+            }
+            return .init(transactionHash: eachTransaction.id, operations: operationsToWrite)
+        }
+        return try JSONEncoder().encode(transactionsToWrite)
     }
 }

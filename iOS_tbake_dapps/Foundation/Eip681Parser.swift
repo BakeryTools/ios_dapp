@@ -7,10 +7,10 @@ import PromiseKit
 //In the future, this can include invoking functions other than for sending of Ether and tokens
 enum Eip681Type {
     case nativeCryptoSend(server: RPCServer?, recipient: AddressOrEnsName, amount: String)
-    case erc20Send(contract: AlphaWallet.Address, server: RPCServer?, recipient: AddressOrEnsName?, amount: String)
+    case erc20Send(contract: TBakeWallet.Address, server: RPCServer?, recipient: AddressOrEnsName?, amount: String)
     case invalidOrNotSupported
 
-    var parameters: (contract: AlphaWallet.Address, RPCServer?, recipient: AddressOrEnsName?, amount: String)? {
+    var parameters: (contract: TBakeWallet.Address, RPCServer?, recipient: AddressOrEnsName?, amount: String)? {
         switch self {
         case .nativeCryptoSend(let server, let recipient, let amount):
             return (Constants.nativeCryptoAddressInDatabase, server, recipient, amount)

@@ -91,7 +91,7 @@ class TokensCardCoordinator: NSObject, Coordinator {
         }
     }
 
-    private func refreshScreen(forContract contract: AlphaWallet.Address) {
+    private func refreshScreen(forContract contract: TBakeWallet.Address) {
         guard contract.sameContract(as: token.contractAddress) else { return }
         for each in navigationController.viewControllers {
             switch each {
@@ -639,7 +639,7 @@ extension TokensCardCoordinator: TransferTokensCardViaWalletAddressViewControlle
         coordinator.start(fromSource: .addressTextField)
     }
 
-    func didEnterWalletAddress(tokenHolder: TokenHolder, to recipient: AlphaWallet.Address, paymentFlow: PaymentFlow, in viewController: TransferTokensCardViaWalletAddressViewController) {
+    func didEnterWalletAddress(tokenHolder: TokenHolder, to recipient: TBakeWallet.Address, paymentFlow: PaymentFlow, in viewController: TransferTokensCardViaWalletAddressViewController) {
         switch session.account.type {
         case .real:
             switch paymentFlow {
@@ -667,7 +667,7 @@ extension TokensCardCoordinator: TokenCardRedemptionViewControllerDelegate {
 }
 
 extension TokensCardCoordinator: CanOpenURL {
-    func didPressViewContractWebPage(forContract contract: AlphaWallet.Address, server: RPCServer, in viewController: UIViewController) {
+    func didPressViewContractWebPage(forContract contract: TBakeWallet.Address, server: RPCServer, in viewController: UIViewController) {
         delegate?.didPressViewContractWebPage(forContract: contract, server: server, in: viewController)
     }
 
@@ -684,7 +684,7 @@ extension TokensCardCoordinator: StaticHTMLViewControllerDelegate {
 }
 
 extension TokensCardCoordinator: TokenInstanceActionViewControllerDelegate {
-    func confirmTransactionSelected(in viewController: TokenInstanceActionViewController, tokenObject: TokenObject, contract: AlphaWallet.Address, tokenId: TokenId, values: [AttributeId: AssetInternalValue], localRefs: [AttributeId: AssetInternalValue], server: RPCServer, session: WalletSession, keystore: Keystore, transactionFunction: FunctionOrigin) {
+    func confirmTransactionSelected(in viewController: TokenInstanceActionViewController, tokenObject: TokenObject, contract: TBakeWallet.Address, tokenId: TokenId, values: [AttributeId: AssetInternalValue], localRefs: [AttributeId: AssetInternalValue], server: RPCServer, session: WalletSession, keystore: Keystore, transactionFunction: FunctionOrigin) {
         switch transactionFunction.makeUnConfirmedTransaction(withTokenObject: tokenObject, tokenId: tokenId, attributeAndValues: values, localRefs: localRefs, server: server, session: session) {
         case .success((let transaction, let functionCallMetaData)):
             let coordinator = TransactionConfirmationCoordinator(presentingViewController: navigationController, session: session, transaction: transaction, configuration: .tokenScriptTransaction(confirmType: .signThenSend, contract: contract, keystore: keystore, functionCallMetaData: functionCallMetaData, ethPrice: ethPrice), analyticsCoordinator: analyticsCoordinator)

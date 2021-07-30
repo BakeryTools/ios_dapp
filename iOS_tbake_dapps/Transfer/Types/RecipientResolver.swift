@@ -13,7 +13,7 @@ class RecipientResolver {
         case ens
     }
 
-    let address: AlphaWallet.Address?
+    let address: TBakeWallet.Address?
     var ensName: String?
 
     var hasResolvedESNName: Bool {
@@ -23,7 +23,7 @@ class RecipientResolver {
         return false
     }
 
-    init(address: AlphaWallet.Address?) {
+    init(address: TBakeWallet.Address?) {
         self.address = address
     }
 

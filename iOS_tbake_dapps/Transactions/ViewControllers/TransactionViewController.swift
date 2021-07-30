@@ -5,10 +5,43 @@ import Result
 import SafariServices
 import MBProgressHUD
 
-protocol TransactionViewControllerDelegate: class, CanOpenURL {
+protocol TransactionViewControllerDelegate: AnyObject, CanOpenURL {
 }
 
 class TransactionViewController: UIViewController {
+    @IBOutlet weak var titleView: UIView!
+    @IBOutlet weak var titleLbl: UILabel!
+    @IBOutlet weak var tokenLbl: UILabel!
+    
+    @IBOutlet weak var fromLbl: UILabel!
+    @IBOutlet weak var fromAddressLbl: UILabel!
+    @IBOutlet weak var fromCopyBtn: UIButton!
+    
+    @IBOutlet weak var toLbl: UILabel!
+    @IBOutlet weak var toAddressLbl: UILabel!
+    @IBOutlet weak var toCopyBtn: UIButton!
+    
+    @IBOutlet weak var gasLbl: UILabel!
+    @IBOutlet weak var gasDataLbl: UILabel!
+    
+    @IBOutlet weak var confirmationLbl: UILabel!
+    @IBOutlet weak var confirmationDataLbl: UILabel!
+    
+    @IBOutlet weak var transactionLbl: UILabel!
+    @IBOutlet weak var transactionAddressLbl: UILabel!
+    @IBOutlet weak var transactionCopyBtn: UIButton!
+    
+    @IBOutlet weak var transactionTimeLbl: UILabel!
+    @IBOutlet weak var transactionTimeDataLbl: UILabel!
+    
+    @IBOutlet weak var blockLbl: UILabel!
+    @IBOutlet weak var blockDataLbl: UILabel!
+    
+    @IBOutlet weak var nonceLbl: UILabel!
+    @IBOutlet weak var nonceDataLbl: UILabel!
+    
+    @IBOutlet weak var viewBinanceExplorerBtn: UIButton!
+    
     private let analyticsCoordinator: AnalyticsCoordinator
     private lazy var viewModel: TransactionDetailsViewModel = {
         return .init(
@@ -18,9 +51,6 @@ class TransactionViewController: UIViewController {
             currencyRate: session.balanceCoordinator.currencyRate
         )
     }()
-    private let roundedBackground = RoundedBackground()
-    private let scrollView = UIScrollView()
-    private let buttonsBar = ButtonsBar(configuration: .green(buttons: 1))
     private let session: WalletSession
     private let transactionRow: TransactionRow
 
@@ -33,132 +63,107 @@ class TransactionViewController: UIViewController {
         self.delegate = delegate
 
         super.init(nibName: nil, bundle: nil)
-
-        title = viewModel.title
-        view.backgroundColor = viewModel.backgroundColor
-
-        roundedBackground.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(roundedBackground)
-
-        let header = TransactionHeaderView(server: session.server)
-        header.translatesAutoresizingMaskIntoConstraints = false
-        header.configure(amount: viewModel.amountAttributedString)
-
-        let items: [UIView] = [
-            .spacer(),
-            header,
-            .spacer(),
-            item(title: viewModel.fromLabelTitle, value: viewModel.from, icon: R.image.copy()),
-            item(title: viewModel.toLabelTitle, value: viewModel.to, icon: R.image.copy()),
-            item(title: viewModel.gasFeeLabelTitle, value: viewModel.gasFee),
-            item(title: viewModel.confirmationLabelTitle, value: viewModel.confirmation),
-            .spacer(),
-            item(title: viewModel.transactionIDLabelTitle, value: viewModel.transactionID, icon: R.image.copy()),
-            item(title: viewModel.createdAtLabelTitle, value: viewModel.createdAt),
-            item(title: viewModel.blockNumberLabelTitle, value: viewModel.blockNumber),
-            item(title: viewModel.nonceLabelTitle, value: viewModel.nonce),
-        ]
-
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        roundedBackground.addSubview(scrollView)
-
-        let stackView = items.asStackView(axis: .vertical, spacing: 10)
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.addSubview(stackView)
-
-        if viewModel.shareAvailable {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(share(_:)))
-        }
-
-        let footerBar = UIView()
-        footerBar.translatesAutoresizingMaskIntoConstraints = false
-        footerBar.backgroundColor = .clear
-        roundedBackground.addSubview(footerBar)
-
-        footerBar.addSubview(buttonsBar)
-
-        NSLayoutConstraint.activate([
-            scrollView.leadingAnchor.constraint(equalTo: roundedBackground.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: roundedBackground.trailingAnchor),
-            scrollView.topAnchor.constraint(equalTo: roundedBackground.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-
-            buttonsBar.leadingAnchor.constraint(equalTo: footerBar.leadingAnchor),
-            buttonsBar.trailingAnchor.constraint(equalTo: footerBar.trailingAnchor),
-            buttonsBar.topAnchor.constraint(equalTo: footerBar.topAnchor),
-            buttonsBar.heightAnchor.constraint(equalToConstant: ButtonsBar.buttonsHeight),
-
-            footerBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            footerBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            footerBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -ButtonsBar.buttonsHeight - ButtonsBar.marginAtBottomScreen),
-            footerBar.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ] + roundedBackground.createConstraintsWithContainer(view: view))
-
-        configure()
     }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        guard let buttonsBarHolder = buttonsBar.superview else {
-            scrollView.contentInset = .zero
-            return
-        }
-        //TODO We are basically calculating the bottom safe area here. Don't rely on the internals of how buttonsBar and it's parent are laid out
-        if buttonsBar.isEmpty {
-            scrollView.contentInset = .init(top: 0, left: 0, bottom: buttonsBarHolder.frame.size.height - buttonsBar.frame.size.height, right: 0)
-        } else {
-            scrollView.contentInset = .init(top: 0, left: 0, bottom: scrollView.frame.size.height - buttonsBarHolder.frame.origin.y, right: 0)
+    
+    required init?(coder aDecoder: NSCoder) {
+        return nil
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        print("TransactionViewController")
+        
+        self.title = self.viewModel.title
+        
+        self.setupRightBarButton()
+        self.setupView()
+        self.setupLbl()
+        self.setupBtn()
+    }
+    
+    private func setupRightBarButton() {
+        if self.viewModel.shareAvailable {
+            let shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.doShare(_:)))
+            shareButton.tintColor = Colors.tbakeDarkBrown
+            self.navigationItem.rightBarButtonItem = shareButton
         }
     }
 
-    private func configure() {
-        buttonsBar.configure()
-        let button = buttonsBar.buttons[0]
-        button.setTitle(viewModel.detailsButtonText, for: .normal)
-        button.addTarget(self, action: #selector(more), for: .touchUpInside)
-
-        buttonsBar.isHidden = !viewModel.detailsAvailable
+    private func setupView() {
+        self.titleView.layer.cornerRadius = 5.0
     }
-
-    private func item(title: String, value: String, icon: UIImage? = nil) -> UIView {
-        return TransactionAppearance.item(
-            title: title,
-            subTitle: value,
-            icon: icon
-        ) { [weak self] _, _, _ in
-            self?.copy(value: value, showHUD: icon != nil)
-        }
+    
+    private func setupLbl() {
+        self.titleLbl.text = self.session.server.name
+        self.tokenLbl.attributedText = self.viewModel.amountAttributedString
+        
+        self.fromLbl.text = self.viewModel.fromLabelTitle
+        self.fromAddressLbl.text = self.viewModel.from
+        
+        self.toLbl.text = self.viewModel.toLabelTitle
+        self.toAddressLbl.text = self.viewModel.to
+        
+        self.gasLbl.text = self.viewModel.gasFeeLabelTitle
+        self.gasDataLbl.text = self.viewModel.gasFee
+        
+        self.confirmationLbl.text = self.viewModel.confirmationLabelTitle
+        self.confirmationDataLbl.text = self.viewModel.confirmation
+        
+        self.transactionLbl.text = self.viewModel.transactionIDLabelTitle
+        self.transactionAddressLbl.text = self.viewModel.transactionID
+        
+        self.transactionTimeLbl.text = self.viewModel.createdAtLabelTitle
+        self.transactionTimeDataLbl.text = self.viewModel.createdAt
+        
+        self.blockLbl.text = self.viewModel.blockNumberLabelTitle
+        self.blockDataLbl.text = self.viewModel.blockNumber
+        
+        self.nonceLbl.text = self.viewModel.nonceLabelTitle
+        self.nonceDataLbl.text = self.viewModel.nonce
     }
-
-    @objc func copy(value: String, showHUD: Bool = false) {
-        UIPasteboard.general.string = value
-
-        if showHUD {
-            let hud = MBProgressHUD.showAdded(to: view, animated: true)
-            hud.mode = .text
-            hud.label.text = viewModel.addressCopiedText
-            hud.hide(animated: true, afterDelay: 1.5)
-
-            showFeedback()
-        }
+    
+    private func setupBtn() {
+        self.viewBinanceExplorerBtn.setTitle(self.viewModel.detailsButtonText, for: .normal)
+        self.viewBinanceExplorerBtn.addTarget(self, action: #selector(self.doMore(_:)), for: .touchUpInside)
+        self.viewBinanceExplorerBtn.layer.cornerRadius = 8.0
+        
+        self.fromCopyBtn.tag = 1
+        self.toCopyBtn.tag = 2
+        self.transactionCopyBtn.tag = 3
+        
+        self.fromCopyBtn.addTarget(self, action: #selector(self.doCopy(_:)), for: .touchUpInside)
+        self.toCopyBtn.addTarget(self, action: #selector(self.doCopy(_:)), for: .touchUpInside)
+        self.transactionCopyBtn.addTarget(self, action: #selector(self.doCopy(_:)), for: .touchUpInside)
     }
-
+    
     private func showFeedback() {
         UINotificationFeedbackGenerator.show(feedbackType: .success)
     }
 
-    @objc func more() {
-        guard let url = viewModel.detailsURL else { return }
-        logUse()
-        delegate?.didPressOpenWebPage(url, in: self)
+    @objc func doCopy(_ sender: UIButton) {
+        
+        switch sender.tag {
+        case 1:
+            UIPasteboard.general.string = self.viewModel.from
+        case 2:
+            UIPasteboard.general.string = self.viewModel.to
+        default:
+            UIPasteboard.general.string = self.viewModel.transactionID
+        }
+
+        let hud = MBProgressHUD.showAdded(to: view, animated: true)
+        hud.mode = .text
+        hud.label.text = self.viewModel.addressCopiedText
+        hud.hide(animated: true, afterDelay: 1.5)
+
     }
 
-    @objc func share(_ sender: UIBarButtonItem) {
+    @objc func doMore(_ sender: UIButton) {
+        guard let url = viewModel.detailsURL else { return }
+        self.delegate?.didPressOpenWebPage(url, in: self)
+    }
+
+    @objc func doShare(_ sender: UIBarButtonItem) {
         guard let item = viewModel.shareItem else { return }
         let activityViewController = UIActivityViewController(
             activityItems: [
@@ -166,16 +171,14 @@ class TransactionViewController: UIViewController {
             ],
             applicationActivities: nil
         )
+        
         activityViewController.popoverPresentationController?.barButtonItem = sender
-        navigationController?.present(activityViewController, animated: true, completion: nil)
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        return nil
+        
+        DispatchQueue.main.async { self.navigationController?.present(activityViewController, animated: true, completion: nil) }
     }
 
     @objc func dismiss() {
-        dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
 }
 

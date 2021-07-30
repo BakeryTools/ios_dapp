@@ -2,8 +2,8 @@
 
 import UIKit
 
-protocol TransferTokensCardViaWalletAddressViewControllerDelegate: class, CanOpenURL {
-    func didEnterWalletAddress(tokenHolder: TokenHolder, to recipient: AlphaWallet.Address, paymentFlow: PaymentFlow, in viewController: TransferTokensCardViaWalletAddressViewController)
+protocol TransferTokensCardViaWalletAddressViewControllerDelegate: AnyObject, CanOpenURL {
+    func didEnterWalletAddress(tokenHolder: TokenHolder, to recipient: TBakeWallet.Address, paymentFlow: PaymentFlow, in viewController: TransferTokensCardViaWalletAddressViewController)
     func didPressViewInfo(in viewController: TransferTokensCardViaWalletAddressViewController)
     func openQRCode(in controller: TransferTokensCardViaWalletAddressViewController)
 }
@@ -22,7 +22,7 @@ class TransferTokensCardViaWalletAddressViewController: UIViewController, TokenV
     private var tokenHolder: TokenHolder
     private var paymentFlow: PaymentFlow
 
-    var contract: AlphaWallet.Address {
+    var contract: TBakeWallet.Address {
         return token.contractAddress
     }
     var server: RPCServer {
@@ -152,7 +152,7 @@ class TransferTokensCardViaWalletAddressViewController: UIViewController, TokenV
     @objc func nextButtonTapped() {
         targetAddressTextField.errorState = .none
 
-        if let address = AlphaWallet.Address(string: targetAddressTextField.value.trimmed) {
+        if let address = TBakeWallet.Address(string: targetAddressTextField.value.trimmed) {
             delegate?.didEnterWalletAddress(tokenHolder: tokenHolder, to: address, paymentFlow: paymentFlow, in: self)
         } else {
             targetAddressTextField.errorState = .error(Errors.invalidAddress.prettyError)

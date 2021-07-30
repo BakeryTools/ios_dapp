@@ -3,7 +3,7 @@
 import Foundation
 
 class AssetDefinitionInMemoryBackingStore: AssetDefinitionBackingStore {
-    private var xmls = [AlphaWallet.Address: String]()
+    private var xmls = [TBakeWallet.Address: String]()
 
     weak var delegate: AssetDefinitionBackingStoreDelegate?
     var badTokenScriptFileNames: [TokenScriptFileIndices.FileName] {
@@ -13,11 +13,11 @@ class AssetDefinitionInMemoryBackingStore: AssetDefinitionBackingStore {
         return (official: [], overrides: [], all: [])
     }
 
-    var contractsWithTokenScriptFileFromOfficialRepo: [AlphaWallet.Address] {
+    var contractsWithTokenScriptFileFromOfficialRepo: [TBakeWallet.Address] {
         return .init()
     }
 
-    subscript(contract: AlphaWallet.Address) -> String? {
+    subscript(contract: TBakeWallet.Address) -> String? {
         get {
             return xmls[contract]
         }
@@ -27,29 +27,29 @@ class AssetDefinitionInMemoryBackingStore: AssetDefinitionBackingStore {
         }
     }
 
-    func lastModifiedDateOfCachedAssetDefinitionFile(forContract contract: AlphaWallet.Address) -> Date? {
+    func lastModifiedDateOfCachedAssetDefinitionFile(forContract contract: TBakeWallet.Address) -> Date? {
         return nil
     }
 
-    func forEachContractWithXML(_ body: (AlphaWallet.Address) -> Void) {
+    func forEachContractWithXML(_ body: (TBakeWallet.Address) -> Void) {
         xmls.forEach { contract, _ in
             body(contract)
         }
     }
 
-    func isOfficial(contract: AlphaWallet.Address) -> Bool {
+    func isOfficial(contract: TBakeWallet.Address) -> Bool {
         return false
     }
 
-    func isCanonicalized(contract: AlphaWallet.Address) -> Bool {
+    func isCanonicalized(contract: TBakeWallet.Address) -> Bool {
         return true
     }
 
-    func hasConflictingFile(forContract contract: AlphaWallet.Address) -> Bool {
+    func hasConflictingFile(forContract contract: TBakeWallet.Address) -> Bool {
         return false
     }
 
-    func hasOutdatedTokenScript(forContract contract: AlphaWallet.Address) -> Bool {
+    func hasOutdatedTokenScript(forContract contract: TBakeWallet.Address) -> Bool {
         return false
     }
 
@@ -57,11 +57,11 @@ class AssetDefinitionInMemoryBackingStore: AssetDefinitionBackingStore {
         return nil
     }
 
-    func writeCacheTokenScriptSignatureVerificationType(_ verificationType: TokenScriptSignatureVerificationType, forContract contract: AlphaWallet.Address, forXmlString xmlString: String) {
+    func writeCacheTokenScriptSignatureVerificationType(_ verificationType: TokenScriptSignatureVerificationType, forContract contract: TBakeWallet.Address, forXmlString xmlString: String) {
         //do nothing
     }
 
-    func deleteFileDownloadedFromOfficialRepoFor(contract: AlphaWallet.Address) {
+    func deleteFileDownloadedFromOfficialRepoFor(contract: TBakeWallet.Address) {
         xmls[contract] = nil
     }
 }

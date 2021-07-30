@@ -31,6 +31,7 @@ class LockEnterPasscodeViewController: LockPasscodeViewController {
 		context = LAContext()
 		touchValidation()
 	}
+    
 	override func enteredPasscode(_ passcode: String) {
 		super.enteredPasscode(passcode)
 		if lock.isPasscodeValid(passcode: passcode) {
@@ -79,14 +80,15 @@ class LockEnterPasscodeViewController: LockPasscodeViewController {
 		}
 		hideKeyboard()
 		context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { [weak self] success, _ in
+            guard let self = self else { return }
 			DispatchQueue.main.async {
 				if success {
-					self?.lock.resetPasscodeAttemptHistory()
-					self?.lock.removeIncorrectMaxAttemptTime()
-					self?.lockView.lockTitle.text = self?.lockEnterPasscodeViewModel?.initialLabelText
-					self?.unlock(withResult: true, bioUnlock: true)
+					self.lock.resetPasscodeAttemptHistory()
+					self.lock.removeIncorrectMaxAttemptTime()
+					self.lockView.lockTitle.text = self.lockEnterPasscodeViewModel?.initialLabelText
+					self.unlock(withResult: true, bioUnlock: true)
 				} else {
-					self?.showKeyboard()
+					self.showKeyboard()
 				}
 			}
 		}

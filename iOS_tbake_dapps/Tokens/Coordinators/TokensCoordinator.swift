@@ -4,7 +4,7 @@ import Foundation
 import UIKit
 import PromiseKit
 
-protocol TokensCoordinatorDelegate: class, CanOpenURL {
+protocol TokensCoordinatorDelegate: AnyObject, CanOpenURL {
     func didTapSwap(forTransactionType transactionType: TransactionType, service: SwapTokenURLProviderType, in coordinator: TokensCoordinator)
     func shouldOpen(url: URL, shouldSwitchServer: Bool, forTransactionType transactionType: TransactionType, in coordinator: TokensCoordinator)
     func didPress(for type: PaymentFlow, server: RPCServer, in coordinator: TokensCoordinator)
@@ -67,7 +67,7 @@ class TokensCoordinator: Coordinator {
         return controller
     }()
 
-    private var addressToAutoDetectServerFor: AlphaWallet.Address?
+    private var addressToAutoDetectServerFor: TBakeWallet.Address?
     private var sendToAddressState: SendToAddressState = .none
     private var singleChainTokenCoordinators: [SingleChainTokenCoordinator] {
         return coordinators.compactMap { $0 as? SingleChainTokenCoordinator }
@@ -122,7 +122,7 @@ class TokensCoordinator: Coordinator {
         for each in singleChainTokenCoordinators {
             each.start()
         }
-        addUefaTokenIfAny()
+        addTBakeToken()
         showTokens()
     }
 
@@ -142,15 +142,14 @@ class TokensCoordinator: Coordinator {
         navigationController.viewControllers = [rootViewController]
     }
 
-    func addImportedToken(forContract contract: AlphaWallet.Address, server: RPCServer) {
+    func addImportedToken(forContract contract: TBakeWallet.Address, server: RPCServer) {
         guard let coordinator = singleChainTokenCoordinator(forServer: server) else { return }
         coordinator.addImportedToken(forContract: contract)
     }
-
-    func addUefaTokenIfAny() {
-        let server = Constants.uefaRpcServer
-        guard let coordinator = singleChainTokenCoordinator(forServer: server) else { return }
-        coordinator.addImportedToken(forContract: Constants.uefaMainnet, onlyIfThereIsABalance: true)
+    
+    func addTBakeToken() {
+        guard let coordinator = singleChainTokenCoordinator(forServer: .binance_smart_chain) else { return }
+        coordinator.addImportedToken(forContract: Constants.tbakeToken)
     }
 
     private func singleChainTokenCoordinator(forServer server: RPCServer) -> SingleChainTokenCoordinator? {
@@ -295,7 +294,7 @@ extension TokensCoordinator: QRCodeResolutionCoordinatorDelegate {
         delegate?.didPress(for: paymentFlow, server: token.server, in: self)
     }
 
-    func coordinator(_ coordinator: QRCodeResolutionCoordinator, didResolveAddress address: AlphaWallet.Address, action: ScanQRCodeAction) {
+    func coordinator(_ coordinator: QRCodeResolutionCoordinator, didResolveAddress address: TBakeWallet.Address, action: ScanQRCodeAction) {
         removeCoordinator(coordinator)
 
         switch action {
@@ -310,7 +309,7 @@ extension TokensCoordinator: QRCodeResolutionCoordinatorDelegate {
         }
     }
 
-    private func handleAddCustomToken(_ address: AlphaWallet.Address) {
+    private func handleAddCustomToken(_ address: TBakeWallet.Address) {
         let coordinator = NewTokenCoordinator(
             analyticsCoordinator: analyticsCoordinator,
             navigationController: navigationController,
@@ -327,11 +326,11 @@ extension TokensCoordinator: QRCodeResolutionCoordinatorDelegate {
     }
 
     private enum SendToAddressState {
-        case pending(address: AlphaWallet.Address)
+        case pending(address: TBakeWallet.Address)
         case none
     }
 
-    private func handleSendToAddress(_ address: AlphaWallet.Address) {
+    private func handleSendToAddress(_ address: TBakeWallet.Address) {
         sendToAddressState = .pending(address: address)
 
         let coordinator = SelectAssetCoordinator(
@@ -347,7 +346,7 @@ extension TokensCoordinator: QRCodeResolutionCoordinatorDelegate {
         coordinator.start()
     }
 
-    private func handleWatchWallet(_ address: AlphaWallet.Address) {
+    private func handleWatchWallet(_ address: TBakeWallet.Address) {
         let walletCoordinator = WalletCoordinator(config: config, keystore: keystore, analyticsCoordinator: analyticsCoordinator)
         walletCoordinator.delegate = self
 
@@ -401,7 +400,7 @@ extension TokensCoordinator: WalletCoordinatorDelegate {
 }
 
 extension TokensCoordinator: SingleChainTokenCoordinatorDelegate {
-
+    
     func didTapSwap(forTransactionType transactionType: TransactionType, service: SwapTokenURLProviderType, in coordinator: SingleChainTokenCoordinator) {
         delegate?.didTapSwap(forTransactionType: transactionType, service: service, in: self)
     }
@@ -428,7 +427,7 @@ extension TokensCoordinator: SingleChainTokenCoordinatorDelegate {
 }
 
 extension TokensCoordinator: CanOpenURL {
-    func didPressViewContractWebPage(forContract contract: AlphaWallet.Address, server: RPCServer, in viewController: UIViewController) {
+    func didPressViewContractWebPage(forContract contract: TBakeWallet.Address, server: RPCServer, in viewController: UIViewController) {
         delegate?.didPressViewContractWebPage(forContract: contract, server: server, in: viewController)
     }
 

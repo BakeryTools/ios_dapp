@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import Result
 
-protocol TokensCardViewControllerDelegate: class, CanOpenURL {
+protocol TokensCardViewControllerDelegate: AnyObject, CanOpenURL {
     func didPressRedeem(token: TokenObject, tokenHolder: TokenHolder, in viewController: TokensCardViewController)
     func didPressSell(tokenHolder: TokenHolder, for paymentFlow: PaymentFlow, in viewController: TokensCardViewController)
     func didPressTransfer(token: TokenObject, tokenHolder: TokenHolder, for type: PaymentFlow, tokenHolders: [TokenHolder], in viewController: TokensCardViewController)
@@ -55,7 +55,7 @@ class TokensCardViewController: UIViewController, TokenVerifiableStatusViewContr
     var server: RPCServer {
         return tokenObject.server
     }
-    var contract: AlphaWallet.Address {
+    var contract: TBakeWallet.Address {
         return tokenObject.contractAddress
     }
     let assetDefinitionStore: AssetDefinitionStore
@@ -304,6 +304,8 @@ class TokensCardViewController: UIViewController, TokenVerifiableStatusViewContr
            }
        case .possible, .changed, .ended, .cancelled, .failed:
            break
+       @unknown default:
+        break
        }
     }
 

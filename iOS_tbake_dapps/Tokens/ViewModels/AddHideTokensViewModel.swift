@@ -117,7 +117,7 @@ class AddHideTokensViewModel {
             let token = hiddenTokens.remove(at: indexPath.row)
             displayedTokens.append(token)
 
-            if let sectionIndex = sections.index(of: .hiddenTokens) {
+            if let sectionIndex = sections.firstIndex(of: .hiddenTokens) {
                 return .value((token, IndexPath(row: max(0, displayedTokens.count - 1), section: Int(sectionIndex)), withTokenCreation: false))
             }
         case .availableNewTokens:
@@ -129,7 +129,7 @@ class AddHideTokensViewModel {
                 self.popularTokens.remove(at: indexPath.row)
                 self.displayedTokens.append(token)
 
-                if let sectionIndex = self.sections.index(of: .displayedTokens) {
+                if let sectionIndex = self.sections.firstIndex(of: .displayedTokens) {
                     return .value((token, IndexPath(row: max(0, self.displayedTokens.count - 1), section: Int(sectionIndex)), withTokenCreation: true))
                 }
 
@@ -146,7 +146,7 @@ class AddHideTokensViewModel {
             let token = displayedTokens.remove(at: indexPath.row)
             hiddenTokens.insert(token, at: 0)
 
-            if let sectionIndex = sections.index(of: .hiddenTokens) {
+            if let sectionIndex = sections.firstIndex(of: .hiddenTokens) {
                 return .value((token, IndexPath(row: 0, section: Int(sectionIndex)), withTokenCreation: false))
             }
         case .hiddenTokens, .availableNewTokens, .popularTokens:
@@ -224,7 +224,7 @@ class AddHideTokensViewModel {
         displayedTokens = filterTokensCoordinator.sortDisplayedTokens(tokens: displayedTokens)
     }
 
-    private func fetchContractDataPromise(forServer server: RPCServer, address: AlphaWallet.Address) -> Promise<TokenObject> {
+    private func fetchContractDataPromise(forServer server: RPCServer, address: TBakeWallet.Address) -> Promise<TokenObject> {
         guard let coordinator = singleChainTokenCoordinator(forServer: server) else {
             return .init(error: RetrieveSingleChainTokenCoordinator())
         }

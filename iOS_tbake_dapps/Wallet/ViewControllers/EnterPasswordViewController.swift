@@ -3,8 +3,8 @@
 import UIKit
 import Eureka
 
-protocol EnterPasswordViewControllerDelegate: class {
-    func didEnterPassword(password: String, for account: AlphaWallet.Address, inViewController viewController: EnterPasswordViewController)
+protocol EnterPasswordViewControllerDelegate: AnyObject {
+    func didEnterPassword(password: String, for account: TBakeWallet.Address, inViewController viewController: EnterPasswordViewController)
 }
 
 class EnterPasswordViewController: FormViewController {
@@ -20,7 +20,7 @@ class EnterPasswordViewController: FormViewController {
     }
 
     private let viewModel = EnterPasswordViewModel()
-    private let account: AlphaWallet.Address
+    private let account: TBakeWallet.Address
     private var passwordTextField: UITextField?
 
     private var passwordRow: TextFloatLabelRow? {
@@ -29,7 +29,7 @@ class EnterPasswordViewController: FormViewController {
 
     weak var delegate: EnterPasswordViewControllerDelegate?
 
-    init(account: AlphaWallet.Address) {
+    init(account: TBakeWallet.Address) {
         self.account = account
         super.init(nibName: nil, bundle: nil)
     }

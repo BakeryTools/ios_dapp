@@ -7,12 +7,12 @@
 
 import UIKit
 
-extension AlphaWallet {
+extension TBakeWallet {
     enum Ethereum {
         enum ABI {}
     }
 }
-extension AlphaWallet.Ethereum.ABI {
+extension TBakeWallet.Ethereum.ABI {
     static let ERC20: Data = {
         let url = Bundle.main.url(forResource: "ERC20", withExtension: "json")!
         return try! Data(contentsOf: url)

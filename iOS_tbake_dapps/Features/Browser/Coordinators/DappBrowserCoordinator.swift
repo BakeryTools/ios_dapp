@@ -14,7 +14,7 @@ protocol DappBrowserCoordinatorDelegate: AnyObject, CanOpenURL {
     func importUniversalLink(url: URL, forCoordinator coordinator: DappBrowserCoordinator)
     func handleUniversalLink(_ url: URL, forCoordinator coordinator: DappBrowserCoordinator)
     func handleCustomUrlScheme(_ url: URL, forCoordinator coordinator: DappBrowserCoordinator)
-    func restartToAddEnableAAndSwitchBrowserToServer(inCoordinator coordinator: DappBrowserCoordinator)
+    func restartToAddEnableAndSwitchBrowserToServer(inCoordinator coordinator: DappBrowserCoordinator)
     func restartToEnableAndSwitchBrowserToServer(inCoordinator coordinator: DappBrowserCoordinator)
 }
 
@@ -152,7 +152,7 @@ final class DappBrowserCoordinator: NSObject, Coordinator {
 
     private var pendingTransaction: PendingTransaction = .none
 
-    private func executeTransaction(account: AlphaWallet.Address, action: DappAction, callbackID: Int, transaction: UnconfirmedTransaction, type: ConfirmType, server: RPCServer) {
+    private func executeTransaction(account: TBakeWallet.Address, action: DappAction, callbackID: Int, transaction: UnconfirmedTransaction, type: ConfirmType, server: RPCServer) {
         pendingTransaction = .data(callbackID: callbackID)
         let ethPrice = nativeCryptoCurrencyPrices[server]
         let coordinator = TransactionConfirmationCoordinator(presentingViewController: navigationController, session: session, transaction: transaction, configuration: .dappTransaction(confirmType: type, keystore: keystore, ethPrice: ethPrice), analyticsCoordinator: analyticsCoordinator)
@@ -161,7 +161,7 @@ final class DappBrowserCoordinator: NSObject, Coordinator {
         coordinator.start(fromSource: .browser)
     }
 
-    private func ethCall(callbackID: Int, from: AlphaWallet.Address?, to: AlphaWallet.Address?, data: String, server: RPCServer) {
+    private func ethCall(callbackID: Int, from: TBakeWallet.Address?, to: TBakeWallet.Address?, data: String, server: RPCServer) {
         let request = EthCallRequest(from: from, to: to, data: data)
         firstly {
             Session.send(EtherServiceRequest(server: server, batch: BatchFactory().create(request)))
@@ -200,7 +200,7 @@ final class DappBrowserCoordinator: NSObject, Coordinator {
         browserViewController.goTo(url: url)
     }
 
-    func signMessage(with type: SignMessageType, account: AlphaWallet.Address, callbackID: Int) {
+    func signMessage(with type: SignMessageType, account: TBakeWallet.Address, callbackID: Int) {
         firstly {
             SignMessageCoordinator.promise(analyticsCoordinator: analyticsCoordinator, navigationController: navigationController, keystore: keystore, coordinator: self, signType: type, account: account, source: .dappBrowser)
         }.done { data in
@@ -387,7 +387,7 @@ final class DappBrowserCoordinator: NSObject, Coordinator {
     }
 
     private func addCustomWallet(callbackID: Int, customChain: WalletAddEthereumChainObject, inViewController viewController: UIViewController) {
-        let coordinator = DappRequestSwitchCustomChainCoordinator(config: config, server: server, callbackId: callbackID, customChain: customChain, restartQueue: restartQueue, currentUrl: currentUrl, inViewController: viewController)
+        let coordinator = DappRequestSwitchCustomChainCoordinator(config: config, server: server, callbackId: callbackID, customChain: customChain, restartQueue: restartQueue, analyticsCoordinator: analyticsCoordinator, currentUrl: currentUrl, inViewController: viewController)
         coordinator.delegate = self
         addCoordinator(coordinator)
         coordinator.start()
@@ -479,8 +479,8 @@ extension DappBrowserCoordinator: BrowserViewControllerDelegate {
             signMessage(with: .eip712v3And4(typedData), account: account, callbackID: callbackID)
         case .ethCall(from: let from, to: let to, data: let data):
             //Must use unchecked form for `Address `because `from` and `to` might be 0x0..0. We assume the dapp author knows what they are doing
-            let from = AlphaWallet.Address(uncheckedAgainstNullAddress: from)
-            let to = AlphaWallet.Address(uncheckedAgainstNullAddress: to)
+            let from = TBakeWallet.Address(uncheckedAgainstNullAddress: from)
+            let to = TBakeWallet.Address(uncheckedAgainstNullAddress: to)
             ethCall(callbackID: callbackID, from: from, to: to, data: data, server: server)
         case .walletAddEthereumChain(let customChain):
             addCustomWallet(callbackID: callbackID, customChain: customChain, inViewController: viewController)
@@ -750,7 +750,7 @@ extension DappBrowserCoordinator: ServersCoordinatorDelegate {
 }
 
 extension DappBrowserCoordinator: CanOpenURL {
-    func didPressViewContractWebPage(forContract contract: AlphaWallet.Address, server: RPCServer, in viewController: UIViewController) {
+    func didPressViewContractWebPage(forContract contract: TBakeWallet.Address, server: RPCServer, in viewController: UIViewController) {
         delegate?.didPressViewContractWebPage(forContract: contract, server: server, in: viewController)
     }
 
@@ -815,8 +815,8 @@ extension DappBrowserCoordinator: DappRequestSwitchCustomChainCoordinatorDelegat
         removeCoordinator(coordinator)
     }
 
-    func restartToAddEnableAAndSwitchBrowserToServer(inCoordinator coordinator: DappRequestSwitchCustomChainCoordinator) {
-        delegate?.restartToAddEnableAAndSwitchBrowserToServer(inCoordinator: self)
+    func restartToAddEnableAndSwitchBrowserToServer(inCoordinator coordinator: DappRequestSwitchCustomChainCoordinator) {
+        delegate?.restartToAddEnableAndSwitchBrowserToServer(inCoordinator: self)
         removeCoordinator(coordinator)
     }
 

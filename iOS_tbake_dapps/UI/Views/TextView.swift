@@ -2,7 +2,7 @@
 
 import UIKit
 
-protocol TextViewDelegate: class {
+protocol TextViewDelegate: AnyObject {
     func shouldReturn(in textView: TextView) -> Bool
     func doneButtonTapped(for textView: TextView)
     func nextButtonTapped(for textView: TextView)
@@ -173,7 +173,6 @@ extension TextView: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         let borderColor = errorState.textFieldBorderColor(whileEditing: true)
         layer.borderColor = borderColor.cgColor
-        backgroundColor = Colors.appWhite
 
         dropShadow(color: borderColor, radius: DataEntry.Metric.shadowRadius)
     }

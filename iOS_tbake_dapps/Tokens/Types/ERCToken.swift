@@ -3,7 +3,7 @@
 import Foundation
 
 struct ERCToken {
-    let contract: AlphaWallet.Address
+    let contract: TBakeWallet.Address
     let server: RPCServer
     let name: String
     let symbol: String

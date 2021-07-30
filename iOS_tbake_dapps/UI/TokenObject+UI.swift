@@ -1,16 +1,14 @@
-// Copyright © 2020 Stormbird PTE. LTD.
-
 import UIKit
 import PromiseKit
 
 typealias TokenImage = (image: UIImage, symbol: String)
 
-private func programmaticallyGeneratedIconImage(for contractAddress: AlphaWallet.Address, server: RPCServer) -> UIImage {
+private func programmaticallyGeneratedIconImage(for contractAddress: TBakeWallet.Address, server: RPCServer) -> UIImage {
     let backgroundColor = symbolBackgroundColor(for: contractAddress, server: server)
     return UIView.tokenSymbolBackgroundImage(backgroundColor: backgroundColor)
 }
 
-private func symbolBackgroundColor(for contractAddress: AlphaWallet.Address, server: RPCServer) -> UIColor {
+private func symbolBackgroundColor(for contractAddress: TBakeWallet.Address, server: RPCServer) -> UIColor {
     if contractAddress.sameContract(as: Constants.nativeCryptoAddressInDatabase) {
         return server.blockChainNameColor
     } else {
@@ -51,10 +49,10 @@ class TokenImageFetcher {
 
     static var instance = TokenImageFetcher()
 
-    private var subscribables: ThreadSafeDictionary<String, Subscribable<TokenImage>> = .init()
+    private static var subscribables: ThreadSafeDictionary<String, Subscribable<TokenImage>> = .init()
     private let queue: DispatchQueue = .global()
 
-    private func programmaticallyGenerateIcon(for contractAddress: AlphaWallet.Address, server: RPCServer, symbol: String) -> TokenImage {
+    private func programmaticallyGenerateIcon(for contractAddress: TBakeWallet.Address, server: RPCServer, symbol: String) -> TokenImage {
         let i = [TokenObject.numberOfCharactersOfSymbolToShowInIcon, symbol.count].min()!
         let symbol = symbol.substring(to: i)
         return (image: programmaticallyGeneratedIconImage(for: contractAddress, server: server), symbol: symbol)
@@ -64,11 +62,11 @@ class TokenImageFetcher {
     func image(forToken tokenObject: TokenObject) -> Subscribable<TokenImage> {
         let subscribable: Subscribable<TokenImage>
         let key = "\(tokenObject.contractAddress.eip55String)-\(tokenObject.server.chainID)"
-        if let sub = subscribables[key] {
+        if let sub = Self.subscribables[key] {
             subscribable = sub
         } else {
             let sub = Subscribable<TokenImage>(nil)
-            subscribables[key] = sub
+            Self.subscribables[key] = sub
             subscribable = sub
         }
 
@@ -109,14 +107,14 @@ class TokenImageFetcher {
         return subscribable
     }
 
-    func image(contractAddress: AlphaWallet.Address, server: RPCServer, name: String) -> Subscribable<TokenImage> {
+    func image(contractAddress: TBakeWallet.Address, server: RPCServer, name: String) -> Subscribable<TokenImage> {
         let subscribable: Subscribable<TokenImage>
         let key = "\(contractAddress.eip55String)-\(server.chainID)"
-        if let sub = subscribables[key] {
+        if let sub = Self.subscribables[key] {
             subscribable = sub
         } else {
             let sub = Subscribable<TokenImage>(nil)
-            subscribables[key] = sub
+            Self.subscribables[key] = sub
             subscribable = sub
         }
 
@@ -166,7 +164,7 @@ class TokenImageFetcher {
         }
     }
 
-    private func fetchFromAssetGitHubRepo(_ githubAssetsSource: GithubAssetsURLResolver.Source, contractAddress: AlphaWallet.Address) -> Promise<UIImage> {
+    private func fetchFromAssetGitHubRepo(_ githubAssetsSource: GithubAssetsURLResolver.Source, contractAddress: TBakeWallet.Address) -> Promise<UIImage> {
         firstly {
             GithubAssetsURLResolver().resolve(for: githubAssetsSource, contractAddress: contractAddress)
         }.then(on: queue, { request -> Promise<UIImage> in
@@ -174,7 +172,7 @@ class TokenImageFetcher {
         })
     }
 
-    private func fetchFromAssetGitHubRepo(contractAddress: AlphaWallet.Address) -> Promise<UIImage> {
+    private func fetchFromAssetGitHubRepo(contractAddress: TBakeWallet.Address) -> Promise<UIImage> {
         firstly {
             fetchFromAssetGitHubRepo(.alphaWallet, contractAddress: contractAddress)
         }.recover(on: queue, { _ -> Promise<UIImage> in
@@ -215,7 +213,7 @@ class GithubAssetsURLResolver {
         case case1
     }
 
-    func resolve(for githubAssetsSource: GithubAssetsURLResolver.Source, contractAddress: AlphaWallet.Address) -> Promise<URLRequest> {
+    func resolve(for githubAssetsSource: GithubAssetsURLResolver.Source, contractAddress: TBakeWallet.Address) -> Promise<URLRequest> {
         let value = githubAssetsSource.rawValue + contractAddress.eip55String + "/" + GithubAssetsURLResolver.file
 
         guard let url = URL(string: value) else {

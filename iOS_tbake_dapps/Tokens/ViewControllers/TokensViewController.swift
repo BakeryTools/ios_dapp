@@ -5,7 +5,7 @@ import Result
 import StatefulViewController
 import PromiseKit
 
-protocol TokensViewControllerDelegate: class {
+protocol TokensViewControllerDelegate: AnyObject {
     func didPressAddToken( in viewController: UIViewController)
     func didPressAddHideTokens(viewModel: TokensViewModel)
     func didSelect(token: TokenObject, in viewController: UIViewController)
@@ -106,7 +106,7 @@ class TokensViewController: UIViewController {
 //        ])
 //        return imageView
 //    }()
-    private var currentCollectiblesContractsDisplayed = [AlphaWallet.Address]()
+    private var currentCollectiblesContractsDisplayed = [TBakeWallet.Address]()
     private let searchController: UISearchController
     private var isSearchBarConfigured = false
     private let hideTokenWidth: CGFloat = 170
@@ -310,8 +310,8 @@ class TokensViewController: UIViewController {
     }
 
     //Reloading the collectibles tab is very obvious visually, with the flashing images even if there are no changes. So we used this to check if the list of collectibles have changed, if not, don't refresh. We could have used a library that tracks diff, but that is overkill and one more dependency
-    private func contractsForCollectiblesFromViewModel() -> [AlphaWallet.Address] {
-        var contractsForCollectibles = [AlphaWallet.Address]()
+    private func contractsForCollectiblesFromViewModel() -> [TBakeWallet.Address] {
+        var contractsForCollectibles = [TBakeWallet.Address]()
         for i in (0..<viewModel.numberOfItems()) {
             let token = viewModel.item(for: i, section: 0)
             contractsForCollectibles.append(token.contractAddress)

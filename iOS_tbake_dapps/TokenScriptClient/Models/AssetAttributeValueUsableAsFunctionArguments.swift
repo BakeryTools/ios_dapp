@@ -6,7 +6,7 @@ import TrustKeystore
 import web3swift
 
 enum AssetAttributeValueUsableAsFunctionArguments {
-    case address(AlphaWallet.Address)
+    case address(TBakeWallet.Address)
     case string(String)
     case int(BigInt)
     case uint(BigUInt)
@@ -90,7 +90,7 @@ enum AssetAttributeValueUsableAsFunctionArguments {
             switch functionType {
             case .functionCall:
                 //Not use .init(string:) so that addresses like "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE" can go through
-                return AlphaWallet.Address(uncheckedAgainstNullAddress: string)?.eip55String as AnyObject
+                return TBakeWallet.Address(uncheckedAgainstNullAddress: string)?.eip55String as AnyObject
             case .functionTransaction, .paymentTransaction:
                 //Not use .init(string:) so that addresses like "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE" can go through
                 return Address(uncheckedAgainstNullAddress: string) as AnyObject

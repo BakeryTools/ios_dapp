@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol RedeemTokenCardQuantitySelectionViewControllerDelegate: class, CanOpenURL {
+protocol RedeemTokenCardQuantitySelectionViewControllerDelegate: AnyObject, CanOpenURL {
     func didSelectQuantity(token: TokenObject, tokenHolder: TokenHolder, in viewController: RedeemTokenCardQuantitySelectionViewController)
     func didPressViewInfo(in viewController: RedeemTokenCardQuantitySelectionViewController)
 }
@@ -24,7 +24,7 @@ class RedeemTokenCardQuantitySelectionViewController: UIViewController, TokenVer
     private let buttonsBar = ButtonsBar(configuration: .green(buttons: 1))
     private var viewModel: RedeemTokenCardQuantitySelectionViewModel
 
-    var contract: AlphaWallet.Address {
+    var contract: TBakeWallet.Address {
         return token.contractAddress
     }
     var server: RPCServer {

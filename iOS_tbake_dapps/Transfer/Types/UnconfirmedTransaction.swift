@@ -6,8 +6,8 @@ import BigInt
 struct UnconfirmedTransaction {
     let transactionType: TransactionType
     let value: BigInt
-    let recipient: AlphaWallet.Address?
-    let contract: AlphaWallet.Address?
+    let recipient: TBakeWallet.Address?
+    let contract: TBakeWallet.Address?
     let data: Data?
     let gasLimit: BigInt?
     let tokenId: BigUInt?
@@ -26,8 +26,8 @@ struct UnconfirmedTransaction {
     init(
         transactionType: TransactionType,
         value: BigInt,
-        recipient: AlphaWallet.Address?,
-        contract: AlphaWallet.Address?,
+        recipient: TBakeWallet.Address?,
+        contract: TBakeWallet.Address?,
         data: Data?,
         tokenId: BigUInt? = nil,
         indices: [UInt16]? = nil,

@@ -6,6 +6,10 @@
 //
 import UIKit
 
+
+let screenHeight = UIScreen.main.bounds.height
+let screenWidth = UIScreen.main.bounds.width
+
 //MARK:- Global Function
 func setRippleTransition() -> CATransition {
     let animation = CATransition()
@@ -72,6 +76,19 @@ func isJailbrokenCanOpen(path: String) -> Bool {
     return true
 }
 
+func hideShakeNib() -> Bool {
+    return UserDefaults.standard.bool(forKey: "ShakeNib")
+}
+
+func setShakeNib(_ value: Bool) {
+    UserDefaults.standard.set(value, forKey: "ShakeNib")
+}
+
+func getKeyWindow() -> UIWindow? {
+    let keyWindow = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
+    
+    return keyWindow
+}
 
 //func checkAppUpdate(_ completion: @escaping ()->Void) {
 //    let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
@@ -105,12 +122,4 @@ func isJailbrokenCanOpen(path: String) -> Bool {
 //MARK:- Get Data
 func getDeviceId() -> String {
     return UIDevice.current.identifierForVendor?.uuidString ?? ""
-}
-
-func getUserHasBackup() -> Bool {
-    return UserDefaults.standard.bool(forKey: "userHasBackup")
-}
-
-func setUserHasBackup(_ value: Bool) {
-    UserDefaults.standard.set(value, forKey: "userHasBackup")
 }

@@ -13,7 +13,7 @@ class SupportViewModel: NSObject {
         R.string.localizable.settingsSocialMediaTitle()
     }
     
-    var rows: [SupportRow] = [.telegramCustomer, .telegramPublic, .twitter, .reddit, .facebook, .faq]
+    var rows: [SupportRow] = [.telegramAnnouncement, .telegramGroup, .twitter, .website, .medium, .github]
     
     func cellViewModel(indexPath: IndexPath) -> SettingTableViewCellViewModel {
         let row = rows[indexPath.row]
@@ -22,66 +22,59 @@ class SupportViewModel: NSObject {
 }
 
 enum SupportRow {
-    case telegramPublic
-    case telegramCustomer
+    case telegramAnnouncement
+    case telegramGroup
     case twitter
-    case reddit
-    case facebook
-    case blog
-    case faq
+    case website
+    case medium
+    case github
     
     var urlProvider: URLServiceProvider? {
         switch self {
-        case .telegramPublic:
-            return URLServiceProvider.telegramPublic
-        case .telegramCustomer:
-            return URLServiceProvider.telegramCustomer
+        case .telegramAnnouncement:
+            return URLServiceProvider.telegramAnnouncement
+        case .telegramGroup:
+            return URLServiceProvider.telegramGroup
         case .twitter:
             return URLServiceProvider.twitter
-        case .reddit:
-            return URLServiceProvider.reddit
-        case .facebook:
-            return URLServiceProvider.facebook
-        case .faq:
-            return URLServiceProvider.faq
-        case .blog:
-            return nil
+        case .website:
+            return URLServiceProvider.website
+        case .github:
+            return URLServiceProvider.github
+        case .medium:
+            return URLServiceProvider.medium
         }
     }
     
     var title: String {
         switch self {
-        case .telegramPublic:
-            return URLServiceProvider.telegramPublic.title
-        case .telegramCustomer:
-            return URLServiceProvider.telegramCustomer.title
+        case .telegramAnnouncement:
+            return URLServiceProvider.telegramAnnouncement.title
+        case .telegramGroup:
+            return URLServiceProvider.telegramGroup.title
         case .twitter:
             return URLServiceProvider.twitter.title
-        case .reddit:
-            return URLServiceProvider.reddit.title
-        case .facebook:
-            return URLServiceProvider.facebook.title
-        case .faq:
-            return URLServiceProvider.faq.title
-        case .blog:
-            return "Blog"
+        case .website:
+            return URLServiceProvider.website.title
+        case .github:
+            return URLServiceProvider.github.title
+        case .medium:
+            return URLServiceProvider.medium.title
         }
     }
     
     var image: UIImage {
         switch self {
-        case .telegramPublic, .telegramCustomer:
-            return URLServiceProvider.telegramPublic.image!
+        case .telegramAnnouncement, .telegramGroup:
+            return URLServiceProvider.telegramAnnouncement.image!
         case .twitter:
             return URLServiceProvider.twitter.image!
-        case .reddit:
-            return URLServiceProvider.reddit.image!
-        case .facebook:
-            return URLServiceProvider.facebook.image!
-        case .faq:
-            return R.image.settings_faq()!
-        case .blog:
-            return R.image.settings_faq()!
+        case .website:
+            return URLServiceProvider.website.image!
+        case .github:
+            return URLServiceProvider.github.image!
+        case .medium:
+            return URLServiceProvider.medium.image!
         }
     }
 } 

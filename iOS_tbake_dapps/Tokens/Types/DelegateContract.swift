@@ -8,7 +8,7 @@ class DelegateContract: Object {
     @objc dynamic var chainId: Int = 0
     @objc dynamic var contract: String = ""
 
-    convenience init(contractAddress: AlphaWallet.Address, server: RPCServer) {
+    convenience init(contractAddress: TBakeWallet.Address, server: RPCServer) {
         self.init()
         self.contract = contractAddress.eip55String
         self.chainId = server.chainID
@@ -19,7 +19,7 @@ class DelegateContract: Object {
         return "primaryKey"
     }
 
-    var contractAddress: AlphaWallet.Address {
-        return AlphaWallet.Address(uncheckedAgainstNullAddress: contract)!
+    var contractAddress: TBakeWallet.Address {
+        return TBakeWallet.Address(uncheckedAgainstNullAddress: contract)!
     }
 }

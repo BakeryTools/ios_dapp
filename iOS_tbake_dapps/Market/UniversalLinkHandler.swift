@@ -64,7 +64,7 @@ public class UniversalLinkHandler {
         }
         let signature = signedOrder.signature
         let link = (message + signature).hexToBytes
-        let binaryData = Data(bytes: link)
+        let binaryData = Data(link)
         let base64String = binaryData.base64EncodedString()
         return prefix + b64SafeEncoding(base64String)
     }
@@ -137,17 +137,17 @@ public class UniversalLinkHandler {
         let amount = Array(bytes[12...15])
         let expiry = Array(bytes[16...19])
         let contractBytes = Array(bytes[20...39])
-        guard let contractAddress = AlphaWallet.Address(uncheckedAgainstNullAddress: Data(bytes: contractBytes).hex()) else { return nil }
+        guard let contractAddress = TBakeWallet.Address(uncheckedAgainstNullAddress: Data( contractBytes).hex()) else { return nil }
         let v = String(bytes[104], radix: 16)
-        let r = Data(bytes: Array(bytes[40...71])).hex()
-        let s = Data(bytes: Array(bytes[72...103])).hex()
+        let r = Data( Array(bytes[40...71])).hex()
+        let s = Data( Array(bytes[72...103])).hex()
         let order = Order(
                 price: BigUInt(0),
                 indices: [UInt16](),
-                expiry: BigUInt(Data(bytes: expiry)),
+                expiry: BigUInt(Data( expiry)),
                 contractAddress: contractAddress,
-                count: BigUInt(Data(bytes: amount)),
-                nonce: BigUInt(Data(bytes: nonce)),
+                count: BigUInt(Data( amount)),
+                nonce: BigUInt(Data( nonce)),
                 tokenIds: [BigUInt](),
                 spawnable: false,
                 nativeCurrencyDrop: true
@@ -190,7 +190,7 @@ public class UniversalLinkHandler {
         let tokenPos = 28 //tokens start at this byte
         let bytes = Array(linkBytes[tokenPos..<sigPos])
         let tokenIds = bytes.chunked(into: 32)
-        return tokenIds.map { BigUInt(Data(bytes: $0)) }
+        return tokenIds.map { BigUInt(Data( $0)) }
     }
 
     //we used a special encoding so that one 16 bit number could represent either one token or two
@@ -227,7 +227,7 @@ public class UniversalLinkHandler {
         messageWithSzabo.append(contentsOf: expiryBytes)
         messageWithSzabo.append(contentsOf: signedOrder.order.contractAddress.data.bytes)
         messageWithSzabo.append(contentsOf: indices)
-        return Data(bytes: messageWithSzabo).hex()
+        return Data( messageWithSzabo).hex()
     }
 
     private func formatMessageForLink721Ticket(signedOrder: SignedOrder) -> String {
@@ -245,7 +245,7 @@ public class UniversalLinkHandler {
         for token in tokens {
             messageWithSzabo.append(contentsOf: token)
         }
-        return Data(bytes: messageWithSzabo).hex()
+        return Data( messageWithSzabo).hex()
     }
 
     private func padTo4Bytes(_ array: [UInt8]) -> [UInt8] {
@@ -263,22 +263,22 @@ public class UniversalLinkHandler {
 
     private func getPriceFromLinkBytes(linkBytes: [UInt8]) -> BigUInt {
         let priceBytes = Array(linkBytes[0...3])
-        let priceHex = Data(bytes: priceBytes).hex()
+        let priceHex = Data( priceBytes).hex()
         guard let price = BigUInt(priceHex, radix: 16) else { return BigUInt(0) }
         return price * 1000000000000
     }
 
     private func getExpiryFromLinkBytes(linkBytes: [UInt8]) -> BigUInt {
         let expiryBytes = Array(linkBytes[4...7])
-        let expiry = Data(bytes: expiryBytes).hex()
+        let expiry = Data( expiryBytes).hex()
         guard let expiryBigUInt = BigUInt(expiry, radix: 16) else { return BigUInt(0) }
         return expiryBigUInt
     }
 
     //Specifically not for null (0x0...0) address
-    private func getNonNullContractAddressFromLinkBytes(linkBytes: [UInt8]) -> AlphaWallet.Address? {
+    private func getNonNullContractAddressFromLinkBytes(linkBytes: [UInt8]) -> TBakeWallet.Address? {
         let contractAddrBytes = Array(linkBytes[8...27])
-        return AlphaWallet.Address(string: Data(bytes: contractAddrBytes).hex())
+        return TBakeWallet.Address(string: Data( contractAddrBytes).hex())
     }
 
     private func getTokenIndicesFromLinkBytes(linkBytes: [UInt8]) -> [UInt16] {
@@ -314,9 +314,9 @@ public class UniversalLinkHandler {
         let signatureLength = 65
         guard linkBytes.count >= signatureLength else { return nil }
         var start = linkBytes.count - signatureLength
-        let r = Data(bytes: Array(linkBytes[start...start + 31])).hex()
+        let r = Data( Array(linkBytes[start...start + 31])).hex()
         start += 32
-        let s = Data(bytes: Array(linkBytes[start...start + 31])).hex()
+        let s = Data( Array(linkBytes[start...start + 31])).hex()
         var v = String(format: "%2X", linkBytes[linkBytes.count - 1]).trimmed
         if var vInt = Int(v) {
             if vInt < 5 {

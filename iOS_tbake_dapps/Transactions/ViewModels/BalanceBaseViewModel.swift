@@ -1,5 +1,3 @@
-// Copyright SIX DAY LLC. All rights reserved.
-
 import Foundation
 import UIKit
 import BigInt
@@ -11,4 +9,11 @@ protocol BalanceBaseViewModel {
     var symbol: String { get }
 
     var value: BigInt { get }
+    var ticker: CoinTicker? { get }
+}
+
+extension BalanceBaseViewModel {
+    var isZero: Bool {
+        value.isZero
+    }
 }

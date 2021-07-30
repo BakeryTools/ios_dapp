@@ -11,32 +11,16 @@ protocol AddHideTokensViewControllerDelegate: AnyObject {
 }
 
 class AddHideTokensViewController: UIViewController {
+    @IBOutlet weak var tableView: UITableView!
+    
     private let assetDefinitionStore: AssetDefinitionStore
     private var viewModel: AddHideTokensViewModel
     private let searchController: UISearchController
     private var isSearchBarConfigured = false
-    private lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .grouped)
-        tableView.register(WalletTokenViewCell.self)
-        tableView.register(PopularTokenViewCell.self)
-        tableView.registerHeaderFooterView(AddHideTokenSectionHeaderView.self)
-        tableView.isEditing = true
-        tableView.estimatedRowHeight = 100
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.separatorStyle = .singleLine
-        tableView.separatorInset = .zero
-        tableView.contentInset = .zero
-        tableView.contentOffset = .zero
-        tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 0.01))
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        return tableView
-    }()
     private let refreshControl = UIRefreshControl()
     private var prefersLargeTitles: Bool?
     private let notificationCenter = NotificationCenter.default
     weak var delegate: AddHideTokensViewControllerDelegate?
-    private let backgroundImage = UIImageView()
 
     init(viewModel: AddHideTokensViewModel, assetDefinitionStore: AssetDefinitionStore) {
         self.assetDefinitionStore = assetDefinitionStore
@@ -44,26 +28,7 @@ class AddHideTokensViewController: UIViewController {
         searchController = UISearchController(searchResultsController: nil)
         
         super.init(nibName: nil, bundle: nil)
-        
-        self.backgroundImage.contentMode = .scaleAspectFill
-        self.backgroundImage.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.view.addSubview(self.backgroundImage)
-        self.view.addSubview(self.tableView)
-        
-        NSLayoutConstraint.activate([
-            self.backgroundImage.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            self.backgroundImage.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            self.backgroundImage.topAnchor.constraint(equalTo: view.topAnchor),
-            self.backgroundImage.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            self.tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            self.tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            self.tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            self.tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-        
-        hidesBottomBarWhenPushed = true
+      
     }
 
     required init?(coder: NSCoder) {
@@ -76,7 +41,7 @@ class AddHideTokensViewController: UIViewController {
         configure(viewModel: viewModel)
         setupFilteringWithKeyword()
         
-        self.backgroundImage.image = UIImage(named: "background_img")
+        self.setupTableView()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -85,9 +50,6 @@ class AddHideTokensViewController: UIViewController {
 
         notificationCenter.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-
-        prefersLargeTitles = navigationController?.navigationBar.prefersLargeTitles
-        navigationController?.navigationBar.prefersLargeTitles = false
 
         reload()
     }
@@ -105,6 +67,21 @@ class AddHideTokensViewController: UIViewController {
             delegate?.didClose(viewController: self)
             return
         }
+    }
+    
+    private func setupTableView() {
+        self.tableView.register(WalletTokenViewCell.self)
+        self.tableView.register(PopularTokenViewCell.self)
+        self.tableView.registerHeaderFooterView(AddHideTokenSectionHeaderView.self)
+        self.tableView.isEditing = true
+        self.tableView.estimatedRowHeight = 100
+        self.tableView.dataSource = self
+        self.tableView.delegate = self
+        self.tableView.separatorStyle = .singleLine
+        self.tableView.separatorInset = .zero
+        self.tableView.contentInset = .zero
+        self.tableView.contentOffset = .zero
+        self.tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 0.01))
     }
 
     @objc private func keyboardWillShow(_ notification: Notification) {
@@ -221,6 +198,8 @@ extension AddHideTokensViewController: UITableViewDataSource {
         case .none:
             promise = .value(nil)
             isTokenHidden = false
+        @unknown default:
+            return
         }
 
         self.displayLoading()

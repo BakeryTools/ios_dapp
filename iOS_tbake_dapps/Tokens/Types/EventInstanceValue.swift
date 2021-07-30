@@ -19,7 +19,7 @@ struct EventInstanceValue {
     var json: String
     var _data: [String: AssetInternalValue]?
 
-    init(contract: AlphaWallet.Address, tokenContract: AlphaWallet.Address, server: RPCServer, eventName: String, blockNumber: Int, logIndex: Int, filter: String, json: String) {
+    init(contract: TBakeWallet.Address, tokenContract: TBakeWallet.Address, server: RPCServer, eventName: String, blockNumber: Int, logIndex: Int, filter: String, json: String) {
         self.primaryKey = EventInstance.generatePrimaryKey(fromContract: contract, tokenContract: tokenContract, server: server, eventName: eventName, blockNumber: blockNumber, logIndex: logIndex, filter: filter)
         self.contract = contract.eip55String
         self.tokenContract = tokenContract.eip55String

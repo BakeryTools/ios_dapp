@@ -2,8 +2,9 @@
 
 import UIKit
 import PromiseKit
+import LocalAuthentication
 
-protocol SettingsViewControllerDelegate: class, CanOpenURL {
+protocol SettingsViewControllerDelegate: AnyObject, CanOpenURL {
     func settingsViewControllerAdvancedSettingsSelected(in controller: SettingsViewController)
     func settingsViewControllerChangeWalletSelected(in controller: SettingsViewController)
     func settingsViewControllerMyWalletAddressSelected(in controller: SettingsViewController)
@@ -130,7 +131,7 @@ class SettingsViewController: UIViewController {
 
 extension SettingsViewController: CanOpenURL {
 
-    func didPressViewContractWebPage(forContract contract: AlphaWallet.Address, server: RPCServer, in viewController: UIViewController) {
+    func didPressViewContractWebPage(forContract contract: TBakeWallet.Address, server: RPCServer, in viewController: UIViewController) {
         delegate?.didPressViewContractWebPage(forContract: contract, server: server, in: viewController)
     }
 
@@ -161,8 +162,7 @@ extension SettingsViewController: SwitchTableViewCellDelegate {
                 }
             case .darkmode:
                 UserDefaults.standard.set(isOn ? true : false, forKey: "darkMode")
-                guard let keyWindow = UIApplication.shared.keyWindow else { return }
-                keyWindow.overrideUserInterfaceStyle = isOn ? .dark : .light
+                getKeyWindow()?.overrideUserInterfaceStyle = isOn ? .dark : .light
             case .notifications, .selectActiveNetworks, .advanced:
                 break
             }

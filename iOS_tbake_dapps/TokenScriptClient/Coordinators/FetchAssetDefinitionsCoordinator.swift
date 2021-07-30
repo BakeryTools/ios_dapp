@@ -7,8 +7,8 @@ class FetchAssetDefinitionsCoordinator: Coordinator {
     private let assetDefinitionStore: AssetDefinitionStore
     private let tokensDataStores: ServerDictionary<TokensDataStore>
 
-    private var contractsInDatabase: [AlphaWallet.Address] {
-        var contracts = [AlphaWallet.Address]()
+    private var contractsInDatabase: [TBakeWallet.Address] {
+        var contracts = [TBakeWallet.Address]()
         for each in tokensDataStores.values {
             contracts.append(contentsOf: each.enabledObject.filter {
                 switch $0.type {
@@ -22,7 +22,7 @@ class FetchAssetDefinitionsCoordinator: Coordinator {
         return contracts
     }
 
-    private var contractsWithTokenScriptFileFromOfficialRepo: [AlphaWallet.Address] {
+    private var contractsWithTokenScriptFileFromOfficialRepo: [TBakeWallet.Address] {
         return assetDefinitionStore.contractsWithTokenScriptFileFromOfficialRepo
     }
 

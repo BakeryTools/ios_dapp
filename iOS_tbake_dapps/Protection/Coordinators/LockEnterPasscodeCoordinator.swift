@@ -23,7 +23,7 @@ class LockEnterPasscodeCoordinator: Coordinator {
 	}
 	func start() {
 		guard lock.isPasscodeSet else { return }
-		window.rootViewController = lockEnterPasscodeViewController
+		window.rootViewController =  lockEnterPasscodeViewController
 		window.makeKeyAndVisible()
 	}
 	func stop() {

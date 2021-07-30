@@ -7,7 +7,7 @@ import JSONRPCKit
 struct BalanceRequest: JSONRPCKit.Request {
     typealias Response = Balance
 
-    let address: AlphaWallet.Address
+    let address: TBakeWallet.Address
 
     var method: String {
         return "eth_getBalance"

@@ -14,7 +14,7 @@ typealias BlockiesImage = UIImage
 
 class BlockiesGenerator {
     private struct BlockieKey: Hashable {
-        let address: AlphaWallet.Address
+        let address: TBakeWallet.Address
         let size: Int
         let scale: Int
 
@@ -27,7 +27,7 @@ class BlockiesGenerator {
 
     private static var cache: [BlockieKey: BlockiesImage] = [:]
 
-    func promise(address: AlphaWallet.Address, size: Int = 8, scale: Int = 3) -> Promise<BlockiesImage> {
+    func promise(address: TBakeWallet.Address, size: Int = 8, scale: Int = 3) -> Promise<BlockiesImage> {
         enum AnyError: Error {
             case blockieCreateFailure
         }
@@ -49,12 +49,12 @@ class BlockiesGenerator {
         }
     }
 
-    private func cacheBlockie(address: AlphaWallet.Address, blockie: BlockiesImage, size: Int, scale: Int) {
+    private func cacheBlockie(address: TBakeWallet.Address, blockie: BlockiesImage, size: Int, scale: Int) {
         let key = BlockieKey(address: address, size: size, scale: scale)
         BlockiesGenerator.cache[key] = blockie
     }
 
-    private func cachedBlockie(address: AlphaWallet.Address, size: Int, scale: Int) -> Promise<BlockiesImage> {
+    private func cachedBlockie(address: TBakeWallet.Address, size: Int, scale: Int) -> Promise<BlockiesImage> {
         enum AnyError: Error {
             case cacheNotFound
         }
@@ -69,7 +69,7 @@ class BlockiesGenerator {
         }
     }
 
-    private func createBlockiesImage(address: AlphaWallet.Address, size: Int, scale: Int) -> Promise<BlockiesImage> {
+    private func createBlockiesImage(address: TBakeWallet.Address, size: Int, scale: Int) -> Promise<BlockiesImage> {
         enum AnyError: Error {
             case blockieCreateFailure
         }

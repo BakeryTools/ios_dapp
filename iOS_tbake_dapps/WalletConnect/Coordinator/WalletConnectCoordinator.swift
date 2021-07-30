@@ -20,7 +20,7 @@ enum SessionsToDisconnect {
 
 typealias SessionsToURLServersMap = (sessions: [WalletConnectSession], urlToServer: [WCURL: RPCServer])
 
-protocol WalletConnectCoordinatorDelegate: class, CanOpenURL {
+protocol WalletConnectCoordinatorDelegate: AnyObject, CanOpenURL {
     func universalScannerSelected(in coordinator: WalletConnectCoordinator)
     func didSendTransaction(_ transaction: SentTransaction, inCoordinator coordinator: WalletConnectCoordinator)
 }
@@ -209,7 +209,7 @@ extension WalletConnectCoordinator: WalletConnectServerDelegate {
         }
     }
 
-    private func signMessage(with type: SignMessageType, account: AlphaWallet.Address, callbackID id: WalletConnectRequestID, url: WalletConnectURL) -> Promise<WalletConnectServer.Callback> {
+    private func signMessage(with type: SignMessageType, account: TBakeWallet.Address, callbackID id: WalletConnectRequestID, url: WalletConnectURL) -> Promise<WalletConnectServer.Callback> {
         firstly {
             SignMessageCoordinator.promise(analyticsCoordinator: analyticsCoordinator, navigationController: navigationController, keystore: keystore, coordinator: self, signType: type, account: account, source: .walletConnect)
         }.map { data -> WalletConnectServer.Callback in
@@ -257,7 +257,7 @@ extension WalletConnectCoordinator: WalletConnectServerDelegate {
     }
 
     private var presentationViewController: UIViewController {
-        guard let keyWindow = UIApplication.shared.keyWindow else { return navigationController }
+        guard let keyWindow = getKeyWindow() else { return navigationController }
 
         if let controller = keyWindow.rootViewController?.presentedViewController {
             return controller
@@ -370,7 +370,7 @@ extension WalletConnectCoordinator: WalletConnectSessionsViewControllerDelegate 
 }
 
 extension WalletConnectCoordinator: CanOpenURL {
-    func didPressViewContractWebPage(forContract contract: AlphaWallet.Address, server: RPCServer, in viewController: UIViewController) {
+    func didPressViewContractWebPage(forContract contract: TBakeWallet.Address, server: RPCServer, in viewController: UIViewController) {
         delegate?.didPressViewContractWebPage(forContract: contract, server: server, in: viewController)
     }
 

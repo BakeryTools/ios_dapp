@@ -6,7 +6,7 @@ import JSONRPCKit
 import StatefulViewController
 import Result
 
-protocol TransactionsViewControllerDelegate: class {
+protocol TransactionsViewControllerDelegate: AnyObject {
     func didPressTransaction(transactionRow: TransactionRow, in viewController: TransactionsViewController)
 }
 

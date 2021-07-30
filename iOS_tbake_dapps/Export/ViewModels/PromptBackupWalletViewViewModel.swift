@@ -20,7 +20,7 @@ protocol PromptBackupWalletViewModel {
     var backupButtonContentEdgeInsets: UIEdgeInsets { get }
     var moreButtonImage: UIImage { get }
     var moreButtonColor: UIColor { get }
-    var walletAddress: AlphaWallet.Address { get }
+    var walletAddress: TBakeWallet.Address { get }
 }
 
 extension PromptBackupWalletViewModel {

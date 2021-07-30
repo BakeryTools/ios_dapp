@@ -2,7 +2,7 @@
 
 import UIKit
 
-protocol SetSellTokensCardExpiryDateViewControllerDelegate: class, CanOpenURL {
+protocol SetSellTokensCardExpiryDateViewControllerDelegate: AnyObject, CanOpenURL {
     func didSetSellTokensExpiryDate(tokenHolder: TokenHolder, linkExpiryDate: Date, ethCost: Ether, in viewController: SetSellTokensCardExpiryDateViewController)
     func didPressViewInfo(in viewController: SetSellTokensCardExpiryDateViewController)
 }
@@ -32,7 +32,7 @@ class SetSellTokensCardExpiryDateViewController: UIViewController, TokenVerifiab
     private let tokenHolder: TokenHolder
     private let ethCost: Ether
 
-    var contract: AlphaWallet.Address {
+    var contract: TBakeWallet.Address {
         return viewModel.token.contractAddress
     }
     var server: RPCServer {

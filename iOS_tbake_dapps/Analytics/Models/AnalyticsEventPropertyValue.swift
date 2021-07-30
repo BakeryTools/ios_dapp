@@ -46,7 +46,7 @@ extension URL: AnalyticsEventPropertyValue {
         return self
     }
 }
-extension AlphaWallet.Address: AnalyticsEventPropertyValue {
+extension TBakeWallet.Address: AnalyticsEventPropertyValue {
     var value: Any {
         return self.eip55String
     }

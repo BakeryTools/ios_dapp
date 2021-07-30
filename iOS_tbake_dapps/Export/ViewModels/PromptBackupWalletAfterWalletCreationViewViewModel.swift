@@ -4,7 +4,7 @@ import Foundation
 import UIKit
 
 struct PromptBackupWalletAfterWalletCreationViewViewModel: PromptBackupWalletViewModel {
-    let walletAddress: AlphaWallet.Address
+    let walletAddress: TBakeWallet.Address
 
     var backgroundColor: UIColor {
         return .init(red: 183, green: 80, blue: 70)

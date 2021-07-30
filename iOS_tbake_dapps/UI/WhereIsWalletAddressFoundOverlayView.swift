@@ -42,7 +42,7 @@ class WhereIsWalletAddressFoundOverlayView: UIView {
 
     private func clipBottomRight() {
         //TODO support clipping for iPad too
-        if UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiom.phone {
+        if UIDevice.current.userInterfaceIdiom  == .phone {
             let clipDimension = CGFloat(180)
             let clipPath = UIBezierPath(ovalIn: CGRect(x: UIScreen.main.bounds.size.width - clipDimension / 2 - 20, y: UIScreen.main.bounds.size.height - clipDimension / 2 - 20, width: clipDimension, height: clipDimension))
             let maskPath = UIBezierPath(rect: UIScreen.main.bounds)
@@ -61,7 +61,7 @@ class WhereIsWalletAddressFoundOverlayView: UIView {
     func show() {
         dialog.configure()
         dialog.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
-        UIApplication.shared.keyWindow?.addSubview(self)
+        getKeyWindow()?.addSubview(self)
         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 7, options: .curveEaseInOut, animations: {
             self.dialog.transform = .identity
         })
@@ -76,7 +76,7 @@ extension WhereIsWalletAddressFoundOverlayView: DialogDelegate {
     }
 }
 
-private protocol DialogDelegate: class {
+private protocol DialogDelegate: AnyObject {
     func tappedContinue(inDialog dialog: Dialog)
 }
 

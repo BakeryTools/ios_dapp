@@ -11,7 +11,7 @@ class GetWalletNameCoordinator {
         self.config = config
     }
 
-    func getName(forAddress address: AlphaWallet.Address) -> Promise<String?> {
+    func getName(forAddress address: TBakeWallet.Address) -> Promise<String?> {
         Promise { seal in
             if let walletName = config.walletNames[address] {
                 seal.fulfill(walletName)

@@ -8,7 +8,7 @@
 import UIKit
 
 struct TokenActionsServiceKey {
-    let contractAddress: AlphaWallet.Address
+    let contractAddress: TBakeWallet.Address
     let server: RPCServer
     var symbol: String
     var decimals: Int

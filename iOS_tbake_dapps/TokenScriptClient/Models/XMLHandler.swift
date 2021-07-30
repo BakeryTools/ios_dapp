@@ -1,10 +1,3 @@
-//  XMLHandler.swift
-//  AlphaWallet
-//
-//  Created by James Sangalli on 11/4/18.
-//  Copyright © 2018 Stormbird PTE. LTD.
-//
-
 import Foundation
 import Kanna
 import PromiseKit
@@ -82,7 +75,7 @@ enum TokenScriptSignatureVerificationType: Codable {
     }
 }
 
-//https://github.com/AlphaWallet/TokenScript/wiki/Visual-representation-of-the-validity-of-TokenScript-files
+//https://github.com/TBakeWallet/TokenScript/wiki/Visual-representation-of-the-validity-of-TokenScript-files
 enum TokenLevelTokenScriptDisplayStatus {
     case type0NoTokenScript
     case type1GoodTokenScriptSignatureGoodOrOptional(isDebugMode: Bool, isSigned: Bool, validatedDomain: String?, message: String)
@@ -106,7 +99,7 @@ private class PrivateXMLHandler {
     private let signatureNamespacePrefix = "ds:"
     private let xhtmlNamespacePrefix = "xhtml:"
     private let xmlContext = PrivateXMLHandler.createXmlContext(withLang: PrivateXMLHandler.lang)
-    private let contractAddress: AlphaWallet.Address
+    private let contractAddress: TBakeWallet.Address
     private weak var assetDefinitionStore: AssetDefinitionStore?
     var server: RPCServerOrAny?
     //Explicit type so that the variable autocompletes with AppCode
@@ -117,7 +110,7 @@ private class PrivateXMLHandler {
         baseTokenType != nil
     }
     private let baseTokenType: TokenType?
-    lazy private var contractNamesAndAddresses: [String: [(AlphaWallet.Address, RPCServer)]] = extractContractNamesAndAddresses()
+    lazy private var contractNamesAndAddresses: [String: [(TBakeWallet.Address, RPCServer)]] = extractContractNamesAndAddresses()
 
     private var tokenElement: XMLElement? {
         return XMLHandler.getTokenElement(fromRoot: xml, xmlContext: xmlContext)
@@ -210,11 +203,11 @@ private class PrivateXMLHandler {
               let ethereumEventElement = XMLHandler.getEthereumOriginElementEvents(fromAttributeTypeElement: eachCard, xmlContext: xmlContext),
                let eventName = ethereumEventElement["type"],
                let asnModuleNamedElement = XMLHandler.getAsnModuleNamedTypeElement(fromRoot: xml, xmlContext: xmlContext, forTypeName: eventName) else { return nil }
-            let optionalContract: AlphaWallet.Address?
+            let optionalContract: TBakeWallet.Address?
             if let eventContractName = ethereumEventElement["contract"],
                let eventSourceContractElement = XMLHandler.getContractElementByName(contractName: eventContractName, fromRoot: xml, xmlContext: xmlContext) {
                 let addressElements = XMLHandler.getAddressElements(fromContractElement: eventSourceContractElement, xmlContext: xmlContext)
-                optionalContract = addressElements.first?.text.flatMap({ AlphaWallet.Address(string: $0.trimmed) })
+                optionalContract = addressElements.first?.text.flatMap({ TBakeWallet.Address(string: $0.trimmed) })
             } else {
                 optionalContract = contractAddress
             }
@@ -291,18 +284,18 @@ private class PrivateXMLHandler {
     }
 
     //TODO maybe this should be removed. We should not use AssetDefinitionStore here because it's easy to create cyclical references and infinite loops since they refer to each other
-    convenience init(contract: AlphaWallet.Address, assetDefinitionStore: AssetDefinitionStore) {
+    convenience init(contract: TBakeWallet.Address, assetDefinitionStore: AssetDefinitionStore) {
         let xmlString = assetDefinitionStore[contract]
         let isOfficial = assetDefinitionStore.isOfficial(contract: contract)
         let isCanonicalized = assetDefinitionStore.isCanonicalized(contract: contract)
         self.init(contract: contract, xmlString: xmlString, baseTokenType: nil, isOfficial: isOfficial, isCanonicalized: isCanonicalized, assetDefinitionStore: assetDefinitionStore)
     }
 
-    convenience init(contract: AlphaWallet.Address, baseXml: String, baseTokenType: TokenType, assetDefinitionStore: AssetDefinitionStore) {
+    convenience init(contract: TBakeWallet.Address, baseXml: String, baseTokenType: TokenType, assetDefinitionStore: AssetDefinitionStore) {
         self.init(contract: contract, xmlString: baseXml, baseTokenType: baseTokenType, isOfficial: true, isCanonicalized: true, assetDefinitionStore: assetDefinitionStore)
     }
 
-    private init(contract: AlphaWallet.Address, xmlString: String?, baseTokenType: TokenType?, isOfficial: Bool, isCanonicalized: Bool, assetDefinitionStore: AssetDefinitionStore) {
+    private init(contract: TBakeWallet.Address, xmlString: String?, baseTokenType: TokenType?, isOfficial: Bool, isCanonicalized: Bool, assetDefinitionStore: AssetDefinitionStore) {
         let xmlString = xmlString ?? ""
         self.contractAddress = contract
         self.isOfficial = isOfficial
@@ -407,7 +400,6 @@ private class PrivateXMLHandler {
             index: UInt16,
             inWallet account: Wallet,
             server: RPCServer,
-            callForAssetAttributeCoordinator: CallForAssetAttributeCoordinator,
             tokenType: TokenType
     ) -> Token {
         guard tokenIdOrEvent.tokenId != 0 else { return .empty }
@@ -434,7 +426,7 @@ private class PrivateXMLHandler {
         fields.resolve(withTokenIdOrEvent: tokenIdOrEvent, userEntryValues: .init(), server: server, account: account, additionalValues: .init(), localRefs: .init())
     }
 
-    private static func computeTokenScriptStatus(forContract contract: AlphaWallet.Address, xmlString: String, isOfficial: Bool, isCanonicalized: Bool, assetDefinitionStore: AssetDefinitionStore) -> Promise<TokenLevelTokenScriptDisplayStatus> {
+    private static func computeTokenScriptStatus(forContract contract: TBakeWallet.Address, xmlString: String, isOfficial: Bool, isCanonicalized: Bool, assetDefinitionStore: AssetDefinitionStore) -> Promise<TokenLevelTokenScriptDisplayStatus> {
         if assetDefinitionStore.hasConflict(forContract: contract) {
             return .value(.type2BadTokenScript(isDebugMode: !isOfficial, message: R.string.localizable.tokenScriptType2ConflictingFiles(), reason: .conflictWithAnotherFile))
         }
@@ -503,7 +495,7 @@ private class PrivateXMLHandler {
         cache.cache(attributes: fields, values: valuesAsDictionary, forContract: contractAddress, tokenId: tokenId)
     }
 
-    private static func extractServer(fromXML xml: XMLDocument, xmlContext: XmlContext, matchingContract contractAddress: AlphaWallet.Address) -> RPCServer? {
+    private static func extractServer(fromXML xml: XMLDocument, xmlContext: XmlContext, matchingContract contractAddress: TBakeWallet.Address) -> RPCServer? {
         for (contract, chainId) in getHoldingContracts(xml: xml, xmlContext: xmlContext) where contract == contractAddress {
             return .init(chainID: chainId)
         }
@@ -511,7 +503,7 @@ private class PrivateXMLHandler {
         return nil
     }
 
-    private static func verificationType(forXml xmlString: String, isCanonicalized: Bool, contractAddress: AlphaWallet.Address) -> Promise<TokenScriptSignatureVerificationType> {
+    private static func verificationType(forXml xmlString: String, isCanonicalized: Bool, contractAddress: TBakeWallet.Address) -> Promise<TokenScriptSignatureVerificationType> {
         let verifier = TokenScriptSignatureVerifier()
         return verifier.verify(xml: xmlString)
     }
@@ -569,13 +561,13 @@ private class PrivateXMLHandler {
         }
     }
 
-    private func extractContractNamesAndAddresses() -> [String: [(AlphaWallet.Address, RPCServer)]] {
-        var result = [String: [(AlphaWallet.Address, RPCServer)]]()
+    private func extractContractNamesAndAddresses() -> [String: [(TBakeWallet.Address, RPCServer)]] {
+        var result = [String: [(TBakeWallet.Address, RPCServer)]]()
         for eachContractElement in XMLHandler.getContractElements(fromRoot: xml, xmlContext: xmlContext) {
             guard let name = eachContractElement["name"] else { continue }
             let addressElements = XMLHandler.getAddressElements(fromContractElement: eachContractElement, xmlContext: xmlContext)
             result[name] = addressElements.compactMap {
-                guard let address = $0.text.flatMap({ AlphaWallet.Address(string: $0.trimmed) }), let chainId = $0["network"].flatMap({ Int($0) }) else { return nil }
+                guard let address = $0.text.flatMap({ TBakeWallet.Address(string: $0.trimmed) }), let chainId = $0["network"].flatMap({ Int($0) }) else { return nil }
                 return (address: address, server: RPCServer(chainID: chainId))
             }
         }
@@ -623,17 +615,17 @@ private class PrivateXMLHandler {
         return html
     }
 
-    fileprivate static func getHoldingContracts(xml: XMLDocument, xmlContext: XmlContext) -> [(AlphaWallet.Address, Int)] {
-        let fromTokenAsTopLevel: [(AlphaWallet.Address, Int)] = XMLHandler.getAddressElementsForHoldingContracts(fromRoot: xml, xmlContext: xmlContext)
+    fileprivate static func getHoldingContracts(xml: XMLDocument, xmlContext: XmlContext) -> [(TBakeWallet.Address, Int)] {
+        let fromTokenAsTopLevel: [(TBakeWallet.Address, Int)] = XMLHandler.getAddressElementsForHoldingContracts(fromRoot: xml, xmlContext: xmlContext)
                 .map { (contract: $0.text, chainId: $0["network"]) }
                 .compactMap { (contract, chainId) in
-                    if let contract = contract.flatMap({ AlphaWallet.Address(string: $0) }), let chainId = chainId.flatMap({ Int($0) }) {
+                    if let contract = contract.flatMap({ TBakeWallet.Address(string: $0) }), let chainId = chainId.flatMap({ Int($0) }) {
                         return (contract: contract, chainId: chainId)
                     } else {
                         return nil
                     }
                 }
-        let fromActionAsTopLevel: [(AlphaWallet.Address, Int)]
+        let fromActionAsTopLevel: [(TBakeWallet.Address, Int)]
         if let server = XMLHandler.getServerForNativeCurrencyAction(fromRoot: xml, xmlContext: xmlContext) {
             fromActionAsTopLevel = [(Constants.nativeCryptoAddressInDatabase, server.chainID)]
         } else {
@@ -672,58 +664,12 @@ private class PrivateXMLHandler {
 }
 // swiftlint:enable type_body_length
 
-private class ThreadSafeBaseXmlHandlersCache {
-    fileprivate var cache: [String: PrivateXMLHandler] = [:]
-    private let queue = DispatchQueue(label: "SynchronizedArrayAccess", attributes: .concurrent)
-
-    subscript(key: String) -> PrivateXMLHandler? {
-        get {
-            var element: PrivateXMLHandler?
-            queue.sync {
-                element = cache[key]
-            }
-            return element
-        }
-        set {
-            queue.async(flags: .barrier) {
-                self.cache[key] = newValue
-            }
-        }
-    }
-}
-
-private class ThreadSafeXmlHandlersCache {
-    fileprivate var cache: [AlphaWallet.Address: PrivateXMLHandler] = [:]
-    private let queue = DispatchQueue(label: "SynchronizedArrayAccess", attributes: .concurrent)
-
-    subscript(key: AlphaWallet.Address) -> PrivateXMLHandler? {
-        get {
-            var element: PrivateXMLHandler?
-            queue.sync {
-                element = cache[key]
-            }
-            return element
-        }
-        set {
-            queue.async(flags: .barrier) {
-                self.cache[key] = newValue
-            }
-        }
-    }
-
-    func removeAll() {
-        queue.async(flags: .barrier) {
-            self.cache.removeAll()
-        }
-    }
-}
-
 /// This class delegates all the functionality to a singleton of the actual XML parser. 1 for each contract. So we just parse the XML file 1 time only for each contract
 public class XMLHandler {
     //TODO not the best thing to have, especially because it's an optional
     static var callForAssetAttributeCoordinators: ServerDictionary<CallForAssetAttributeCoordinator>?
-    fileprivate static var xmlHandlers = ThreadSafeXmlHandlersCache()
-    fileprivate static var baseXmlHandlers = ThreadSafeBaseXmlHandlersCache()
+    fileprivate static var xmlHandlers = ThreadSafeDictionary<TBakeWallet.Address, PrivateXMLHandler>()
+    fileprivate static var baseXmlHandlers = ThreadSafeDictionary<String, PrivateXMLHandler>()
     private let privateXMLHandler: PrivateXMLHandler
     private let baseXMLHandler: PrivateXMLHandler?
 
@@ -843,12 +789,12 @@ public class XMLHandler {
         self.init(contract: token.contractAddress, tokenType: token.type, assetDefinitionStore: assetDefinitionStore)
     }
 
-    convenience init(contract: AlphaWallet.Address, tokenType: TokenType, assetDefinitionStore: AssetDefinitionStore) {
+    convenience init(contract: TBakeWallet.Address, tokenType: TokenType, assetDefinitionStore: AssetDefinitionStore) {
         self.init(contract: contract, optionalTokenType: tokenType, assetDefinitionStore: assetDefinitionStore)
     }
 
     //private because we don't want client code creating XMLHandler(s) to be able to accidentally pass in a nil TokenType
-    private init(contract: AlphaWallet.Address, optionalTokenType tokenType: TokenType?, assetDefinitionStore: AssetDefinitionStore) {
+    private init(contract: TBakeWallet.Address, optionalTokenType tokenType: TokenType?, assetDefinitionStore: AssetDefinitionStore) {
         if let handler = XMLHandler.xmlHandlers[contract] {
             privateXMLHandler = handler
         } else {
@@ -881,11 +827,11 @@ public class XMLHandler {
         }
     }
 
-    static func tokenScriptStatus(forContract contract: AlphaWallet.Address, assetDefinitionStore: AssetDefinitionStore) -> Promise<TokenLevelTokenScriptDisplayStatus> {
+    static func tokenScriptStatus(forContract contract: TBakeWallet.Address, assetDefinitionStore: AssetDefinitionStore) -> Promise<TokenLevelTokenScriptDisplayStatus> {
         XMLHandler(contract: contract, optionalTokenType: nil, assetDefinitionStore: assetDefinitionStore).tokenScriptStatus
     }
 
-    static func getNonTokenHoldingContract(byName name: String, server: RPCServerOrAny, fromContractNamesAndAddresses contractNamesAndAddresses: [String: [(AlphaWallet.Address, RPCServer)]]) -> AlphaWallet.Address? {
+    static func getNonTokenHoldingContract(byName name: String, server: RPCServerOrAny, fromContractNamesAndAddresses contractNamesAndAddresses: [String: [(TBakeWallet.Address, RPCServer)]]) -> TBakeWallet.Address? {
         guard let addressesAndServers = contractNamesAndAddresses[name] else { return nil }
         switch server {
         case .any:
@@ -899,7 +845,7 @@ public class XMLHandler {
     }
 
     //Returns nil if the XML schema is not supported
-    static func getHoldingContracts(forTokenScript xmlString: String) -> [(AlphaWallet.Address, Int)]? {
+    static func getHoldingContracts(forTokenScript xmlString: String) -> [(TBakeWallet.Address, Int)]? {
         //Lang doesn't matter
         let xmlContext = PrivateXMLHandler.createXmlContext(withLang: "en")
 
@@ -920,7 +866,7 @@ public class XMLHandler {
         return PrivateXMLHandler.getEntities(inXml: xml)
     }
 
-    static func invalidate(forContract contract: AlphaWallet.Address) {
+    static func invalidate(forContract contract: TBakeWallet.Address) {
         xmlHandlers[contract] = nil
     }
 
@@ -930,10 +876,10 @@ public class XMLHandler {
 
     func getToken(name: String, symbol: String, fromTokenIdOrEvent tokenIdOrEvent: TokenIdOrEvent, index: UInt16, inWallet account: Wallet, server: RPCServer, tokenType: TokenType) -> Token {
         //TODO get rid of the forced unwrap
-        let callForAssetAttributeCoordinator = (XMLHandler.callForAssetAttributeCoordinators?[server])!
-        let overrides = privateXMLHandler.getToken(name: name, symbol: symbol, fromTokenIdOrEvent: tokenIdOrEvent, index: index, inWallet: account, server: server, callForAssetAttributeCoordinator: callForAssetAttributeCoordinator, tokenType: tokenType)
+
+        let overrides = privateXMLHandler.getToken(name: name, symbol: symbol, fromTokenIdOrEvent: tokenIdOrEvent, index: index, inWallet: account, server: server, tokenType: tokenType)
         if let baseXMLHandler = baseXMLHandler {
-            let base = baseXMLHandler.getToken(name: name, symbol: symbol, fromTokenIdOrEvent: tokenIdOrEvent, index: index, inWallet: account, server: server, callForAssetAttributeCoordinator: callForAssetAttributeCoordinator, tokenType: tokenType)
+            let base = baseXMLHandler.getToken(name: name, symbol: symbol, fromTokenIdOrEvent: tokenIdOrEvent, index: index, inWallet: account, server: server, tokenType: tokenType)
             let baseValues = base.values
             let overriddenValues = overrides.values
             return Token(

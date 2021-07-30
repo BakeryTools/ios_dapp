@@ -32,7 +32,7 @@ enum TransactionType {
     case claimPaidErc875MagicLink(TokenObject)
     case tokenScript(TokenObject)
 
-    var contractForFungibleSend: AlphaWallet.Address? {
+    var contractForFungibleSend: TBakeWallet.Address? {
         switch self {
         case .nativeCryptocurrency:
             return nil
@@ -113,7 +113,7 @@ extension TransactionType {
         }
     }
 
-    var contract: AlphaWallet.Address {
+    var contract: TBakeWallet.Address {
         switch self {
         case .nativeCryptocurrency:
             return Constants.nativeCryptoAddressInDatabase

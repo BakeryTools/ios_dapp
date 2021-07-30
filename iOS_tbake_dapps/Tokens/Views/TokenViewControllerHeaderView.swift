@@ -3,13 +3,13 @@
 import Foundation
 import UIKit
 
-protocol TokenViewControllerHeaderViewDelegate: class {
-    func didPressViewContractWebPage(forContract contract: AlphaWallet.Address, inHeaderView: TokenViewControllerHeaderView)
+protocol TokenViewControllerHeaderViewDelegate: AnyObject {
+    func didPressViewContractWebPage(forContract contract: TBakeWallet.Address, inHeaderView: TokenViewControllerHeaderView)
     func didShowHideMarketPrice(inHeaderView: TokenViewControllerHeaderView)
 }
 
 class TokenViewControllerHeaderView: UIView {
-    private let contract: AlphaWallet.Address
+    private let contract: TBakeWallet.Address
     private let recentTransactionsLabel = UILabel()
     private let recentTransactionsLabelBorders = (top: UIView(), bottom: UIView())
     private let spacers = (beforeTokenScriptFileStatus: UIView.spacer(height: DataEntry.Metric.SendHeader.topSpacerHeight), ())
@@ -17,7 +17,7 @@ class TokenViewControllerHeaderView: UIView {
     let sendHeaderView = SendHeaderView()
     weak var delegate: TokenViewControllerHeaderViewDelegate?
 
-    init(contract: AlphaWallet.Address) {
+    init(contract: TBakeWallet.Address) {
         self.contract = contract
         super.init(frame: .zero)
 

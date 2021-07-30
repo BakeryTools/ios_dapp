@@ -27,9 +27,9 @@ extension WalletConnectServer {
         }
 
         case signTransaction(_ transaction: RawTransactionBridge)
-        case sign(address: AlphaWallet.Address, message: String)
-        case signPersonalMessage(address: AlphaWallet.Address, message: String)
-        case signTypedData(address: AlphaWallet.Address, data: EIP712TypedData)
+        case sign(address: TBakeWallet.Address, message: String)
+        case signPersonalMessage(address: TBakeWallet.Address, message: String)
+        case signTypedData(address: TBakeWallet.Address, data: EIP712TypedData)
         case signTypedMessage(data: [EthTypedData])
         case sendTransaction(_ transaction: RawTransactionBridge)
         case sendRawTransaction(_ value: String)
@@ -42,14 +42,14 @@ extension WalletConnectServer {
                 let addressRawValue = try request.parameter(of: String.self, at: 1)
                 let data = try request.parameter(of: String.self, at: 0)
 
-                guard let address = AlphaWallet.Address(string: addressRawValue) else { throw AnyError.invalid }
+                guard let address = TBakeWallet.Address(string: addressRawValue) else { throw AnyError.invalid }
 
                 self = .signPersonalMessage(address: address, message: data)
             case .sign:
                 let addressRawValue = try request.parameter(of: String.self, at: 0)
                 let data = try request.parameter(of: String.self, at: 1)
 
-                guard let address = AlphaWallet.Address(string: addressRawValue) else { throw AnyError.invalid }
+                guard let address = TBakeWallet.Address(string: addressRawValue) else { throw AnyError.invalid }
 
                 self = .sign(address: address, message: data)
             case .signTransaction:
@@ -61,7 +61,7 @@ extension WalletConnectServer {
                     let addressRawValue = try request.parameter(of: String.self, at: 0)
                     let rawValue = try request.parameter(of: String.self, at: 1)
 
-                    guard let address = AlphaWallet.Address(string: addressRawValue), let data = rawValue.data(using: .utf8) else { throw AnyError.invalid }
+                    guard let address = TBakeWallet.Address(string: addressRawValue), let data = rawValue.data(using: .utf8) else { throw AnyError.invalid }
 
                     let typed = try JSONDecoder().decode(EIP712TypedData.self, from: data)
                     self = .signTypedData(address: address, data: typed)

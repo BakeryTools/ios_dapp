@@ -9,10 +9,27 @@ struct AccountsViewModel {
     private let watchedWallets: [Wallet]
     private let keystore: Keystore
 
-    var sections: [AccountsSectionType] = [/*.summary,*/ .hdWallet, .keystoreWallet, .watchedWallet]
+    var sections: [AccountsSectionType] {
+        switch configuration {
+        case .changeWallets:
+            return [.hdWallet, .keystoreWallet, .watchedWallet]
+        case .summary:
+            return [.summary, .hdWallet, .keystoreWallet, .watchedWallet]
+        }
+    }
+
     let configuration: AccountsCoordinatorViewModel.Configuration
-    var addresses: [AlphaWallet.Address] {
+    var addresses: [TBakeWallet.Address] {
         return (hdWallets + keystoreWallets + watchedWallets).compactMap { $0.address }
+    }
+
+    var subscribeForBalanceUpdates: Bool {
+        switch configuration {
+        case .changeWallets:
+            return false
+        case .summary:
+            return true
+        }
     }
 
     init(keystore: Keystore, config: Config, configuration: AccountsCoordinatorViewModel.Configuration) {
@@ -22,6 +39,13 @@ struct AccountsViewModel {
         hdWallets = keystore.wallets.filter { keystore.isHdWallet(wallet: $0) }.sorted { $0.address.eip55String < $1.address.eip55String }
         keystoreWallets = keystore.wallets.filter { keystore.isKeystore(wallet: $0) }.sorted { $0.address.eip55String < $1.address.eip55String }
         watchedWallets = keystore.wallets.filter { keystore.isWatched(wallet: $0) }.sorted { $0.address.eip55String < $1.address.eip55String }
+    }
+
+    subscript(indexPath: IndexPath) -> AccountViewModel? {
+        guard let account = account(for: indexPath) else { return nil }
+        let walletName = self.walletName(forAccount: account)
+
+        return AccountViewModel(wallet: account, current: keystore.currentWallet, walletName: walletName)
     }
 
     var title: String {
@@ -79,9 +103,19 @@ struct AccountsViewModel {
         case .hdWallet:
             return (hdWallets.isEmpty, .hdWallet)
         case .keystoreWallet:
-            return (shouldHideSectionHeaders || keystoreWallets.isEmpty, .keystoreWallet)
+            switch configuration {
+            case .changeWallets:
+                return (shouldHideSectionHeaders || keystoreWallets.isEmpty, .keystoreWallet)
+            case .summary:
+                return (keystoreWallets.isEmpty, .keystoreWallet)
+            }
         case .watchedWallet:
-            return (shouldHideSectionHeaders || watchedWallets.isEmpty, .watchedWallet)
+            switch configuration {
+            case .changeWallets:
+                return (shouldHideSectionHeaders || watchedWallets.isEmpty, .watchedWallet)
+            case .summary:
+                return (watchedWallets.isEmpty, .watchedWallet)
+            }
         case .summary:
             return (shouldHide: false, section: .summary)
         }
@@ -98,7 +132,7 @@ struct AccountsViewModel {
         case .summary:
             return nil
         }
-    } 
+    }
 
 }
 
@@ -111,13 +145,13 @@ enum AccountsSectionType: Int, CaseIterable {
     var title: String {
         switch self {
         case .summary:
-            return R.string.localizable.walletTypesSummary()
+            return R.string.localizable.walletTypesSummary().uppercased()
         case .hdWallet:
-            return R.string.localizable.walletTypesHdWallets()
+            return R.string.localizable.walletTypesHdWallets().uppercased()
         case .keystoreWallet:
-            return R.string.localizable.walletTypesKeystoreWallets()
+            return R.string.localizable.walletTypesKeystoreWallets().uppercased()
         case .watchedWallet:
-            return R.string.localizable.walletTypesWatchedWallets()
+            return R.string.localizable.walletTypesWatchedWallets().uppercased()
         }
     }
 }

@@ -7,7 +7,7 @@ import JSONRPCKit
 struct GetTransactionCountRequest: JSONRPCKit.Request {
     typealias Response = Int
 
-    let address: AlphaWallet.Address
+    let address: TBakeWallet.Address
     let state: String
 
     var method: String {

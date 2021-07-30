@@ -49,13 +49,13 @@ struct GasSpeedTableViewCellViewModel {
     var titleAttributedString: NSAttributedString? {
         if isSelected {
             return NSAttributedString(string: title, attributes: [
-                .foregroundColor: Colors.black,
-                .font: Fonts.semibold(size: 17)
+                .foregroundColor: Screen.TokenCard.Color.title,
+                .font: Screen.TokenCard.Font.title
             ])
         } else {
             return NSAttributedString(string: title, attributes: [
-                .foregroundColor: Colors.black,
-                .font: Fonts.regular(size: 17)
+                .foregroundColor: Screen.TokenCard.Color.subtitle,
+                .font: Screen.TokenCard.Font.subtitle
             ])
         }
     }
@@ -64,22 +64,22 @@ struct GasSpeedTableViewCellViewModel {
         guard let estimatedTime = estimatedTime else { return nil }
 
         return NSAttributedString(string: estimatedTime, attributes: [
-            .foregroundColor: R.color.mine()!,
-            .font: Fonts.regular(size: 15)
+            .foregroundColor: Screen.TokenCard.Color.grayLabel,
+            .font: Screen.TokenCard.Font.subtitle
         ])
     }
 
     var detailsAttributedString: NSAttributedString? {
         return NSAttributedString(string: gasFeeString, attributes: [
-            .foregroundColor: R.color.dove()!,
-            .font: Fonts.regular(size: 15)
+            .foregroundColor: Screen.TokenCard.Color.grayLabel,
+            .font: Screen.TokenCard.Font.subtitle
         ])
     }
 
     var gasPriceAttributedString: NSAttributedString? {
         NSAttributedString(string: gasPriceString, attributes: [
-            .foregroundColor: R.color.dove()!,
-            .font: Fonts.regular(size: 13)
+            .foregroundColor: Screen.TokenCard.Color.grayLabel,
+            .font: Screen.TokenCard.Font.valueChangeLabel
         ])
     }
 

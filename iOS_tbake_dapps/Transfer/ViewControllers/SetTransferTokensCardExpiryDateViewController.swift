@@ -2,7 +2,7 @@
 
 import UIKit
 
-protocol SetTransferTokensCardExpiryDateViewControllerDelegate: class, CanOpenURL {
+protocol SetTransferTokensCardExpiryDateViewControllerDelegate: AnyObject, CanOpenURL {
     func didPressNext(tokenHolder: TokenHolder, linkExpiryDate: Date, in viewController: SetTransferTokensCardExpiryDateViewController)
     func didPressViewInfo(in viewController: SetTransferTokensCardExpiryDateViewController)
 }
@@ -27,7 +27,7 @@ class SetTransferTokensCardExpiryDateViewController: UIViewController, TokenVeri
     private let analyticsCoordinator: AnalyticsCoordinator
     private let tokenHolder: TokenHolder
 
-    var contract: AlphaWallet.Address {
+    var contract: TBakeWallet.Address {
         return viewModel.token.contractAddress
     }
     var server: RPCServer {

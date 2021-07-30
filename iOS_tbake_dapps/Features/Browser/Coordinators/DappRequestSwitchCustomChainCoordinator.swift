@@ -1,11 +1,9 @@
-// Copyright © 2021 Stormbird PTE. LTD.
-
 import UIKit
 
-protocol DappRequestSwitchCustomChainCoordinatorDelegate: class {
+protocol DappRequestSwitchCustomChainCoordinatorDelegate: AnyObject {
     func notifySuccessful(withCallbackId callbackId: Int, inCoordinator coordinator: DappRequestSwitchCustomChainCoordinator)
     func restartToEnableAndSwitchBrowserToServer(inCoordinator coordinator: DappRequestSwitchCustomChainCoordinator)
-    func restartToAddEnableAAndSwitchBrowserToServer(inCoordinator coordinator: DappRequestSwitchCustomChainCoordinator)
+    func restartToAddEnableAndSwitchBrowserToServer(inCoordinator coordinator: DappRequestSwitchCustomChainCoordinator)
     func switchBrowserToExistingServer(_ server: RPCServer, url: URL?, inCoordinator coordinator: DappRequestSwitchCustomChainCoordinator)
     func userCancelled(withCallbackId callbackId: Int, inCoordinator coordinator: DappRequestSwitchCustomChainCoordinator)
     func failed(withErrorMessage errorMessage: String, withCallbackId callbackId: Int, inCoordinator coordinator: DappRequestSwitchCustomChainCoordinator)
@@ -21,18 +19,20 @@ class DappRequestSwitchCustomChainCoordinator: NSObject, Coordinator {
     private let callbackId: Int
     private let customChain: WalletAddEthereumChainObject
     private let restartQueue: RestartTaskQueue
+    private let analyticsCoordinator: AnalyticsCoordinator
     private let currentUrl: URL?
     private let viewController: UIViewController
 
     var coordinators: [Coordinator] = []
     weak var delegate: DappRequestSwitchCustomChainCoordinatorDelegate?
 
-    init(config: Config, server: RPCServer, callbackId: Int, customChain: WalletAddEthereumChainObject, restartQueue: RestartTaskQueue, currentUrl: URL?, inViewController viewController: UIViewController) {
+    init(config: Config, server: RPCServer, callbackId: Int, customChain: WalletAddEthereumChainObject, restartQueue: RestartTaskQueue, analyticsCoordinator: AnalyticsCoordinator, currentUrl: URL?, inViewController viewController: UIViewController) {
         self.config = config
         self.server = server
         self.callbackId = callbackId
         self.customChain = customChain
         self.restartQueue = restartQueue
+        self.analyticsCoordinator = analyticsCoordinator
         self.currentUrl = currentUrl
         self.viewController = viewController
     }
@@ -71,11 +71,11 @@ class DappRequestSwitchCustomChainCoordinator: NSObject, Coordinator {
                 viewController: viewController,
                 completion: { [self] choice in
                     if choice == 0 {
-                        let enableChain = EnableChain(existingServer, restartQueue: restartQueue, url: currentUrl)
+                        let enableChain = EnableChain(existingServer, restartQueue: self.restartQueue, url: self.currentUrl)
                         enableChain.delegate = self
                         enableChain.run()
                     } else {
-                        delegate?.userCancelled(withCallbackId: callbackID, inCoordinator: self)
+                        self.delegate?.userCancelled(withCallbackId: callbackID, inCoordinator: self)
                     }
                 })
     }
@@ -89,7 +89,7 @@ class DappRequestSwitchCustomChainCoordinator: NSObject, Coordinator {
                 viewController: viewController,
                 completion: { [self] choice in
                     func runAddCustomChain(isTestnet: Bool) {
-                        let addCustomChain = AddCustomChain(customChain, isTestnet: isTestnet, restartQueue: restartQueue, url: currentUrl)
+                        let addCustomChain = AddCustomChain(customChain, isTestnet: isTestnet, restartQueue: self.restartQueue, url: self.currentUrl)
                         self.addCustomChain = (chain: addCustomChain, callbackId: callbackID)
                         addCustomChain.delegate = self
                         addCustomChain.run()
@@ -100,7 +100,7 @@ class DappRequestSwitchCustomChainCoordinator: NSObject, Coordinator {
                     case 1:
                         runAddCustomChain(isTestnet: true)
                     default:
-                        delegate?.userCancelled(withCallbackId: callbackID, inCoordinator: self)
+                        self.delegate?.userCancelled(withCallbackId: callbackID, inCoordinator: self)
                     }
                 })
     }
@@ -114,9 +114,9 @@ class DappRequestSwitchCustomChainCoordinator: NSObject, Coordinator {
                 viewController: viewController,
                 completion: { [self] choice in
                     if choice == 0 {
-                        delegate?.switchBrowserToExistingServer(existingServer, url: currentUrl, inCoordinator: self)
+                        self.delegate?.switchBrowserToExistingServer(existingServer, url: self.currentUrl, inCoordinator: self)
                     } else {
-                        delegate?.userCancelled(withCallbackId: callbackID, inCoordinator: self)
+                        self.delegate?.userCancelled(withCallbackId: callbackID, inCoordinator: self)
                     }
                 })
     }
@@ -137,11 +137,12 @@ extension DappRequestSwitchCustomChainCoordinator: EnableChainDelegate {
 extension DappRequestSwitchCustomChainCoordinator: AddCustomChainDelegate {
     //Don't need to notify browser/dapp since we are restarting UI
     func notifyAddCustomChainQueuedSuccessfully(in addCustomChain: AddCustomChain) {
+        analyticsCoordinator.log(action: Analytics.Action.addCustomChain, properties: [Analytics.Properties.addCustomChainType.rawValue: "dapp"])
         guard self.addCustomChain != nil else {
             delegate?.cleanup(coordinator: self)
             return
         }
-        delegate?.restartToAddEnableAAndSwitchBrowserToServer(inCoordinator: self)
+        delegate?.restartToAddEnableAndSwitchBrowserToServer(inCoordinator: self)
     }
 
     func notifyAddCustomChainFailed(error: AddCustomChainError, in addCustomChain: AddCustomChain) {

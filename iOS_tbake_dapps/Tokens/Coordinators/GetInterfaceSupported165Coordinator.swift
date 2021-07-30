@@ -14,7 +14,7 @@ class GetInterfaceSupported165Coordinator {
 
     func getInterfaceSupported165(
             hash: String,
-            contract: AlphaWallet.Address,
+            contract: TBakeWallet.Address,
             completion: @escaping (Result<Bool, AnyError>) -> Void
     ) {
         let function = GetInterfaceSupported165Encode()

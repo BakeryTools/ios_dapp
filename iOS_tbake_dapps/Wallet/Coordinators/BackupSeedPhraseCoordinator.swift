@@ -4,9 +4,9 @@ import Foundation
 import LocalAuthentication
 import UIKit
 
-protocol BackupSeedPhraseCoordinatorDelegate: class {
-    func didClose(forAccount account: AlphaWallet.Address, inCoordinator coordinator: BackupSeedPhraseCoordinator)
-    func didVerifySeedPhraseSuccessfully(forAccount account: AlphaWallet.Address, inCoordinator coordinator: BackupSeedPhraseCoordinator)
+protocol BackupSeedPhraseCoordinatorDelegate: AnyObject {
+    func didClose(forAccount account: TBakeWallet.Address, inCoordinator coordinator: BackupSeedPhraseCoordinator)
+    func didVerifySeedPhraseSuccessfully(forAccount account: TBakeWallet.Address, inCoordinator coordinator: BackupSeedPhraseCoordinator)
 }
 
 class BackupSeedPhraseCoordinator: Coordinator {
@@ -22,7 +22,7 @@ class BackupSeedPhraseCoordinator: Coordinator {
         controller.delegate = self
         return controller
     }()
-    private let account: AlphaWallet.Address
+    private let account: TBakeWallet.Address
     private let analyticsCoordinator: AnalyticsCoordinator
     private let keystore: Keystore
     private var _context: LAContext?
@@ -49,7 +49,7 @@ class BackupSeedPhraseCoordinator: Coordinator {
     var coordinators: [Coordinator] = []
     weak var delegate: BackupSeedPhraseCoordinatorDelegate?
 
-    init(navigationController: UINavigationController = UINavigationController(), keystore: Keystore, account: AlphaWallet.Address, analyticsCoordinator: AnalyticsCoordinator) {
+    init(navigationController: UINavigationController = UINavigationController(), keystore: Keystore, account: TBakeWallet.Address, analyticsCoordinator: AnalyticsCoordinator) {
         self.navigationController = navigationController
         self.keystore = keystore
         self.account = account
@@ -105,13 +105,13 @@ extension BackupSeedPhraseCoordinator: ShowSeedPhraseViewControllerDelegate {
         return context
     }
 
-    func didTapTestSeedPhrase(for account: AlphaWallet.Address, inViewController viewController: ShowSeedPhraseViewController) {
+    func didTapTestSeedPhrase(for account: TBakeWallet.Address, inViewController viewController: ShowSeedPhraseViewController) {
         //Important to re-create it because we want to make sure the seed phrase display state etc are correct
         verifySeedPhraseViewController.navigationItem.largeTitleDisplayMode = .never
         navigationController.pushViewController(verifySeedPhraseViewController, animated: true)
     }
 
-    func biometricsFailed(for account: AlphaWallet.Address, inViewController viewController: ShowSeedPhraseViewController) {
+    func biometricsFailed(for account: TBakeWallet.Address, inViewController viewController: ShowSeedPhraseViewController) {
         clearContext()
     }
 }
@@ -121,11 +121,11 @@ extension BackupSeedPhraseCoordinator: VerifySeedPhraseViewControllerDelegate {
         return context
     }
 
-    func didVerifySeedPhraseSuccessfully(for account: AlphaWallet.Address, in viewController: VerifySeedPhraseViewController) {
+    func didVerifySeedPhraseSuccessfully(for account: TBakeWallet.Address, in viewController: VerifySeedPhraseViewController) {
         delegate?.didVerifySeedPhraseSuccessfully(forAccount: account, inCoordinator: self)
     }
 
-    func biometricsFailed(for account: AlphaWallet.Address, inViewController viewController: VerifySeedPhraseViewController) {
+    func biometricsFailed(for account: TBakeWallet.Address, inViewController viewController: VerifySeedPhraseViewController) {
         clearContext()
     }
 }

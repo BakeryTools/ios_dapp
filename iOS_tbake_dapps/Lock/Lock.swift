@@ -10,8 +10,8 @@ protocol LockInterface {
 
 class Lock: LockInterface {
     private struct Keys {
-        static let service = "alphawallet.lock"
-        static let account = "alphawallet.account"
+        static let service = "tbakewallet.lock"
+        static let account = "tbakewallet.account"
     }
 
     private let passcodeAttempts = "passcodeAttempts"
@@ -21,32 +21,38 @@ class Lock: LockInterface {
     var isPasscodeSet: Bool {
         return currentPasscode != nil
     }
+    
     var currentPasscode: String? {
         return SAMKeychain.password(forService: Keys.service, account: Keys.account)
     }
+    
     var numberOfAttempts: Int {
         guard let attempts = keychain.get(passcodeAttempts) else {
             return 0
         }
         return Int(attempts)!
     }
+    
     var recordedMaxAttemptTime: Date {
         //This method is called only when we knew that maxAttemptTime is set. So no worries with !.
         let timeString = keychain.get(maxAttemptTime)!
         return dateFormatter.date(from: timeString)!
     }
+    
     var isIncorrectMaxAttemptTimeSet: Bool {
         guard let timeString = keychain.get(maxAttemptTime), !timeString.isEmpty  else {
             return false
         }
         return true
     }
+    
     private var dateFormatter: DateFormatter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = DateFormatter.Style.short
         dateFormatter.timeStyle = DateFormatter.Style.short
         return dateFormatter
     }
+    
     func isPasscodeValid(passcode: String) -> Bool {
         return passcode == currentPasscode
     }

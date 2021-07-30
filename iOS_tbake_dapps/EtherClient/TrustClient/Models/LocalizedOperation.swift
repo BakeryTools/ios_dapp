@@ -10,8 +10,8 @@ struct ERC20Contract: Decodable {
     let symbol: String
 
     //TODO forced unwrap is not good
-    var contractAddress: AlphaWallet.Address! {
-        return AlphaWallet.Address(uncheckedAgainstNullAddress: address)!
+    var contractAddress: TBakeWallet.Address! {
+        return TBakeWallet.Address(uncheckedAgainstNullAddress: address)!
     }
 }
 
@@ -31,11 +31,11 @@ struct LocalizedOperation: Decodable {
         case contract
     }
 
-    var fromAddress: AlphaWallet.Address? {
-        return AlphaWallet.Address(uncheckedAgainstNullAddress: from)
+    var fromAddress: TBakeWallet.Address? {
+        return TBakeWallet.Address(uncheckedAgainstNullAddress: from)
     }
 
-    var toAddress: AlphaWallet.Address? {
-        return AlphaWallet.Address(uncheckedAgainstNullAddress: to)
+    var toAddress: TBakeWallet.Address? {
+        return TBakeWallet.Address(uncheckedAgainstNullAddress: to)
     }
 }

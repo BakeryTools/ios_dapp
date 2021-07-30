@@ -11,13 +11,13 @@ import BigInt
 
 class TokenHolder {
     let tokens: [Token]
-    let contractAddress: AlphaWallet.Address
+    let contractAddress: TBakeWallet.Address
     let hasAssetDefinition: Bool
 
     var isSelected = false
     var areDetailsVisible = false
 
-    init(tokens: [Token], contractAddress: AlphaWallet.Address, hasAssetDefinition: Bool) {
+    init(tokens: [Token], contractAddress: TBakeWallet.Address, hasAssetDefinition: Bool) {
         self.tokens = tokens
         self.contractAddress = contractAddress
         self.hasAssetDefinition = hasAssetDefinition

@@ -3,7 +3,7 @@
 import Foundation
 
 enum QRCodeValue {
-    case address(AlphaWallet.Address)
+    case address(TBakeWallet.Address)
     ///Strictly speaking, EIP 681 should be like this:
     ///  ethereum:pay-0xfb6916095ca1df60bb79Ce92ce3ea74c37c5d359?value=2.014e18
     ///the "pay-" prefix is optional, if that prefix absent, the payload (0xfb6 here) must be an address. This is because not all ethereum: links are EIP 681
@@ -14,7 +14,7 @@ struct QRCodeValueParser {
     static func from(string: String) -> QRCodeValue? {
         let string = string.trimmed
         let parts = string.components(separatedBy: ":")
-        if parts.count == 1, let address = parts.first.flatMap({ AlphaWallet.Address(string: $0) }) {
+        if parts.count == 1, let address = parts.first.flatMap({ TBakeWallet.Address(string: $0) }) {
             return .address(address)
         }
 

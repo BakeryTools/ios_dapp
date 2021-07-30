@@ -12,6 +12,7 @@ class WalletSummaryTableViewCell: UITableViewCell {
     private let balanceLabel = UILabel()
 
     var viewModel: WalletSummaryTableViewCellViewModel?
+    var walletSummarySubscriptionKey: Subscribable<WalletSummary>.SubscribableKey?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -55,41 +56,3 @@ class WalletSummaryTableViewCell: UITableViewCell {
         accessoryType = viewModel.accessoryType
     }
 }
-
-struct WalletSummaryTableViewCellViewModel {
-    private let server: RPCServer
-    let walletBalance: Balance?
-
-    init(walletBalance: Balance?, server: RPCServer) {
-        self.walletBalance = walletBalance
-        self.server = server
-    }
-
-    private var balance: String {
-        let amount = walletBalance?.amountShort ?? "--"
-        return "\(amount) \(server.symbol)"
-    }
-
-    var balanceAttributedString: NSAttributedString {
-        return .init(string: balance, attributes: [
-            .font: Screen.TokenCard.Font.subtitle,
-            .foregroundColor: Screen.TokenCard.Color.title,
-        ])
-    }
-
-    var apprecation24HoursAttributedString: NSAttributedString {
-        return .init(string: "balance", attributes: [
-            .font: Screen.TokenCard.Font.subtitle,
-            .foregroundColor: Screen.TokenCard.Color.grayLabel,
-        ])
-    }
-
-    var accessoryType: UITableViewCell.AccessoryType {
-        return .disclosureIndicator
-    }
-
-    var backgroundColor: UIColor {
-        return Colors.backgroundClear
-    }
-}
-

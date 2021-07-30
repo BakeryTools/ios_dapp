@@ -1,5 +1,3 @@
-// Copyright SIX DAY LLC. All rights reserved.
-
 import Foundation
 import BigInt
 import RealmSwift
@@ -112,7 +110,7 @@ extension Transaction {
 }
 
 extension Transaction {
-    static func from(from: AlphaWallet.Address, transaction: SentTransaction, tokensDataStore: TokensDataStore) -> Transaction {
+    static func from(from: TBakeWallet.Address, transaction: SentTransaction, tokensDataStore: TokensDataStore) -> Transaction {
         let (operations: operations, isErc20Interaction: isErc20Interaction) = decodeOperations(fromData: transaction.original.data, from: transaction.original.account, contractOrRecipient: transaction.original.to, tokensDataStore: tokensDataStore)
 
         return Transaction(
@@ -135,7 +133,7 @@ extension Transaction {
     }
 
     //TODO add support for more types of pending transactions
-    fileprivate static func decodeOperations(fromData data: Data, from: AlphaWallet.Address, contractOrRecipient: AlphaWallet.Address?, tokensDataStore: TokensDataStore) -> (operations: [LocalizedOperationObject], isErc20Interaction: Bool) {
+    fileprivate static func decodeOperations(fromData data: Data, from: TBakeWallet.Address, contractOrRecipient: TBakeWallet.Address?, tokensDataStore: TokensDataStore) -> (operations: [LocalizedOperationObject], isErc20Interaction: Bool) {
         if let functionCallMetaData = DecodedFunctionCall(data: data), let contract = contractOrRecipient, let token = tokensDataStore.tokenThreadSafe(forContract: contract) {
             switch functionCallMetaData.type {
             case .erc20Approve(let spender, let value):

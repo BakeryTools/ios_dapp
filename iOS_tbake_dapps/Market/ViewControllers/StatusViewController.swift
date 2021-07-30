@@ -2,14 +2,14 @@
 import Foundation
 import UIKit
 
-protocol StatusViewControllerDelegate: class {
+protocol StatusViewControllerDelegate: AnyObject {
 	func didPressDone(in viewController: StatusViewController)
 }
 
 class StatusViewController: UIViewController {
 	private let background = UIView()
 	private let imageView = UIImageView()
-	private let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
+    private let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
 	private let titleLabel = UILabel()
 	private let actionButton = UIButton()
 	private var viewModel: StatusViewControllerViewModel?

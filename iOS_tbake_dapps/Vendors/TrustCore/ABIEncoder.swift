@@ -166,7 +166,7 @@ public final class ABIEncoder {
         data.append(address.data)
     }
 
-    public func encode(_ address: AlphaWallet.Address) throws {
+    public func encode(_ address: TBakeWallet.Address) throws {
         let padding = ((address.data.count + 31) / 32) * 32 - address.data.count
         data.append(Data(repeating: 0, count: padding))
         data.append(address.data)

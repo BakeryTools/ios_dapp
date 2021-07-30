@@ -2,12 +2,12 @@
 
 import Foundation
 
-//TODO this should probably be part of AlphaWallet.Address functionality instead, but narrowing the scope of the current change when we added this
+//TODO this should probably be part of TBakeWallet.Address functionality instead, but narrowing the scope of the current change when we added this
 enum AddressOrEnsName {
-    case address(AlphaWallet.Address)
+    case address(TBakeWallet.Address)
     case ensName(String)
 
-    init(address: AlphaWallet.Address) {
+    init(address: TBakeWallet.Address) {
         self = .address(address)
     }
 
@@ -27,7 +27,7 @@ enum AddressOrEnsName {
 
     init?(string: String) {
         let optionalResult: AddressOrEnsName?
-        if let address = AlphaWallet.Address(string: string) {
+        if let address = TBakeWallet.Address(string: string) {
             optionalResult = .address(address)
         } else {
             optionalResult = AddressOrEnsName(ensName: string)
@@ -48,7 +48,7 @@ enum AddressOrEnsName {
         }
     }
 
-    var contract: AlphaWallet.Address? {
+    var contract: TBakeWallet.Address? {
         switch self {
         case .address(let address):
             return address

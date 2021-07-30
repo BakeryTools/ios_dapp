@@ -72,17 +72,17 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) uses the camera to scan QR codes.</string>
+	<string>BakeryTools uses the camera to scan QR codes.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>$(PRODUCT_NAME) uses Face ID to access wallet or to approve transaction.</string>
+	<string>BakeryTools uses Face ID to access wallet or to approve transaction.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Location data may be accessed when you are using the in-app browser and tap on a link to retrieve your current location</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>$(PRODUCT_NAME) might capture audio if a website needs to perform KYC (with your permission)</string>
+	<string>BakeryTools might capture audio if a website needs to perform KYC (with your permission)</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>$(PRODUCT_NAME) access photo library to send QR Code to your contacts.</string>
+	<string>BakeryTools access photo library to send QR Code to your contacts.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>$(PRODUCT_NAME) access photo library to send QR Code to your contacts.</string>
+	<string>BakeryTools access photo library to send QR Code to your contacts.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>LibreFranklin-Regular.ttf</string>

@@ -16,7 +16,7 @@ class TokenScriptSignatureVerifier {
         return Promise { seal in
             if Features.isActivityEnabled {
                 if TokenScript.baseTokenScriptFiles.values.contains(xml) {
-                    seal.fulfill(.verified(domainName: "*.aw.app"))
+                    seal.fulfill(.verified(domainName: "*.tbake.app"))
                     return
                 }
             }

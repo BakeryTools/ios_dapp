@@ -19,7 +19,7 @@ class AddressOrEnsNameLabel: UILabel {
         case full
         case truncateMiddle
 
-        func formattedAddress(_ address: AlphaWallet.Address) -> String {
+        func formattedAddress(_ address: TBakeWallet.Address) -> String {
             switch self {
             case .full:
                 return address.eip55String
@@ -40,7 +40,7 @@ class AddressOrEnsNameLabel: UILabel {
     }
 
     let loadingIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .gray)
+        let indicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.medium)
         indicator.hidesWhenStopped = true
         indicator.translatesAutoresizingMaskIntoConstraints = false
         indicator.heightAnchor.constraint(equalToConstant: 15).isActive = true
@@ -104,7 +104,7 @@ class AddressOrEnsNameLabel: UILabel {
     func resolve(_ value: String, completion: @escaping ((AddressOrEnsResolution) -> Void)) {
         clear()
 
-        if let address = AlphaWallet.Address(string: value) {
+        if let address = TBakeWallet.Address(string: value) {
             inResolvingState = true
             ENSReverseLookupCoordinator(server: .forResolvingEns).getENSNameFromResolver(forAddress: address) { [weak self] result in
                 guard let strongSelf = self else { return }
@@ -119,7 +119,7 @@ class AddressOrEnsNameLabel: UILabel {
         } else if value.contains(".") {
             inResolvingState = true
 
-            DomainResolver(server: .forResolvingEns).resolveAddress(value).recover { _ -> Promise<AlphaWallet.Address> in
+            DomainResolver(server: .forResolvingEns).resolveAddress(value).recover { _ -> Promise<TBakeWallet.Address> in
                 GetENSAddressCoordinator(server: .forResolvingEns).getENSAddressFromResolverPromise(value: value)
             }.done { address in
                 completion(.resolved(.address(address)))

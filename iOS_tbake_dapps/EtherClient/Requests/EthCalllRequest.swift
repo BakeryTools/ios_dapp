@@ -6,8 +6,8 @@ import JSONRPCKit
 struct EthCallRequest: JSONRPCKit.Request {
     typealias Response = String
 
-    let from: AlphaWallet.Address?
-    let to: AlphaWallet.Address?
+    let from: TBakeWallet.Address?
+    let to: TBakeWallet.Address?
     let data: String
 
     var method: String {

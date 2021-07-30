@@ -4,7 +4,7 @@ import BigInt
 import PromiseKit
 import Result
 
-protocol TransferNFTCoordinatorDelegate: class, CanOpenURL {
+protocol TransferNFTCoordinatorDelegate: AnyObject, CanOpenURL {
     func didClose(in coordinator: TransferNFTCoordinator)
     func didCompleteTransfer(withTransactionConfirmationCoordinator transactionConfirmationCoordinator: TransactionConfirmationCoordinator, result: TransactionConfirmationResult, inCoordinator coordinator: TransferNFTCoordinator)
 }
@@ -13,7 +13,7 @@ class TransferNFTCoordinator: Coordinator {
     private let navigationController: UINavigationController
     private let transactionType: TransactionType
     private let tokenHolder: TokenHolder
-    private let recipient: AlphaWallet.Address
+    private let recipient: TBakeWallet.Address
     private let keystore: Keystore
     private let session: WalletSession
     private let ethPrice: Subscribable<Double>
@@ -21,7 +21,7 @@ class TransferNFTCoordinator: Coordinator {
     var coordinators: [Coordinator] = []
     weak var delegate: TransferNFTCoordinatorDelegate?
 
-    init(navigationController: UINavigationController, transactionType: TransactionType, tokenHolder: TokenHolder, recipient: AlphaWallet.Address, keystore: Keystore, session: WalletSession, ethPrice: Subscribable<Double>, analyticsCoordinator: AnalyticsCoordinator) {
+    init(navigationController: UINavigationController, transactionType: TransactionType, tokenHolder: TokenHolder, recipient: TBakeWallet.Address, keystore: Keystore, session: WalletSession, ethPrice: Subscribable<Double>, analyticsCoordinator: AnalyticsCoordinator) {
         self.navigationController = navigationController
         self.transactionType = transactionType
         self.tokenHolder = tokenHolder
@@ -68,7 +68,7 @@ extension TransferNFTCoordinator: TransactionConfirmationCoordinatorDelegate {
 }
 
 extension TransferNFTCoordinator: CanOpenURL {
-    func didPressViewContractWebPage(forContract contract: AlphaWallet.Address, server: RPCServer, in viewController: UIViewController) {
+    func didPressViewContractWebPage(forContract contract: TBakeWallet.Address, server: RPCServer, in viewController: UIViewController) {
         delegate?.didPressViewContractWebPage(forContract: contract, server: server, in: viewController)
     }
 

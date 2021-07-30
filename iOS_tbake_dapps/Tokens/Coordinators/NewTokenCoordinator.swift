@@ -12,7 +12,7 @@ import PromiseKit
 private struct NoContractDetailsDetected: Error {
 }
 
-protocol NewTokenCoordinatorDelegate: class {
+protocol NewTokenCoordinatorDelegate: AnyObject {
     func coordinator(_ coordinator: NewTokenCoordinator, didAddToken token: TokenObject)
     func didClose(in coordinator: NewTokenCoordinator)
 }
@@ -29,7 +29,7 @@ class NewTokenCoordinator: Coordinator {
             }
         }
     }
-    private var addressToAutoDetectServerFor: AlphaWallet.Address?
+    private var addressToAutoDetectServerFor: TBakeWallet.Address?
     private let singleChainTokenCoordinators: [SingleChainTokenCoordinator]
     private let config: Config
     private let tokenCollection: TokenCollection
@@ -53,6 +53,8 @@ class NewTokenCoordinator: Coordinator {
 
     func start() {
         viewController.delegate = self
+        viewController.navigationItem.largeTitleDisplayMode = .never
+        viewController.hidesBottomBarWhenPushed = true
         navigationController.pushViewController(viewController, animated: true)
     }
 
@@ -106,7 +108,7 @@ extension NewTokenCoordinator: NewTokenViewControllerDelegate {
         dismiss()
     }
 
-    func didAddAddress(address: AlphaWallet.Address, in viewController: NewTokenViewController) {
+    func didAddAddress(address: TBakeWallet.Address, in viewController: NewTokenViewController) {
         switch viewController.server {
         case .auto:
             addressToAutoDetectServerFor = address
@@ -135,7 +137,7 @@ extension NewTokenCoordinator: NewTokenViewControllerDelegate {
         }
     }
 
-    private func fetchContractDataPromise(forServer server: RPCServer, address: AlphaWallet.Address, inViewController viewController: NewTokenViewController) -> Promise<TokenType> {
+    private func fetchContractDataPromise(forServer server: RPCServer, address: TBakeWallet.Address, inViewController viewController: NewTokenViewController) -> Promise<TokenType> {
         guard let coordinator = singleChainTokenCoordinator(forServer: server) else { return .init { _ in } }
         return Promise { seal in
             coordinator.fetchContractData(for: address) { [weak self] (data) in
@@ -162,7 +164,7 @@ extension NewTokenCoordinator: NewTokenViewControllerDelegate {
         }
     }
 
-    private func fetchContractData(forServer server: RPCServer, address: AlphaWallet.Address, inViewController viewController: NewTokenViewController) {
+    private func fetchContractData(forServer server: RPCServer, address: TBakeWallet.Address, inViewController viewController: NewTokenViewController) {
         guard let coordinator = singleChainTokenCoordinator(forServer: server) else { return }
         coordinator.fetchContractData(for: address) { data in
             switch data {

@@ -79,7 +79,7 @@ struct FunctionOrigin {
         }
     }
 
-    let originContractOrRecipientAddress: AlphaWallet.Address
+    let originContractOrRecipientAddress: TBakeWallet.Address
     private let attributeId: AttributeId
     private let functionType: FunctionType
     private let bitmask: BigUInt?
@@ -96,7 +96,7 @@ struct FunctionOrigin {
         functionType.inputValue
     }
 
-    init?(forEthereumFunctionTransactionElement ethereumFunctionElement: XMLElement, root: XMLDocument, attributeId: AttributeId, originContract: AlphaWallet.Address, xmlContext: XmlContext, bitmask: BigUInt?, bitShift: Int) {
+    init?(forEthereumFunctionTransactionElement ethereumFunctionElement: XMLElement, root: XMLDocument, attributeId: AttributeId, originContract: TBakeWallet.Address, xmlContext: XmlContext, bitmask: BigUInt?, bitShift: Int) {
         guard let functionName = ethereumFunctionElement["function"].nilIfEmpty else { return nil }
         let inputs: [AssetFunctionCall.Argument]
         if let dataElement = XMLHandler.getDataElement(fromFunctionElement: ethereumFunctionElement, xmlContext: xmlContext) {
@@ -109,7 +109,7 @@ struct FunctionOrigin {
         self = .init(originElement: ethereumFunctionElement, xmlContext: xmlContext, originalContractOrRecipientAddress: originContract, attributeId: attributeId, functionType: functionType, bitmask: bitmask, bitShift: bitShift)
     }
 
-    init?(forEthereumPaymentElement ethereumFunctionElement: XMLElement, root: XMLDocument, attributeId: AttributeId, recipientAddress: AlphaWallet.Address, xmlContext: XmlContext, bitmask: BigUInt?, bitShift: Int) {
+    init?(forEthereumPaymentElement ethereumFunctionElement: XMLElement, root: XMLDocument, attributeId: AttributeId, recipientAddress: TBakeWallet.Address, xmlContext: XmlContext, bitmask: BigUInt?, bitShift: Int) {
         if let valueElement = XMLHandler.getValueElement(fromFunctionElement: ethereumFunctionElement, xmlContext: xmlContext), let value = FunctionOrigin.createInput(fromInputElement: valueElement, root: root, xmlContext: xmlContext, withInputType: .uint) {
             let functionType = FunctionType.paymentTransaction(inputValue: value)
             self = .init(originElement: ethereumFunctionElement, xmlContext: xmlContext, originalContractOrRecipientAddress: recipientAddress, attributeId: attributeId, functionType: functionType, bitmask: bitmask, bitShift: bitShift)
@@ -118,7 +118,7 @@ struct FunctionOrigin {
         }
     }
 
-    init?(forEthereumFunctionCallElement ethereumFunctionElement: XMLElement, root: XMLDocument, attributeName: AttributeId, originContract: AlphaWallet.Address, xmlContext: XmlContext, bitmask: BigUInt?, bitShift: Int) {
+    init?(forEthereumFunctionCallElement ethereumFunctionElement: XMLElement, root: XMLDocument, attributeName: AttributeId, originContract: TBakeWallet.Address, xmlContext: XmlContext, bitmask: BigUInt?, bitShift: Int) {
         guard let functionName = ethereumFunctionElement["function"].nilIfEmpty else { return nil }
         guard let asType: OriginAsType = ethereumFunctionElement["as"].flatMap({ OriginAsType(rawValue: $0) }) else { return nil }
         let inputs: [AssetFunctionCall.Argument]
@@ -132,7 +132,7 @@ struct FunctionOrigin {
         self = .init(originElement: ethereumFunctionElement, xmlContext: xmlContext, originalContractOrRecipientAddress: originContract, attributeId: attributeName, functionType: functionType, bitmask: bitmask, bitShift: bitShift)
     }
 
-    init(originElement: XMLElement, xmlContext: XmlContext, originalContractOrRecipientAddress: AlphaWallet.Address, attributeId: AttributeId, functionType: FunctionType, bitmask: BigUInt?, bitShift: Int) {
+    init(originElement: XMLElement, xmlContext: XmlContext, originalContractOrRecipientAddress: TBakeWallet.Address, attributeId: AttributeId, functionType: FunctionType, bitmask: BigUInt?, bitShift: Int) {
         self.originElement = originElement
         self.xmlContext = xmlContext
         self.originContractOrRecipientAddress = originalContractOrRecipientAddress
@@ -331,7 +331,7 @@ struct FunctionOrigin {
             localRefs: [AttributeId: AssetInternalValue],
             account: Wallet,
             server: RPCServer,
-            originContract: AlphaWallet.Address,
+            originContract: TBakeWallet.Address,
             functionName: String,
             output: AssetFunctionCall.ReturnType,
             callForAssetAttributeCoordinator: CallForAssetAttributeCoordinator

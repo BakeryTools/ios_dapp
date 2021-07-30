@@ -104,7 +104,7 @@ func createTokenScriptFileStatusButton(withStatus status: TokenLevelTokenScriptD
         switch reason {
         case .some(.oldTokenScriptVersion):
             //TODO have to reload from repo. But we don't have access to an AssetDefinitionStore for now
-//            button.handler = { urlOpener in urlOpener.open(url: URL(string: "https://alphawallet.com")!) }
+//            button.handler = { urlOpener in urlOpener.open(url: URL(string: "https://TBakeWallet.com")!) }
             break
         case .some(.invalidSignature):
             break
@@ -136,7 +136,7 @@ func createTokenScriptFileStatusButton(withStatus status: TokenLevelTokenScriptD
 }
 
 protocol TokenVerifiableStatusViewController: VerifiableStatusViewController {
-    var contract: AlphaWallet.Address { get }
+    var contract: TBakeWallet.Address { get }
     var server: RPCServer { get }
     var assetDefinitionStore: AssetDefinitionStore { get }
 }
@@ -148,7 +148,7 @@ extension TokenVerifiableStatusViewController {
 }
 
 protocol OptionalTokenVerifiableStatusViewController: VerifiableStatusViewController {
-    var contract: AlphaWallet.Address? { get }
+    var contract: TBakeWallet.Address? { get }
     var server: RPCServer { get }
     var assetDefinitionStore: AssetDefinitionStore { get }
 }

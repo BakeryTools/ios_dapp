@@ -43,6 +43,11 @@ class AppCoordinator: NSObject, Coordinator {
     var inCoordinator: InCoordinator? {
         return coordinators.first { $0 is InCoordinator } as? InCoordinator
     }
+    
+    
+    private lazy var coinTickersFetcher: CoinTickersFetcherType = CoinTickersFetcher(provider: AlphaWalletProviderFactory.makeProvider(), config: config)
+    
+    private lazy var walletBalanceCoordinator: WalletBalanceCoordinatorType = WalletBalanceCoordinator(keystore: keystore, config: config, coinTickersFetcher: coinTickersFetcher)
 
     private var pendingInCoordinator: InCoordinator?
 
@@ -53,7 +58,8 @@ class AppCoordinator: NSObject, Coordinator {
                 keystore: keystore,
                 promptBackupCoordinator: promptBackupCoordinator,
                 analyticsCoordinator: analyticsService,
-                viewModel: .init(configuration: .summary)
+                viewModel: .init(configuration: .summary),
+                walletBalanceCoordinator: walletBalanceCoordinator
         )
         coordinator.delegate = self
 
@@ -127,9 +133,10 @@ class AppCoordinator: NSObject, Coordinator {
 
         setupAssetDefinitionStoreCoordinator()
         migrateToStoringRawPrivateKeysInKeychain()
+        walletBalanceCoordinator.start()
 
         if keystore.hasWallets {
-            if getUserHasBackup() {
+            if keystore.userHasBackup {
                 showTransactions(for: keystore.currentWallet, animated: false)
             } else {
                 showBackupWalletPhraseCoordinator()
@@ -197,7 +204,9 @@ class AppCoordinator: NSObject, Coordinator {
                 restartQueue: restartQueue,
                 urlSchemeCoordinator: urlSchemeCoordinator,
                 promptBackupCoordinator: promptBackupCoordinator,
-                accountsCoordinator: accountsCoordinator
+                accountsCoordinator: accountsCoordinator,
+                walletBalanceCoordinator: walletBalanceCoordinator,
+                coinTickersFetcher: coinTickersFetcher
         )
 
         coordinator.delegate = self
@@ -248,7 +257,7 @@ class AppCoordinator: NSObject, Coordinator {
     }
 
     func showBackupWalletPhraseCoordinator() {
-        let coordinator = BackupCoordinator(navigationController: navigationController, keystore: keystore, account: keystore.currentWallet.address, analyticsCoordinator: analyticsService)
+        let coordinator = BackupCoordinator(navigationController: navigationController, keystore: keystore, account: keystore.currentWallet.address, walletAccount: keystore.currentWallet, analyticsCoordinator: analyticsService)
         coordinator.delegate = self
         coordinator.start()
         addCoordinator(coordinator)
@@ -312,7 +321,7 @@ class AppCoordinator: NSObject, Coordinator {
         inCoordinator?.launchUniversalScanner()
     }
 
-    func didPressViewContractWebPage(forContract contract: AlphaWallet.Address, server: RPCServer, in viewController: UIViewController) {
+    func didPressViewContractWebPage(forContract contract: TBakeWallet.Address, server: RPCServer, in viewController: UIViewController) {
         inCoordinator?.didPressViewContractWebPage(forContract: contract, server: server, in: viewController)
     }
 
@@ -340,25 +349,27 @@ extension AppCoordinator: InitialWalletCreationCoordinatorDelegate {
         if comeFrom == "createWallet" {
             showBackupWalletPhraseCoordinator()
         } else {
+            keystore.userHasBackup = true
             showTransactions(for: keystore.currentWallet, animated: false)
         }
     }
 }
 
 extension AppCoordinator: InCoordinatorDelegate {
-
+    
     func didRestart(in coordinator: InCoordinator, wallet: Wallet) {
         keystore.recentlyUsedWallet = wallet
 
-        coordinator.navigationController.dismiss(animated: true) //??Do we really need to do it here?
+        coordinator.navigationController.dismiss(animated: true)
         removeCoordinator(coordinator)
 
         showTransactions(for: keystore.currentWallet, animated: false)
     }
 
-    func didShowWallets(in coordinator: InCoordinator) {
+    func showWallets(in coordinator: InCoordinator) {
         pendingInCoordinator = coordinator
         removeCoordinator(coordinator)
+
         //NOTE: refactor with more better solution
         accountsCoordinator.promptBackupCoordinator = promptBackupCoordinator
 
@@ -418,7 +429,7 @@ extension AppCoordinator: UniversalLinkCoordinatorDelegate {
         removeCoordinator(coordinator)
     }
 
-    func didImported(contract: AlphaWallet.Address, in coordinator: UniversalLinkCoordinator) {
+    func didImported(contract: TBakeWallet.Address, in coordinator: UniversalLinkCoordinator) {
         inCoordinator?.addImported(contract: contract, forServer: coordinator.server)
     }
 
@@ -446,7 +457,7 @@ extension AppCoordinator: AssetDefinitionStoreCoordinatorDelegate {
         inCoordinator?.show(error: error)
     }
 
-    func addedTokenScript(forContract contract: AlphaWallet.Address, forServer server: RPCServer, destinationFileInUse: Bool, filename: String) {
+    func addedTokenScript(forContract contract: TBakeWallet.Address, forServer server: RPCServer, destinationFileInUse: Bool, filename: String) {
         inCoordinator?.addImported(contract: contract, forServer: server)
 
         if !destinationFileInUse {
@@ -468,7 +479,6 @@ extension AppCoordinator: UrlSchemeCoordinatorDelegate {
 }
 
 extension AppCoordinator: AccountsCoordinatorDelegate {
-
     func didAddAccount(account: Wallet, in coordinator: AccountsCoordinator) {
         coordinator.navigationController.dismiss(animated: true)
     }
@@ -500,8 +510,8 @@ extension AppCoordinator: BackupCoordinatorDelegate {
         print("Do nothing backup cancel bruh")
     }
     
-    func didFinish(account: AlphaWallet.Address, in coordinator: BackupCoordinator) {
-        setUserHasBackup(true)
+    func didFinish(walletAccount: Wallet, account: TBakeWallet.Address, in coordinator: BackupCoordinator) {
+        keystore.userHasBackup = true
         showTransactions(for: keystore.currentWallet, animated: false)
     }
 }

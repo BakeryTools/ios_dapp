@@ -16,7 +16,7 @@ enum WalletConnectError: Error {
     case request(WalletConnectServer.Request.AnyError)
 }
 
-protocol WalletConnectServerDelegate: class {
+protocol WalletConnectServerDelegate: AnyObject {
     func server(_ server: WalletConnectServer, didConnect session: WalletConnectSession)
     func server(_ server: WalletConnectServer, shouldConnectFor connection: WalletConnectConnection, completion: @escaping (WalletConnectServer.ConnectionChoice) -> Void)
     func server(_ server: WalletConnectServer, action: WalletConnectServer.Action, request: WalletConnectRequest)
@@ -58,11 +58,11 @@ class WalletConnectServer {
     }
 
     private enum Keys {
-        static let server = "AlphaWallet"
+        static let server = "SafuWallet"
     }
 
     private let walletMeta = Session.ClientMeta(name: Keys.server, description: nil, icons: [], url: URL(string: Constants.website)!)
-    private let wallet: AlphaWallet.Address
+    private let wallet: TBakeWallet.Address
     static var server: Server?
     //NOTE: We are using singleton server value because while every creation server object dones't release prev instances, WalletConnect meamory issue.
     private var server: Server {
@@ -89,7 +89,7 @@ class WalletConnectServer {
         return handler
     }()
 
-    init(wallet: AlphaWallet.Address) {
+    init(wallet: TBakeWallet.Address) {
         self.wallet = wallet
         sessions.value = server.openSessions()
 
@@ -133,7 +133,7 @@ class WalletConnectServer {
         return approved ? UUID().uuidString : String()
     }
 
-    private func walletInfo(_ wallet: AlphaWallet.Address, choice: WalletConnectServer.ConnectionChoice) -> Session.WalletInfo {
+    private func walletInfo(_ wallet: TBakeWallet.Address, choice: WalletConnectServer.ConnectionChoice) -> Session.WalletInfo {
         return Session.WalletInfo(
                 approved: choice.shouldProceed,
                 accounts: [wallet.eip55String],
@@ -145,7 +145,7 @@ class WalletConnectServer {
     }
 }
 
-protocol WalletConnectServerRequestHandlerDelegate: class {
+protocol WalletConnectServerRequestHandlerDelegate: AnyObject {
     func handler(_ handler: RequestHandlerToAvoidMemoryLeak, request: WalletConnectSwift.Request)
     func handler(_ handler: RequestHandlerToAvoidMemoryLeak, canHandle request: WalletConnectSwift.Request) -> Bool
 }

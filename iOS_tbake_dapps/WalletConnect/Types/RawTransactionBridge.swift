@@ -1,6 +1,6 @@
 //
 //  RawTransactionBridge.swift
-//  AlphaWallet
+//  TBakeWallet
 //
 //  Created by Vladyslav Shepitko on 28.10.2020.
 //
@@ -20,7 +20,7 @@ struct RawTransactionBridge: Decodable {
     }
 
     var value: BigInt? = .none
-    var to: AlphaWallet.Address? = .none
+    var to: TBakeWallet.Address? = .none
     var data: Data? = .none
     var gas: BigInt? = .none
     var gasPrice: BigInt? = .none
@@ -30,7 +30,7 @@ struct RawTransactionBridge: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         if let value = try? container.decode(String.self, forKey: .to) {
-            to = AlphaWallet.Address(string: value)
+            to = TBakeWallet.Address(string: value)
         }
         if let value = try? container.decode(String.self, forKey: .gas).drop0x {
             gas = BigInt(value, radix: 16)
@@ -51,7 +51,7 @@ struct RawTransactionBridge: Decodable {
 }
 
 extension RawTransactionBridge {
-    init(value: BigInt? = .none, to: AlphaWallet.Address? = .none, data: Data? = .none, gas: BigInt? = .none, gasPrice: BigInt? = .none, nonce: BigInt? = .none) {
+    init(value: BigInt? = .none, to: TBakeWallet.Address? = .none, data: Data? = .none, gas: BigInt? = .none, gasPrice: BigInt? = .none, nonce: BigInt? = .none) {
         self.value = value
         self.to = to
         self.data = data

@@ -1,6 +1,6 @@
 //
 //  PopularTokensCollection.swift
-//  AlphaWallet
+//  TBakeWallet
 //
 //  Created by Vladyslav Shepitko on 04.06.2021.
 //
@@ -27,7 +27,7 @@ struct PopularToken: Decodable {
         case invalid
     }
 
-    var contractAddress: AlphaWallet.Address
+    var contractAddress: TBakeWallet.Address
     var server: RPCServer
     var name: String
 
@@ -44,7 +44,7 @@ struct PopularToken: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        if let address = AlphaWallet.Address(uncheckedAgainstNullAddress: try container.decode(String.self, forKey: .address)) {
+        if let address = TBakeWallet.Address(uncheckedAgainstNullAddress: try container.decode(String.self, forKey: .address)) {
             contractAddress = address
         } else {
             throw AnyError.invalid
@@ -59,11 +59,11 @@ enum WalletOrPopularToken {
     case popularToken(PopularToken)
 }
 
-protocol PopularTokensCollectionType: class {
+protocol PopularTokensCollectionType: AnyObject {
     func fetchTokens() -> Promise<[PopularToken]>
 }
 
-class PopularTokensCollection: NSObject, PopularTokensCollectionType {
+class PopularTokensCollection: NSObject, PopularTokensCollectionType { //Danial
     private let tokensURL: URL = URL(string: "https://raw.githubusercontent.com/AlphaWallet/alpha-wallet-android/fa86b477586929f61e7fefefc6a9c70de91de1f0/app/src/main/assets/known_contract.json")!
     private let queue = DispatchQueue.global()
     private static var cache: [PopularToken]? = .none

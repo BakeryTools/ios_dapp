@@ -2,7 +2,7 @@
 
 import UIKit
 
-protocol ChooseTokenCardTransferModeViewControllerDelegate: class, CanOpenURL {
+protocol ChooseTokenCardTransferModeViewControllerDelegate: AnyObject, CanOpenURL {
     func didChooseTransferViaMagicLink(token: TokenObject, tokenHolder: TokenHolder, in viewController: ChooseTokenCardTransferModeViewController)
     func didChooseTransferNow(token: TokenObject, tokenHolder: TokenHolder, in viewController: ChooseTokenCardTransferModeViewController)
     func didPressViewInfo(in viewController: ChooseTokenCardTransferModeViewController)
@@ -18,7 +18,7 @@ class ChooseTokenCardTransferModeViewController: UIViewController, TokenVerifiab
     private let analyticsCoordinator: AnalyticsCoordinator
     private let tokenHolder: TokenHolder
 
-    var contract: AlphaWallet.Address {
+    var contract: TBakeWallet.Address {
         return viewModel.token.contractAddress
     }
     var server: RPCServer {

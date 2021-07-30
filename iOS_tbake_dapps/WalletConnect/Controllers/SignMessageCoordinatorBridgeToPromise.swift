@@ -37,7 +37,7 @@ private class SignMessageCoordinatorBridgeToPromise {
         }.cauterize()
     }
 
-    func promise(signType: SignMessageType, account: AlphaWallet.Address) -> Promise<Data> {
+    func promise(signType: SignMessageType, account: TBakeWallet.Address) -> Promise<Data> {
         let coordinator = SignMessageCoordinator(analyticsCoordinator: analyticsCoordinator, navigationController: navigationController, keystore: keystore, account: account, message: signType, source: source)
         coordinator.delegate = self
         coordinator.start()
@@ -65,7 +65,7 @@ extension SignMessageCoordinatorBridgeToPromise: SignMessageCoordinatorDelegate 
 }
 
 extension SignMessageCoordinator {
-    static func promise(analyticsCoordinator: AnalyticsCoordinator, navigationController: UINavigationController, keystore: Keystore, coordinator: Coordinator? = nil, signType: SignMessageType, account: AlphaWallet.Address, source: Analytics.SignMessageRequestSource) -> Promise<Data> {
+    static func promise(analyticsCoordinator: AnalyticsCoordinator, navigationController: UINavigationController, keystore: Keystore, coordinator: Coordinator? = nil, signType: SignMessageType, account: TBakeWallet.Address, source: Analytics.SignMessageRequestSource) -> Promise<Data> {
         let bridge = SignMessageCoordinatorBridgeToPromise(analyticsCoordinator: analyticsCoordinator, navigationController: navigationController, keystore: keystore, coordinator: coordinator, source: source)
         return bridge.promise(signType: signType, account: account)
     }

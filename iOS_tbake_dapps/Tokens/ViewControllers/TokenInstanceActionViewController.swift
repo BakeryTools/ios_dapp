@@ -5,10 +5,10 @@ import UIKit
 import BigInt
 import PromiseKit
 
-protocol TokenInstanceActionViewControllerDelegate: class, CanOpenURL {
+protocol TokenInstanceActionViewControllerDelegate: AnyObject, CanOpenURL {
     func didPressViewRedemptionInfo(in viewController: TokenInstanceActionViewController)
     func shouldCloseFlow(inViewController viewController: TokenInstanceActionViewController)
-    func confirmTransactionSelected(in viewController: TokenInstanceActionViewController, tokenObject: TokenObject, contract: AlphaWallet.Address, tokenId: TokenId, values: [AttributeId: AssetInternalValue], localRefs: [AttributeId: AssetInternalValue], server: RPCServer, session: WalletSession, keystore: Keystore, transactionFunction: FunctionOrigin)
+    func confirmTransactionSelected(in viewController: TokenInstanceActionViewController, tokenObject: TokenObject, contract: TBakeWallet.Address, tokenId: TokenId, values: [AttributeId: AssetInternalValue], localRefs: [AttributeId: AssetInternalValue], server: RPCServer, session: WalletSession, keystore: Keystore, transactionFunction: FunctionOrigin)
 }
 
 class TokenInstanceActionViewController: UIViewController, TokenVerifiableStatusViewController {
@@ -49,7 +49,7 @@ class TokenInstanceActionViewController: UIViewController, TokenVerifiableStatus
     var server: RPCServer {
         return tokenObject.server
     }
-    var contract: AlphaWallet.Address {
+    var contract: TBakeWallet.Address {
         return tokenObject.contractAddress
     }
     var tokenId: TokenId {

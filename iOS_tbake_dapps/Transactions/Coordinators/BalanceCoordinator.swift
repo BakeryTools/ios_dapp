@@ -1,12 +1,10 @@
-// Copyright SIX DAY LLC. All rights reserved.
-
 import Foundation
 import APIKit
 import JSONRPCKit
 import Result
 import BigInt
 
-protocol BalanceCoordinatorDelegate: class {
+protocol BalanceCoordinatorDelegate: AnyObject {
     func didUpdate(viewModel: BalanceViewModel)
 }
 
@@ -37,7 +35,7 @@ class BalanceCoordinator: BalanceCoordinatorType {
             rate: currencyRate
         )
     }
-
+    
     init(
             wallet: Wallet,
             server: RPCServer,
@@ -53,16 +51,16 @@ class BalanceCoordinator: BalanceCoordinatorType {
             }
         }
 
-        let etherToken = TokensDataStore.etherToken(forServer: server)
-
         storage.tokensModel.subscribe {[weak self] tokensModel in
+            guard let self = self else { return }
+            let etherToken = TokensDataStore.etherToken(forServer: server)
             guard let tokens = tokensModel, let eth = tokens.first(where: { $0 == etherToken }) else {
                 return
             }
-            var ticker = self?.storage.coinTicker(for: eth)
-            self?.balance = Balance(value: BigInt(eth.value, radix: 10) ?? BigInt(0))
-            self?.currencyRate = ticker?.rate
-            self?.update()
+            let ticker = self.storage.coinTicker(for: eth)
+            self.balance = Balance(value: BigInt(eth.value, radix: 10) ?? BigInt(0))
+            self.currencyRate = ticker?.rate
+            self.update()
         }
     }
     func refresh() {

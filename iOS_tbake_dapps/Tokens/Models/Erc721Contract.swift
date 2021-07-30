@@ -10,7 +10,7 @@ class Erc721Contract {
         self.server = server
     }
 
-    func getErc721TokenUri(for tokenId: String, contract: AlphaWallet.Address) -> Promise<URL> {
+    func getErc721TokenUri(for tokenId: String, contract: TBakeWallet.Address) -> Promise<URL> {
         firstly {
             getErc721TokenUriImpl(for: tokenId, contract: contract)
         }.recover { _ in
@@ -18,7 +18,7 @@ class Erc721Contract {
         }
     }
 
-    private func getErc721TokenUriImpl(for tokenId: String, contract: AlphaWallet.Address) -> Promise<URL> {
+    private func getErc721TokenUriImpl(for tokenId: String, contract: TBakeWallet.Address) -> Promise<URL> {
         let function = GetERC721TokenUri()
         return firstly {
             callSmartContract(withServer: server, contract: contract, functionName: function.name, abiString: function.abi, parameters: [tokenId] as [AnyObject], timeout: TokensDataStore.fetchContractDataTimeout)
@@ -32,7 +32,7 @@ class Erc721Contract {
         }
     }
 
-    private func getErc721Uri(for tokenId: String, contract: AlphaWallet.Address) -> Promise<URL> {
+    private func getErc721Uri(for tokenId: String, contract: TBakeWallet.Address) -> Promise<URL> {
         let function = GetERC721Uri()
         return firstly {
             callSmartContract(withServer: server, contract: contract, functionName: function.name, abiString: function.abi, parameters: [tokenId] as [AnyObject], timeout: TokensDataStore.fetchContractDataTimeout)

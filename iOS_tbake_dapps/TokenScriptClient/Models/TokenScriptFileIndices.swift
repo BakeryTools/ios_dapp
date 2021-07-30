@@ -14,10 +14,10 @@ struct TokenScriptFileIndices: Codable {
 
     var fileHashes = [FileName: FileContentsHash]()
     var signatureVerificationTypes = [FileContentsHash: TokenScriptSignatureVerificationType]()
-    var contractsToFileNames = [AlphaWallet.Address: [FileName]]()
+    var contractsToFileNames = [TBakeWallet.Address: [FileName]]()
     var contractsToEntities = [FileName: [Entity]]()
     var badTokenScriptFileNames = [FileName]()
-    var contractsToOldTokenScriptFileNames = [AlphaWallet.Address: [FileName]]()
+    var contractsToOldTokenScriptFileNames = [TBakeWallet.Address: [FileName]]()
 
     var conflictingTokenScriptFileNames: [FileName] {
         var result = [FileName]()
@@ -52,7 +52,7 @@ struct TokenScriptFileIndices: Codable {
     }
 
     ///Return the fileName if there are no other TokenScript files for that holding contract. There can be files with the exact same contents; those are fine because a TokenScript file downloaded from the official repo can support more than one holding contract, so those 2 contracts (0x1 and 0x2) will cause 0x1.tsml and 0x2.tsml to be downloaded with the same contents. This is not considered a conflict
-    func nonConflictingFileName(forContract contract: AlphaWallet.Address) -> FileName? {
+    func nonConflictingFileName(forContract contract: TBakeWallet.Address) -> FileName? {
         guard let fileNames = contractsToFileNames[contract] else { return nil }
         let uniqueHashes = Set(fileNames.map {
             fileHashes[$0]
@@ -64,7 +64,7 @@ struct TokenScriptFileIndices: Codable {
         }
     }
 
-    func hasConflictingFile(forContract contract: AlphaWallet.Address) -> Bool {
+    func hasConflictingFile(forContract contract: TBakeWallet.Address) -> Bool {
         if contractsToFileNames[contract].isEmpty {
             return false
         } else {
@@ -72,7 +72,7 @@ struct TokenScriptFileIndices: Codable {
         }
     }
 
-    func contracts(inFileName fileName: FileName) -> [AlphaWallet.Address] {
+    func contracts(inFileName fileName: FileName) -> [TBakeWallet.Address] {
         return Array(contractsToFileNames.filter { _, fileNames in fileNames.contains(fileName) }.keys)
     }
 

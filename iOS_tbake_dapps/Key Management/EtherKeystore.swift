@@ -20,7 +20,7 @@ enum EtherKeystoreError: LocalizedError {
 //Technically, having 2 sets of (ECDSA key and ciphertext) for each Ethereum raw private key or HD wallet seed may not be required for iOS. But it is done:
 //(A) to be confident that we don't cause the user to lose access to their wallets and
 ///(B) to be consistent with Android's UI and implementation which seems like users will lose access to the data (i.e wallet) which requires user presence if the equivalent of their iOS passcode/biometrics is disabled/deleted
-open class EtherKeystore: Keystore {
+open class EtherKeystore: NSObject, Keystore {
     private struct Keys {
         static let recentlyUsedAddress: String = "recentlyUsedAddress"
         static let watchAddresses = "watchAddresses"
@@ -36,6 +36,7 @@ open class EtherKeystore: Keystore {
         static let encryptionKeyForPrivateKeyUserPresenceRequiredPrefix = "encryptionKeyForPrivateKeyUserPresenceRequired-"
         static let encryptionKeyForSeedUserPresenceNotRequiredPrefix = "encryptionKeyForSeedUserPresenceNotRequired-"
         static let encryptionKeyForPrivateKeyUserPresenceNotRequiredPrefix = "encryptionKeyForPrivateKeyUserPresenceNotRequired-"
+        static let userHasBackup = "userHasBackup"
     }
 
     enum WalletSeedOrKey {
@@ -52,16 +53,46 @@ open class EtherKeystore: Keystore {
     private let defaultKeychainAccessUserPresenceRequired: KeychainSwiftAccessOptions = .accessibleWhenUnlockedThisDeviceOnly(userPresenceRequired: true)
     private let defaultKeychainAccessUserPresenceNotRequired: KeychainSwiftAccessOptions = .accessibleWhenUnlockedThisDeviceOnly(userPresenceRequired: false)
     private let userDefaults: UserDefaults
+    var userHasBackup: Bool {
+        get {
+            guard let data = userDefaults.data(forKey: Keys.userHasBackup) else {
+                return false
+            }
+            do {
+                return try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? Bool ?? false
+            } catch {
+                print("Unable to set data userHasBackup")
+                return false
+            }
+        }
+        set {
+            do {
+                let data = try NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false)
+                return userDefaults.set(data, forKey: Keys.userHasBackup)
+            } catch {
+                print("Unable to set data userHasBackup")
+            }
+        }
+    }
     private var watchAddresses: [String] {
         get {
             guard let data = userDefaults.data(forKey: Keys.watchAddresses) else {
                 return []
             }
-            return NSKeyedUnarchiver.unarchiveObject(with: data) as? [String] ?? []
+            do {
+                return try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? [String] ?? []
+            } catch {
+                print("Unable to set data watchAddresses")
+                return []
+            }
         }
         set {
-            let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
-            return userDefaults.set(data, forKey: Keys.watchAddresses)
+            do {
+                let data = try NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false)
+                return userDefaults.set(data, forKey: Keys.watchAddresses)
+            } catch {
+                print("Unable to set data watchAddresses")
+            }
         }
     }
 
@@ -70,11 +101,20 @@ open class EtherKeystore: Keystore {
             guard let data = userDefaults.data(forKey: Keys.ethereumAddressesWithPrivateKeys) else {
                 return []
             }
-            return NSKeyedUnarchiver.unarchiveObject(with: data) as? [String] ?? []
+            do {
+                return try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? [String] ?? []
+            } catch {
+                print("Unable to set data watchAddresses")
+                return []
+            }
         }
         set {
-            let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
-            return userDefaults.set(data, forKey: Keys.ethereumAddressesWithPrivateKeys)
+            do {
+                let data = try NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false)
+                return userDefaults.set(data, forKey: Keys.ethereumAddressesWithPrivateKeys)
+            } catch {
+                print("Unable to set data ethereumAddressesWithPrivateKeys")
+            }
         }
     }
 
@@ -83,11 +123,20 @@ open class EtherKeystore: Keystore {
             guard let data = userDefaults.data(forKey: Keys.ethereumAddressesWithSeed) else {
                 return []
             }
-            return NSKeyedUnarchiver.unarchiveObject(with: data) as? [String] ?? []
+            do {
+                return try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? [String] ?? []
+            } catch {
+                print("Unable to set data watchAddresses")
+                return []
+            }
         }
         set {
-            let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
-            return userDefaults.set(data, forKey: Keys.ethereumAddressesWithSeed)
+            do {
+                let data = try NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false)
+                return userDefaults.set(data, forKey: Keys.ethereumAddressesWithSeed)
+            } catch {
+                print("Unable to set data ethereumAddressesWithSeed")
+            }
         }
     }
 
@@ -96,12 +145,20 @@ open class EtherKeystore: Keystore {
             guard let data = userDefaults.data(forKey: Keys.ethereumAddressesProtectedByUserPresence) else {
                 return []
             }
-
-            return NSKeyedUnarchiver.unarchiveObject(with: data) as? [String] ?? []
+            do {
+                return try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? [String] ?? []
+            } catch {
+                print("Unable to set data watchAddresses")
+                return []
+            }
         }
         set {
-            let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
-            return userDefaults.set(data, forKey: Keys.ethereumAddressesProtectedByUserPresence)
+            do {
+                let data = try NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false)
+                return userDefaults.set(data, forKey: Keys.ethereumAddressesProtectedByUserPresence)
+            } catch {
+                print("Unable to set data ethereumAddressesProtectedByUserPresence")
+            }
         }
     }
 
@@ -118,11 +175,13 @@ open class EtherKeystore: Keystore {
     }
 
     var wallets: [Wallet] {
-        let watchAddresses = self.watchAddresses.compactMap { AlphaWallet.Address(string: $0) }.map { Wallet(type: .watch($0)) }
-        let addressesWithPrivateKeys = ethereumAddressesWithPrivateKeys.compactMap { AlphaWallet.Address(string: $0) }.map { Wallet(type: .real($0)) }
-        let addressesWithSeed = ethereumAddressesWithSeed.compactMap { AlphaWallet.Address(string: $0) }.map { Wallet(type: .real($0)) }
+        let watchAddresses = self.watchAddresses.compactMap { TBakeWallet.Address(string: $0) }.map { Wallet(type: .watch($0)) }
+        let addressesWithPrivateKeys = ethereumAddressesWithPrivateKeys.compactMap { TBakeWallet.Address(string: $0) }.map { Wallet(type: .real($0)) }
+        let addressesWithSeed = ethereumAddressesWithSeed.compactMap { TBakeWallet.Address(string: $0) }.map { Wallet(type: .real($0)) }
         return addressesWithSeed + addressesWithPrivateKeys + watchAddresses
     }
+
+    var subscribableWallets: Subscribable<Set<Wallet>> = .init(nil)
 
     var hasMigratedFromKeystoreFiles: Bool {
         return userDefaults.data(forKey: Keys.ethereumAddressesWithPrivateKeys) != nil
@@ -168,10 +227,13 @@ open class EtherKeystore: Keystore {
         self.keychain.synchronizable = false
         self.analyticsCoordinator = analyticsCoordinator
         self.userDefaults = userDefaults
+        super.init()
+
+        subscribableWallets.value = Set<Wallet>(wallets)
     }
 
     // Async
-    func createAccount(completion: @escaping (Result<AlphaWallet.Address, KeystoreError>) -> Void) {
+    func createAccount(completion: @escaping (Result<TBakeWallet.Address, KeystoreError>) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let strongSelf = self else {
                 return
@@ -195,7 +257,7 @@ open class EtherKeystore: Keystore {
         completion(results)
     }
 
-    private func isAddressAlreadyInWalletsList(address: AlphaWallet.Address) -> Bool {
+    private func isAddressAlreadyInWalletsList(address: TBakeWallet.Address) -> Bool {
         return wallets.map({ $0.address }).contains { $0.sameContract(as: address) }
     }
 
@@ -213,7 +275,7 @@ open class EtherKeystore: Keystore {
                 return .failure(error)
             }
         case .privateKey(let privateKey):
-            let address = AlphaWallet.Address(fromPrivateKey: privateKey)
+            let address = TBakeWallet.Address(fromPrivateKey: privateKey)
             guard !isAddressAlreadyInWalletsList(address: address) else {
                 return .failure(.duplicateAccount)
             }
@@ -233,7 +295,7 @@ open class EtherKeystore: Keystore {
             guard mnemonicIsGood else { return .failure(.failedToCreateWallet) }
             let wallet = HDWallet(mnemonic: mnemonicString, passphrase: emptyPassphrase)
             let privateKey = derivePrivateKeyOfAccount0(fromHdWallet: wallet)
-            let address = AlphaWallet.Address(fromPrivateKey: privateKey)
+            let address = TBakeWallet.Address(fromPrivateKey: privateKey)
             guard !isAddressAlreadyInWalletsList(address: address) else {
                 return .failure(.duplicateAccount)
             }
@@ -255,23 +317,30 @@ open class EtherKeystore: Keystore {
             watchAddresses = [watchAddresses, [address.eip55String]].flatMap {
                 $0
             }
+            subscribableWallets.value = Set<Wallet>(wallets)
             return .success(Wallet(type: .watch(address)))
         }
     }
 
-    private func addToListOfEthereumAddressesWithPrivateKeys(_ address: AlphaWallet.Address) {
+    private func addToListOfEthereumAddressesWithPrivateKeys(_ address: TBakeWallet.Address) {
         let updatedOwnedAddresses = Array(Set(ethereumAddressesWithPrivateKeys + [address.eip55String]))
         ethereumAddressesWithPrivateKeys = updatedOwnedAddresses
+
+        subscribableWallets.value = Set<Wallet>(wallets)
     }
 
-    private func addToListOfEthereumAddressesWithSeed(_ address: AlphaWallet.Address) {
+    private func addToListOfEthereumAddressesWithSeed(_ address: TBakeWallet.Address) {
         let updated = Array(Set(ethereumAddressesWithSeed + [address.eip55String]))
         ethereumAddressesWithSeed = updated
+
+        subscribableWallets.value = Set<Wallet>(wallets)
     }
 
-    private func addToListOfEthereumAddressesProtectedByUserPresence(_ address: AlphaWallet.Address) {
+    private func addToListOfEthereumAddressesProtectedByUserPresence(_ address: TBakeWallet.Address) {
         let updated = Array(Set(ethereumAddressesProtectedByUserPresence + [address.eip55String]))
         ethereumAddressesProtectedByUserPresence = updated
+
+        subscribableWallets.value = Set<Wallet>(wallets)
     }
 
     private func generateMnemonic() -> String {
@@ -287,7 +356,7 @@ open class EtherKeystore: Keystore {
         return newHdWallet.mnemonic
     }
 
-    func createAccount() -> Result<AlphaWallet.Address, KeystoreError> {
+    func createAccount() -> Result<TBakeWallet.Address, KeystoreError> {
         let mnemonicString = generateMnemonic()
         let mnemonic = mnemonicString.split(separator: " ").map {
             String($0)
@@ -310,7 +379,7 @@ open class EtherKeystore: Keystore {
         //If seed phrase has a typo, the typo will be dropped and "abandon" added as the first word, deriving a different mnemonic silently. We don't want that to happen!
         guard walletWhenImported.mnemonic == mnemonic else { return false }
         let privateKey = derivePrivateKeyOfAccount0(fromHdWallet: walletWhenImported)
-        let address = AlphaWallet.Address(fromPrivateKey: privateKey)
+        let address = TBakeWallet.Address(fromPrivateKey: privateKey)
         let testData = "any data will do here"
         let hash = testData.data(using: .utf8)!.sha3(.keccak256)
         //Do not use EthereumSigner.vitaliklizeConstant because the ECRecover implementation doesn't include it
@@ -328,7 +397,7 @@ open class EtherKeystore: Keystore {
         return privateKey.data
     }
 
-    func exportRawPrivateKeyForNonHdWalletForBackup(forAccount account: AlphaWallet.Address, newPassword: String, completion: @escaping (Result<String, KeystoreError>) -> Void) {
+    func exportRawPrivateKeyForNonHdWalletForBackup(forAccount account: TBakeWallet.Address, newPassword: String, completion: @escaping (Result<String, KeystoreError>) -> Void) {
         let key: Data
         switch getPrivateKeyFromNonHdWallet(forAccount: account, prompt: R.string.localizable.keystoreAccessKeyNonHdBackup(), withUserPresence: isUserPresenceCheckPossible) {
         case .seed, .seedPhrase:
@@ -349,7 +418,7 @@ open class EtherKeystore: Keystore {
         }
     }
 
-    func exportSeedPhraseOfHdWallet(forAccount account: AlphaWallet.Address, context: LAContext, reason: KeystoreExportReason, completion: @escaping (Result<String, KeystoreError>) -> Void) {
+    func exportSeedPhraseOfHdWallet(forAccount account: TBakeWallet.Address, context: LAContext, reason: KeystoreExportReason, completion: @escaping (Result<String, KeystoreError>) -> Void) {
         let seedPhrase = getSeedPhraseForHdWallet(forAccount: account, prompt: reason.prompt, context: context, withUserPresence: isUserPresenceCheckPossible)
         switch seedPhrase {
         case .seedPhrase(let seedPhrase):
@@ -363,7 +432,7 @@ open class EtherKeystore: Keystore {
         }
     }
 
-    func verifySeedPhraseOfHdWallet(_ inputSeedPhrase: String, forAccount account: AlphaWallet.Address, context: LAContext, completion: @escaping (Result<Bool, KeystoreError>) -> Void) {
+    func verifySeedPhraseOfHdWallet(_ inputSeedPhrase: String, forAccount account: TBakeWallet.Address, context: LAContext, completion: @escaping (Result<Bool, KeystoreError>) -> Void) {
         switch getSeedPhraseForHdWallet(forAccount: account, prompt: R.string.localizable.keystoreAccessKeyHdVerify(), context: context, withUserPresence: isUserPresenceCheckPossible) {
         case .seedPhrase(let actualSeedPhrase):
             let matched = inputSeedPhrase.lowercased() == actualSeedPhrase.lowercased()
@@ -397,7 +466,7 @@ open class EtherKeystore: Keystore {
         return .success(())
     }
 
-    private func deletePrivateKeysFromSecureEnclave(forAccount account: AlphaWallet.Address) {
+    private func deletePrivateKeysFromSecureEnclave(forAccount account: TBakeWallet.Address) {
         let secureEnclave = SecureEnclave()
         secureEnclave.deletePrivateKeys(withName: encryptionKeyForPrivateKeyLabel(fromAccount: account, withUserPresence: true))
         secureEnclave.deletePrivateKeys(withName: encryptionKeyForPrivateKeyLabel(fromAccount: account, withUserPresence: false))
@@ -405,21 +474,23 @@ open class EtherKeystore: Keystore {
         secureEnclave.deletePrivateKeys(withName: encryptionKeyForSeedLabel(fromAccount: account, withUserPresence: false))
     }
 
-    private func deleteKeysAndSeedCipherTextFromKeychain(forAccount account: AlphaWallet.Address) {
+    private func deleteKeysAndSeedCipherTextFromKeychain(forAccount account: TBakeWallet.Address) {
         keychain.delete("\(Keys.ethereumRawPrivateKeyUserPresenceNotRequiredPrefix)\(account.eip55String)")
         keychain.delete("\(Keys.ethereumRawPrivateKeyUserPresenceRequiredPrefix)\(account.eip55String)")
         keychain.delete("\(Keys.ethereumSeedUserPresenceNotRequiredPrefix)\(account.eip55String)")
         keychain.delete("\(Keys.ethereumSeedUserPresenceRequiredPrefix)\(account.eip55String)")
     }
 
-    private func removeAccountFromBookkeeping(_ account: AlphaWallet.Address) {
+    private func removeAccountFromBookkeeping(_ account: TBakeWallet.Address) {
         ethereumAddressesWithPrivateKeys = ethereumAddressesWithPrivateKeys.filter { $0 != account.eip55String }
         ethereumAddressesWithSeed = ethereumAddressesWithSeed.filter { $0 != account.eip55String }
         ethereumAddressesProtectedByUserPresence = ethereumAddressesProtectedByUserPresence.filter { $0 != account.eip55String }
         watchAddresses = watchAddresses.filter { $0 != account.eip55String }
+
+        subscribableWallets.value = Set<Wallet>(wallets)
     }
 
-    func isHdWallet(account: AlphaWallet.Address) -> Bool {
+    func isHdWallet(account: TBakeWallet.Address) -> Bool {
         return ethereumAddressesWithSeed.contains(account.eip55String)
     }
 
@@ -450,16 +521,16 @@ open class EtherKeystore: Keystore {
         }
     }
 
-    func isProtectedByUserPresence(account: AlphaWallet.Address) -> Bool {
+    func isProtectedByUserPresence(account: TBakeWallet.Address) -> Bool {
         return ethereumAddressesProtectedByUserPresence.contains(account.eip55String)
     }
 
-    func signPersonalMessage(_ message: Data, for account: AlphaWallet.Address) -> Result<Data, KeystoreError> {
+    func signPersonalMessage(_ message: Data, for account: TBakeWallet.Address) -> Result<Data, KeystoreError> {
         let prefix = "\u{19}Ethereum Signed Message:\n\(message.count)".data(using: .utf8)!
         return signMessage(prefix + message, for: account)
     }
 
-    func signHash(_ hash: Data, for account: AlphaWallet.Address) -> Result<Data, KeystoreError> {
+    func signHash(_ hash: Data, for account: TBakeWallet.Address) -> Result<Data, KeystoreError> {
         let key = getPrivateKeyForSigning(forAccount: account)
         switch key {
         case .seed, .seedPhrase:
@@ -479,22 +550,22 @@ open class EtherKeystore: Keystore {
         }
     }
 
-    func signEip712TypedData(_ data: EIP712TypedData, for account: AlphaWallet.Address) -> Result<Data, KeystoreError> {
+    func signEip712TypedData(_ data: EIP712TypedData, for account: TBakeWallet.Address) -> Result<Data, KeystoreError> {
         signHash(data.digest, for: account)
     }
 
-    func signTypedMessage(_ datas: [EthTypedData], for account: AlphaWallet.Address) -> Result<Data, KeystoreError> {
+    func signTypedMessage(_ datas: [EthTypedData], for account: TBakeWallet.Address) -> Result<Data, KeystoreError> {
         let schemas = datas.map { $0.schemaData }.reduce(Data(), { $0 + $1 }).sha3(.keccak256)
         let values = datas.map { $0.typedData }.reduce(Data(), { $0 + $1 }).sha3(.keccak256)
         let combined = (schemas + values).sha3(.keccak256)
         return signHash(combined, for: account)
     }
 
-    func signMessage(_ message: Data, for account: AlphaWallet.Address) -> Result<Data, KeystoreError> {
+    func signMessage(_ message: Data, for account: TBakeWallet.Address) -> Result<Data, KeystoreError> {
         return signHash(message.sha3(.keccak256), for: account)
     }
 
-    func signMessageBulk(_ data: [Data], for account: AlphaWallet.Address) -> Result<[Data], KeystoreError> {
+    func signMessageBulk(_ data: [Data], for account: TBakeWallet.Address) -> Result<[Data], KeystoreError> {
         switch getPrivateKeyForSigning(forAccount: account) {
         case .seed, .seedPhrase:
             return .failure(.failedToExportPrivateKey)
@@ -520,7 +591,7 @@ open class EtherKeystore: Keystore {
         }
     }
 
-    func signMessageData(_ message: Data?, for account: AlphaWallet.Address) -> Result<Data, KeystoreError> {
+    func signMessageData(_ message: Data?, for account: TBakeWallet.Address) -> Result<Data, KeystoreError> {
         guard let hash = message?.sha3(.keccak256) else { return .failure(KeystoreError.failedToSignMessage) }
         switch getPrivateKeyForSigning(forAccount: account) {
         case .seed, .seedPhrase:
@@ -580,7 +651,7 @@ open class EtherKeystore: Keystore {
         }
     }
 
-    private func getPrivateKeyForSigning(forAccount account: AlphaWallet.Address) -> WalletSeedOrKey {
+    private func getPrivateKeyForSigning(forAccount account: TBakeWallet.Address) -> WalletSeedOrKey {
         let prompt = R.string.localizable.keystoreAccessKeySign()
         if isHdWallet(account: account) {
             let seed = getSeedForHdWallet(forAccount: account, prompt: prompt, context: createContext(), withUserPresence: isUserPresenceCheckPossible)
@@ -600,7 +671,7 @@ open class EtherKeystore: Keystore {
         }
     }
 
-    private func getPrivateKeyFromNonHdWallet(forAccount account: AlphaWallet.Address, prompt: String, withUserPresence: Bool, shouldWriteWithUserPresenceIfNotFound: Bool = true) -> WalletSeedOrKey {
+    private func getPrivateKeyFromNonHdWallet(forAccount account: TBakeWallet.Address, prompt: String, withUserPresence: Bool, shouldWriteWithUserPresenceIfNotFound: Bool = true) -> WalletSeedOrKey {
         let prefix: String
         if withUserPresence {
             prefix = Keys.ethereumRawPrivateKeyUserPresenceRequiredPrefix
@@ -638,7 +709,7 @@ open class EtherKeystore: Keystore {
         }
     }
 
-    private func getSeedPhraseForHdWallet(forAccount account: AlphaWallet.Address, prompt: String, context: LAContext, withUserPresence: Bool) -> WalletSeedOrKey {
+    private func getSeedPhraseForHdWallet(forAccount account: TBakeWallet.Address, prompt: String, context: LAContext, withUserPresence: Bool) -> WalletSeedOrKey {
         let seedOrKey = getSeedForHdWallet(forAccount: account, prompt: prompt, context: context, withUserPresence: withUserPresence)
         switch seedOrKey {
         case .seed(let seed):
@@ -651,7 +722,7 @@ open class EtherKeystore: Keystore {
         }
     }
 
-    private func getSeedForHdWallet(forAccount account: AlphaWallet.Address, prompt: String, context: LAContext, withUserPresence: Bool, shouldWriteWithUserPresenceIfNotFound: Bool = true) -> WalletSeedOrKey {
+    private func getSeedForHdWallet(forAccount account: TBakeWallet.Address, prompt: String, context: LAContext, withUserPresence: Bool, shouldWriteWithUserPresenceIfNotFound: Bool = true) -> WalletSeedOrKey {
         let prefix: String
         if withUserPresence {
             prefix = Keys.ethereumSeedUserPresenceRequiredPrefix
@@ -688,7 +759,7 @@ open class EtherKeystore: Keystore {
         }
     }
 
-    private func savePrivateKeyForNonHdWallet(_ privateKey: Data, forAccount account: AlphaWallet.Address, withUserPresence: Bool) -> Bool {
+    private func savePrivateKeyForNonHdWallet(_ privateKey: Data, forAccount account: TBakeWallet.Address, withUserPresence: Bool) -> Bool {
         let context = createContext()
         guard let cipherTextData = encryptPrivateKey(privateKey, forAccount: account, withUserPresence: withUserPresence, withContext: context) else { return false }
         let access: KeychainSwiftAccessOptions
@@ -703,7 +774,7 @@ open class EtherKeystore: Keystore {
         return keychain.set(cipherTextData, forKey: "\(prefix)\(account.eip55String)", withAccess: access)
     }
 
-    private func saveSeedForHdWallet(_ seed: String, forAccount account: AlphaWallet.Address, withUserPresence: Bool) -> Bool {
+    private func saveSeedForHdWallet(_ seed: String, forAccount account: TBakeWallet.Address, withUserPresence: Bool) -> Bool {
         let context = createContext()
         guard let cipherTextData = seed.data(using: .utf8).flatMap({ self.encryptHdWalletSeed($0, forAccount: account, withUserPresence: withUserPresence, withContext: context) }) else { return false }
         let access: KeychainSwiftAccessOptions
@@ -718,27 +789,27 @@ open class EtherKeystore: Keystore {
         return keychain.set(cipherTextData, forKey: "\(prefix)\(account.eip55String)", withAccess: access)
     }
 
-    private func decryptHdWalletSeed(fromCipherTextData cipherTextData: Data, forAccount account: AlphaWallet.Address, withUserPresence: Bool, withContext context: LAContext) -> Data? {
+    private func decryptHdWalletSeed(fromCipherTextData cipherTextData: Data, forAccount account: TBakeWallet.Address, withUserPresence: Bool, withContext context: LAContext) -> Data? {
         let secureEnclave = SecureEnclave(userPresenceRequired: withUserPresence)
         return try? secureEnclave.decrypt(cipherText: cipherTextData, withPrivateKeyFromLabel: encryptionKeyForSeedLabel(fromAccount: account, withUserPresence: withUserPresence), withContext: context)
     }
 
-    private func decryptPrivateKey(fromCipherTextData cipherTextData: Data, forAccount account: AlphaWallet.Address, withUserPresence: Bool, withContext context: LAContext) -> Data? {
+    private func decryptPrivateKey(fromCipherTextData cipherTextData: Data, forAccount account: TBakeWallet.Address, withUserPresence: Bool, withContext context: LAContext) -> Data? {
         let secureEnclave = SecureEnclave(userPresenceRequired: withUserPresence)
         return try? secureEnclave.decrypt(cipherText: cipherTextData, withPrivateKeyFromLabel: encryptionKeyForPrivateKeyLabel(fromAccount: account, withUserPresence: withUserPresence), withContext: context)
     }
 
-    private func encryptHdWalletSeed(_ seed: Data, forAccount account: AlphaWallet.Address, withUserPresence: Bool, withContext context: LAContext) -> Data? {
+    private func encryptHdWalletSeed(_ seed: Data, forAccount account: TBakeWallet.Address, withUserPresence: Bool, withContext context: LAContext) -> Data? {
         let secureEnclave = SecureEnclave(userPresenceRequired: withUserPresence)
         return try? secureEnclave.encrypt(plainTextData: seed, withPublicKeyFromLabel: encryptionKeyForSeedLabel(fromAccount: account, withUserPresence: withUserPresence), withContext: context)
     }
 
-    private func encryptPrivateKey(_ key: Data, forAccount account: AlphaWallet.Address, withUserPresence: Bool, withContext context: LAContext) -> Data? {
+    private func encryptPrivateKey(_ key: Data, forAccount account: TBakeWallet.Address, withUserPresence: Bool, withContext context: LAContext) -> Data? {
         let secureEnclave = SecureEnclave(userPresenceRequired: withUserPresence)
         return try? secureEnclave.encrypt(plainTextData: key, withPublicKeyFromLabel: encryptionKeyForPrivateKeyLabel(fromAccount: account, withUserPresence: withUserPresence), withContext: context)
     }
 
-    private func encryptionKeyForSeedLabel(fromAccount account: AlphaWallet.Address, withUserPresence: Bool) -> String {
+    private func encryptionKeyForSeedLabel(fromAccount account: TBakeWallet.Address, withUserPresence: Bool) -> String {
         let prefix: String
         if withUserPresence {
             prefix = Keys.encryptionKeyForSeedUserPresenceRequiredPrefix
@@ -748,7 +819,7 @@ open class EtherKeystore: Keystore {
         return "\(prefix)\(account.eip55String)"
     }
 
-    private func encryptionKeyForPrivateKeyLabel(fromAccount account: AlphaWallet.Address, withUserPresence: Bool) -> String {
+    private func encryptionKeyForPrivateKeyLabel(fromAccount account: TBakeWallet.Address, withUserPresence: Bool) -> String {
         let prefix: String
         if withUserPresence {
             prefix = Keys.encryptionKeyForPrivateKeyUserPresenceRequiredPrefix
@@ -758,7 +829,7 @@ open class EtherKeystore: Keystore {
         return "\(prefix)\(account.eip55String)"
     }
 
-    func elevateSecurity(forAccount account: AlphaWallet.Address) -> Bool {
+    func elevateSecurity(forAccount account: TBakeWallet.Address) -> Bool {
         guard !isProtectedByUserPresence(account: account) else { return true }
         guard isUserPresenceCheckPossible else { return false }
         let prompt: String

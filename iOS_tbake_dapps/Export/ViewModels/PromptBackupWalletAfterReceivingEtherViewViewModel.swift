@@ -5,7 +5,7 @@ import UIKit
 import BigInt
 
 struct PromptBackupWalletAfterReceivingNativeCryptoCurrencyViewViewModel: PromptBackupWalletViewModel {
-    let walletAddress: AlphaWallet.Address
+    let walletAddress: TBakeWallet.Address
     let nativeCryptoCurrency: BigInt
 
     var backgroundColor: UIColor {

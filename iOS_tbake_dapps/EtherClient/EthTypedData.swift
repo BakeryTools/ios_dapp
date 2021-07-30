@@ -64,14 +64,14 @@ struct EthTypedData: Decodable {
     }
 
     var schemaData: Data {
-        return Data(bytes: Array(schemaString.utf8))
+        return Data(Array(schemaString.utf8))
     }
 
     var typedData: Data {
         switch value {
         case .bool(let bool):
             let byte: UInt8 = bool ? 0x01 : 0x00
-            return Data(bytes: [byte])
+            return Data([byte])
         case .address(let address):
             let data = Data(_hex: String(address.dropFirst(2)))
             return data
@@ -115,7 +115,7 @@ struct EthTypedData: Decodable {
                     return encoder.data
                 }
             }
-            return Data(bytes: Array(string.utf8))
+            return Data(Array(string.utf8))
         case .none:
             return Data()
         }

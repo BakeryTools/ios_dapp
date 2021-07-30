@@ -106,10 +106,8 @@ struct R: Rswift.Validatable {
   }
   #endif
 
-  /// This `R.color` struct is generated, and contains static references to 26 colors.
+  /// This `R.color` struct is generated, and contains static references to 25 colors.
   struct color {
-    /// Color `BackgroundColor`.
-    static let backgroundColor = Rswift.ColorResource(bundle: R.hostingBundle, name: "BackgroundColor")
     /// Color `alabaster`.
     static let alabaster = Rswift.ColorResource(bundle: R.hostingBundle, name: "alabaster")
     /// Color `alto`.
@@ -160,15 +158,6 @@ struct R: Rswift.Validatable {
     static let solitude = Rswift.ColorResource(bundle: R.hostingBundle, name: "solitude")
     /// Color `white`.
     static let white = Rswift.ColorResource(bundle: R.hostingBundle, name: "white")
-
-    #if os(iOS) || os(tvOS)
-    /// `UIColor(named: "BackgroundColor", bundle: ..., traitCollection: ...)`
-    @available(tvOS 11.0, *)
-    @available(iOS 11.0, *)
-    static func backgroundColor(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIColor? {
-      return UIKit.UIColor(resource: R.color.backgroundColor, compatibleWith: traitCollection)
-    }
-    #endif
 
     #if os(iOS) || os(tvOS)
     /// `UIColor(named: "alabaster", bundle: ..., traitCollection: ...)`
@@ -396,14 +385,6 @@ struct R: Rswift.Validatable {
     #endif
 
     #if os(watchOS)
-    /// `UIColor(named: "BackgroundColor", bundle: ..., traitCollection: ...)`
-    @available(watchOSApplicationExtension 4.0, *)
-    static func backgroundColor(_: Void = ()) -> UIKit.UIColor? {
-      return UIKit.UIColor(named: R.color.backgroundColor.name)
-    }
-    #endif
-
-    #if os(watchOS)
     /// `UIColor(named: "alabaster", bundle: ..., traitCollection: ...)`
     @available(watchOSApplicationExtension 4.0, *)
     static func alabaster(_: Void = ()) -> UIKit.UIColor? {
@@ -606,6 +587,13 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
 
+  /// This `R.entitlements` struct is generated, and contains static references to 1 properties.
+  struct entitlements {
+    static let comAppleDeveloperDefaultDataProtection = infoPlistString(path: [], key: "com.apple.developer.default-data-protection") ?? "NSFileProtectionComplete"
+
+    fileprivate init() {}
+  }
+
   /// This `R.file` struct is generated, and contains static references to 13 files.
   struct file {
     /// Resource file `DAI.tsml`.
@@ -765,7 +753,7 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
 
-  /// This `R.image` struct is generated, and contains static references to 181 images.
+  /// This `R.image` struct is generated, and contains static references to 185 images.
   struct image {
     /// Image `HT-HECO mainnet`.
     static let hthecoMainnet = Rswift.ImageResource(bundle: R.hostingBundle, name: "HT-HECO mainnet")
@@ -825,6 +813,10 @@ struct R: Rswift.Validatable {
     static let gasWarning = Rswift.ImageResource(bundle: R.hostingBundle, name: "gasWarning")
     /// Image `generation`.
     static let generation = Rswift.ImageResource(bundle: R.hostingBundle, name: "generation")
+    /// Image `github_logo`.
+    static let github_logo = Rswift.ImageResource(bundle: R.hostingBundle, name: "github_logo")
+    /// Image `globe`.
+    static let globe = Rswift.ImageResource(bundle: R.hostingBundle, name: "globe")
     /// Image `hideToken`.
     static let hideToken = Rswift.ImageResource(bundle: R.hostingBundle, name: "hideToken")
     /// Image `icon_alert`.
@@ -921,6 +913,8 @@ struct R: Rswift.Validatable {
     static let logo_login_page = Rswift.ImageResource(bundle: R.hostingBundle, name: "logo_login_page")
     /// Image `mascot_happy`.
     static let mascot_happy = Rswift.ImageResource(bundle: R.hostingBundle, name: "mascot_happy")
+    /// Image `medium_logo`.
+    static let medium_logo = Rswift.ImageResource(bundle: R.hostingBundle, name: "medium_logo")
     /// Image `more`.
     static let more = Rswift.ImageResource(bundle: R.hostingBundle, name: "more")
     /// Image `networksCircle`.
@@ -999,6 +993,8 @@ struct R: Rswift.Validatable {
     static let small_icon_logo = Rswift.ImageResource(bundle: R.hostingBundle, name: "small_icon_logo")
     /// Image `splashscreen_background_img`.
     static let splashscreen_background_img = Rswift.ImageResource(bundle: R.hostingBundle, name: "splashscreen_background_img")
+    /// Image `splashscreen_logo`.
+    static let splashscreen_logo = Rswift.ImageResource(bundle: R.hostingBundle, name: "splashscreen_logo")
     /// Image `statement`.
     static let statement = Rswift.ImageResource(bundle: R.hostingBundle, name: "statement")
     /// Image `successOverlay`.
@@ -1330,6 +1326,20 @@ struct R: Rswift.Validatable {
     /// `UIImage(named: "generation", bundle: ..., traitCollection: ...)`
     static func generation(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.generation, compatibleWith: traitCollection)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UIImage(named: "github_logo", bundle: ..., traitCollection: ...)`
+    static func github_logo(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.github_logo, compatibleWith: traitCollection)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UIImage(named: "globe", bundle: ..., traitCollection: ...)`
+    static func globe(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.globe, compatibleWith: traitCollection)
     }
     #endif
 
@@ -1670,6 +1680,13 @@ struct R: Rswift.Validatable {
     #endif
 
     #if os(iOS) || os(tvOS)
+    /// `UIImage(named: "medium_logo", bundle: ..., traitCollection: ...)`
+    static func medium_logo(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.medium_logo, compatibleWith: traitCollection)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UIImage(named: "more", bundle: ..., traitCollection: ...)`
     static func more(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.more, compatibleWith: traitCollection)
@@ -1939,6 +1956,13 @@ struct R: Rswift.Validatable {
     /// `UIImage(named: "splashscreen_background_img", bundle: ..., traitCollection: ...)`
     static func splashscreen_background_img(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
       return UIKit.UIImage(resource: R.image.splashscreen_background_img, compatibleWith: traitCollection)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UIImage(named: "splashscreen_logo", bundle: ..., traitCollection: ...)`
+    static func splashscreen_logo(compatibleWith traitCollection: UIKit.UITraitCollection? = nil) -> UIKit.UIImage? {
+      return UIKit.UIImage(resource: R.image.splashscreen_logo, compatibleWith: traitCollection)
     }
     #endif
 
@@ -2400,10 +2424,14 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
 
-  /// This `R.nib` struct is generated, and contains static references to 9 nibs.
+  /// This `R.nib` struct is generated, and contains static references to 17 nibs.
   struct nib {
+    /// Nib `AddHideTokensViewController`.
+    static let addHideTokensViewController = _R.nib._AddHideTokensViewController()
     /// Nib `BrowserHistoryViewController`.
     static let browserHistoryViewController = _R.nib._BrowserHistoryViewController()
+    /// Nib `ChartViewController`.
+    static let chartViewController = _R.nib._ChartViewController()
     /// Nib `CustomRefreshControlView`.
     static let customRefreshControlView = _R.nib._CustomRefreshControlView()
     /// Nib `DappNoData`.
@@ -2412,20 +2440,48 @@ struct R: Rswift.Validatable {
     static let myDappsViewController = _R.nib._MyDappsViewController()
     /// Nib `NewTokenViewController`.
     static let newTokenViewController = _R.nib._NewTokenViewController()
+    /// Nib `RequestViewController`.
+    static let requestViewController = _R.nib._RequestViewController()
     /// Nib `SendTransactionErrorViewController`.
     static let sendTransactionErrorViewController = _R.nib._SendTransactionErrorViewController()
     /// Nib `SendViewController`.
     static let sendViewController = _R.nib._SendViewController()
+    /// Nib `ShakeShakeViewController`.
+    static let shakeShakeViewController = _R.nib._ShakeShakeViewController()
+    /// Nib `SupportViewController`.
+    static let supportViewController = _R.nib._SupportViewController()
+    /// Nib `TokenViewController`.
+    static let tokenViewController = _R.nib._TokenViewController()
     /// Nib `TransactionConfirmationViewController`.
     static let transactionConfirmationViewController = _R.nib._TransactionConfirmationViewController()
+    /// Nib `TransactionViewController`.
+    static let transactionViewController = _R.nib._TransactionViewController()
+    /// Nib `UnderConstructionViewController`.
+    static let underConstructionViewController = _R.nib._UnderConstructionViewController()
     /// Nib `WordCollectionViewCell`.
     static let wordCollectionViewCell = _R.nib._WordCollectionViewCell()
+
+    #if os(iOS) || os(tvOS)
+    /// `UINib(name: "AddHideTokensViewController", in: bundle)`
+    @available(*, deprecated, message: "Use UINib(resource: R.nib.addHideTokensViewController) instead")
+    static func addHideTokensViewController(_: Void = ()) -> UIKit.UINib {
+      return UIKit.UINib(resource: R.nib.addHideTokensViewController)
+    }
+    #endif
 
     #if os(iOS) || os(tvOS)
     /// `UINib(name: "BrowserHistoryViewController", in: bundle)`
     @available(*, deprecated, message: "Use UINib(resource: R.nib.browserHistoryViewController) instead")
     static func browserHistoryViewController(_: Void = ()) -> UIKit.UINib {
       return UIKit.UINib(resource: R.nib.browserHistoryViewController)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UINib(name: "ChartViewController", in: bundle)`
+    @available(*, deprecated, message: "Use UINib(resource: R.nib.chartViewController) instead")
+    static func chartViewController(_: Void = ()) -> UIKit.UINib {
+      return UIKit.UINib(resource: R.nib.chartViewController)
     }
     #endif
 
@@ -2462,6 +2518,14 @@ struct R: Rswift.Validatable {
     #endif
 
     #if os(iOS) || os(tvOS)
+    /// `UINib(name: "RequestViewController", in: bundle)`
+    @available(*, deprecated, message: "Use UINib(resource: R.nib.requestViewController) instead")
+    static func requestViewController(_: Void = ()) -> UIKit.UINib {
+      return UIKit.UINib(resource: R.nib.requestViewController)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UINib(name: "SendTransactionErrorViewController", in: bundle)`
     @available(*, deprecated, message: "Use UINib(resource: R.nib.sendTransactionErrorViewController) instead")
     static func sendTransactionErrorViewController(_: Void = ()) -> UIKit.UINib {
@@ -2478,10 +2542,50 @@ struct R: Rswift.Validatable {
     #endif
 
     #if os(iOS) || os(tvOS)
+    /// `UINib(name: "ShakeShakeViewController", in: bundle)`
+    @available(*, deprecated, message: "Use UINib(resource: R.nib.shakeShakeViewController) instead")
+    static func shakeShakeViewController(_: Void = ()) -> UIKit.UINib {
+      return UIKit.UINib(resource: R.nib.shakeShakeViewController)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UINib(name: "SupportViewController", in: bundle)`
+    @available(*, deprecated, message: "Use UINib(resource: R.nib.supportViewController) instead")
+    static func supportViewController(_: Void = ()) -> UIKit.UINib {
+      return UIKit.UINib(resource: R.nib.supportViewController)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UINib(name: "TokenViewController", in: bundle)`
+    @available(*, deprecated, message: "Use UINib(resource: R.nib.tokenViewController) instead")
+    static func tokenViewController(_: Void = ()) -> UIKit.UINib {
+      return UIKit.UINib(resource: R.nib.tokenViewController)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UINib(name: "TransactionConfirmationViewController", in: bundle)`
     @available(*, deprecated, message: "Use UINib(resource: R.nib.transactionConfirmationViewController) instead")
     static func transactionConfirmationViewController(_: Void = ()) -> UIKit.UINib {
       return UIKit.UINib(resource: R.nib.transactionConfirmationViewController)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UINib(name: "TransactionViewController", in: bundle)`
+    @available(*, deprecated, message: "Use UINib(resource: R.nib.transactionViewController) instead")
+    static func transactionViewController(_: Void = ()) -> UIKit.UINib {
+      return UIKit.UINib(resource: R.nib.transactionViewController)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
+    /// `UINib(name: "UnderConstructionViewController", in: bundle)`
+    @available(*, deprecated, message: "Use UINib(resource: R.nib.underConstructionViewController) instead")
+    static func underConstructionViewController(_: Void = ()) -> UIKit.UINib {
+      return UIKit.UINib(resource: R.nib.underConstructionViewController)
     }
     #endif
 
@@ -2493,8 +2597,16 @@ struct R: Rswift.Validatable {
     }
     #endif
 
+    static func addHideTokensViewController(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
+      return R.nib.addHideTokensViewController.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
+    }
+
     static func browserHistoryViewController(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
       return R.nib.browserHistoryViewController.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
+    }
+
+    static func chartViewController(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
+      return R.nib.chartViewController.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
     }
 
     static func customRefreshControlView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> CustomRefreshControlView? {
@@ -2513,6 +2625,10 @@ struct R: Rswift.Validatable {
       return R.nib.newTokenViewController.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
     }
 
+    static func requestViewController(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
+      return R.nib.requestViewController.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
+    }
+
     static func sendTransactionErrorViewController(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
       return R.nib.sendTransactionErrorViewController.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
     }
@@ -2521,8 +2637,28 @@ struct R: Rswift.Validatable {
       return R.nib.sendViewController.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
     }
 
+    static func shakeShakeViewController(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
+      return R.nib.shakeShakeViewController.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
+    }
+
+    static func supportViewController(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
+      return R.nib.supportViewController.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
+    }
+
+    static func tokenViewController(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
+      return R.nib.tokenViewController.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
+    }
+
     static func transactionConfirmationViewController(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
       return R.nib.transactionConfirmationViewController.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
+    }
+
+    static func transactionViewController(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
+      return R.nib.transactionViewController.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
+    }
+
+    static func underConstructionViewController(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
+      return R.nib.underConstructionViewController.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
     }
 
     static func wordCollectionViewCell(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> WordCollectionViewCell? {
@@ -2542,7 +2678,7 @@ struct R: Rswift.Validatable {
 
   /// This `R.string` struct is generated, and contains static references to 1 localization tables.
   struct string {
-    /// This `R.string.localizable` struct is generated, and contains static references to 647 localization keys.
+    /// This `R.string.localizable` struct is generated, and contains static references to 657 localization keys.
     struct localizable {
       /// en translation: %@  Start WalletConnect session on:
       ///
@@ -2556,6 +2692,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let confirmPaymentHighFeeWarning = Rswift.StringResource(key: "confirmPayment.highFeeWarning", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: %@ Today
+      ///
+      /// Locales: en
+      static let walletSummaryToday = Rswift.StringResource(key: "wallet.summary.today", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: %@ is disabled. Please enable it in Settings > Select Active Networks
       ///
       /// Locales: en
@@ -2816,6 +2956,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let tokenTransactionCancelConfirmationTitle = Rswift.StringResource(key: "token.transactionCancelConfirmation.title", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: Authentication Error
+      ///
+      /// Locales: en
+      static let authenticationError = Rswift.StringResource(key: "authentication.error", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Authorize to confirm transaction
       ///
       /// Locales: en
@@ -2936,6 +3080,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let browserTabbarItemTitle = Rswift.StringResource(key: "browser.tabbar.item.title", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: Bug Details
+      ///
+      /// Locales: en
+      static let sendBugDetails = Rswift.StringResource(key: "send.bug.details", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Buy %@
       ///
       /// Locales: en
@@ -4108,6 +4256,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let settingsPasscodeTitle = Rswift.StringResource(key: "settings.passcode.title", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: Passcode is not set on the device. Please set the passcode in order to use this feature.
+      ///
+      /// Locales: en
+      static let passcodeNotSet = Rswift.StringResource(key: "passcode.not.set", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Password
       ///
       /// Locales: en
@@ -4136,6 +4288,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let signatureConfirmationPersonalmessageTitle = Rswift.StringResource(key: "signature.confirmation.personalmessage.title", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: Please elaborate the details of bug that you found.
+      ///
+      /// Locales: en
+      static let pleaseElaborateBug = Rswift.StringResource(key: "please.elaborate.bug", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Please enter amount
       ///
       /// Locales: en
@@ -4340,6 +4496,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let walletsNameRenameTo = Rswift.StringResource(key: "wallets.name.rename.to", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: Report A Bug
+      ///
+      /// Locales: en
+      static let reportABug = Rswift.StringResource(key: "report.a.bug", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Request has timed out. Please try again
       ///
       /// Locales: en
@@ -4484,6 +4644,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let aSettingsNavigationTitle = Rswift.StringResource(key: "a.settings.navigation.title", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: Shake detected!
+      ///
+      /// Locales: en
+      static let shakeDetected = Rswift.StringResource(key: "shake.detected", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Share
       ///
       /// Locales: en
@@ -4552,6 +4716,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let errorViewDescriptionLabelTitle = Rswift.StringResource(key: "errorView.description.label.title", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: Sorry, this feature is under construction
+      ///
+      /// Locales: en
+      static let underConstruction = Rswift.StringResource(key: "under.construction", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Speed (Gas)
       ///
       /// Locales: en
@@ -4656,7 +4824,7 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let tokenTransactionConfirmationErrorDescriptionGasPriceTooLow = Rswift.StringResource(key: "token.transactionConfirmation.error.description.gasPriceTooLow", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
-      /// en translation: The higher the fee, the better chances and faster your transaction will go through. Fees are based on current Ethereum blockchain network load.
+      /// en translation: The higher the fee, the better chances and faster your transaction will go through.
       ///
       /// Locales: en
       static let transactionConfirmationFeeFooterText = Rswift.StringResource(key: "transactionConfirmation.fee.footerText", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
@@ -4976,6 +5144,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let settingsEnabledNetworksPromptEnableTestnetTitle = Rswift.StringResource(key: "settings.enabledNetworks.promptEnableTestnet.title", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: Would you like to report a bug?
+      ///
+      /// Locales: en
+      static let wouldYouLikeReportABug = Rswift.StringResource(key: "would.you.like.report.a.bug", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Write this down, and keep it private and secure. You won't be able to restore your wallet if you lose this!
       ///
       /// Locales: en
@@ -4992,6 +5164,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let accountsDeleteErrorDuplicateAccount = Rswift.StringResource(key: "accounts.delete.error.duplicateAccount", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: You can shake-shake to submit bug to our developer.
+      ///
+      /// Locales: en
+      static let sendBugByShake = Rswift.StringResource(key: "send.bug.by.shake", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: You do not have enough ETH to import this ticket
       ///
       /// Locales: en
@@ -5181,6 +5357,23 @@ struct R: Rswift.Validatable {
         }
 
         let format = NSLocalizedString("confirmPayment.highFeeWarning", bundle: bundle, comment: "")
+        return String(format: format, locale: locale, value1)
+      }
+
+      /// en translation: %@ Today
+      ///
+      /// Locales: en
+      static func walletSummaryToday(_ value1: String, preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          let format = NSLocalizedString("wallet.summary.today", bundle: hostingBundle, comment: "")
+          return String(format: format, locale: applicationLocale, value1)
+        }
+
+        guard let (locale, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "wallet.summary.today"
+        }
+
+        let format = NSLocalizedString("wallet.summary.today", bundle: bundle, comment: "")
         return String(format: format, locale: locale, value1)
       }
 
@@ -6187,6 +6380,21 @@ struct R: Rswift.Validatable {
         return NSLocalizedString("token.transactionCancelConfirmation.title", bundle: bundle, comment: "")
       }
 
+      /// en translation: Authentication Error
+      ///
+      /// Locales: en
+      static func authenticationError(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("authentication.error", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "authentication.error"
+        }
+
+        return NSLocalizedString("authentication.error", bundle: bundle, comment: "")
+      }
+
       /// en translation: Authorize to confirm transaction
       ///
       /// Locales: en
@@ -6639,6 +6847,21 @@ struct R: Rswift.Validatable {
         }
 
         return NSLocalizedString("browser.tabbar.item.title", bundle: bundle, comment: "")
+      }
+
+      /// en translation: Bug Details
+      ///
+      /// Locales: en
+      static func sendBugDetails(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("send.bug.details", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "send.bug.details"
+        }
+
+        return NSLocalizedString("send.bug.details", bundle: bundle, comment: "")
       }
 
       /// en translation: Buy %@
@@ -11082,6 +11305,21 @@ struct R: Rswift.Validatable {
         return NSLocalizedString("settings.passcode.title", bundle: bundle, comment: "")
       }
 
+      /// en translation: Passcode is not set on the device. Please set the passcode in order to use this feature.
+      ///
+      /// Locales: en
+      static func passcodeNotSet(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("passcode.not.set", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "passcode.not.set"
+        }
+
+        return NSLocalizedString("passcode.not.set", bundle: bundle, comment: "")
+      }
+
       /// en translation: Password
       ///
       /// Locales: en
@@ -11185,6 +11423,21 @@ struct R: Rswift.Validatable {
         }
 
         return NSLocalizedString("signature.confirmation.personalmessage.title", bundle: bundle, comment: "")
+      }
+
+      /// en translation: Please elaborate the details of bug that you found.
+      ///
+      /// Locales: en
+      static func pleaseElaborateBug(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("please.elaborate.bug", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "please.elaborate.bug"
+        }
+
+        return NSLocalizedString("please.elaborate.bug", bundle: bundle, comment: "")
       }
 
       /// en translation: Please enter amount
@@ -11972,6 +12225,21 @@ struct R: Rswift.Validatable {
         return NSLocalizedString("wallets.name.rename.to", bundle: bundle, comment: "")
       }
 
+      /// en translation: Report A Bug
+      ///
+      /// Locales: en
+      static func reportABug(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("report.a.bug", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "report.a.bug"
+        }
+
+        return NSLocalizedString("report.a.bug", bundle: bundle, comment: "")
+      }
+
       /// en translation: Request has timed out. Please try again
       ///
       /// Locales: en
@@ -12522,6 +12790,21 @@ struct R: Rswift.Validatable {
         return NSLocalizedString("a.settings.navigation.title", bundle: bundle, comment: "")
       }
 
+      /// en translation: Shake detected!
+      ///
+      /// Locales: en
+      static func shakeDetected(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("shake.detected", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "shake.detected"
+        }
+
+        return NSLocalizedString("shake.detected", bundle: bundle, comment: "")
+      }
+
       /// en translation: Share
       ///
       /// Locales: en
@@ -12775,6 +13058,21 @@ struct R: Rswift.Validatable {
         }
 
         return NSLocalizedString("errorView.description.label.title", bundle: bundle, comment: "")
+      }
+
+      /// en translation: Sorry, this feature is under construction
+      ///
+      /// Locales: en
+      static func underConstruction(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("under.construction", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "under.construction"
+        }
+
+        return NSLocalizedString("under.construction", bundle: bundle, comment: "")
       }
 
       /// en translation: Speed (Gas)
@@ -13169,7 +13467,7 @@ struct R: Rswift.Validatable {
         return NSLocalizedString("token.transactionConfirmation.error.description.gasPriceTooLow", bundle: bundle, comment: "")
       }
 
-      /// en translation: The higher the fee, the better chances and faster your transaction will go through. Fees are based on current Ethereum blockchain network load.
+      /// en translation: The higher the fee, the better chances and faster your transaction will go through.
       ///
       /// Locales: en
       static func transactionConfirmationFeeFooterText(preferredLanguages: [String]? = nil) -> String {
@@ -14389,6 +14687,21 @@ struct R: Rswift.Validatable {
         return NSLocalizedString("settings.enabledNetworks.promptEnableTestnet.title", bundle: bundle, comment: "")
       }
 
+      /// en translation: Would you like to report a bug?
+      ///
+      /// Locales: en
+      static func wouldYouLikeReportABug(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("would.you.like.report.a.bug", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "would.you.like.report.a.bug"
+        }
+
+        return NSLocalizedString("would.you.like.report.a.bug", bundle: bundle, comment: "")
+      }
+
       /// en translation: Write this down, and keep it private and secure. You won't be able to restore your wallet if you lose this!
       ///
       /// Locales: en
@@ -14447,6 +14760,21 @@ struct R: Rswift.Validatable {
         }
 
         return NSLocalizedString("accounts.delete.error.duplicateAccount", bundle: bundle, comment: "")
+      }
+
+      /// en translation: You can shake-shake to submit bug to our developer.
+      ///
+      /// Locales: en
+      static func sendBugByShake(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("send.bug.by.shake", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "send.bug.by.shake"
+        }
+
+        return NSLocalizedString("send.bug.by.shake", bundle: bundle, comment: "")
       }
 
       /// en translation: You do not have enough ETH to import this ticket
@@ -15024,12 +15352,35 @@ struct _R: Rswift.Validatable {
   #if os(iOS) || os(tvOS)
   struct nib: Rswift.Validatable {
     static func validate() throws {
+      try _AddHideTokensViewController.validate()
       try _BrowserHistoryViewController.validate()
+      try _ChartViewController.validate()
       try _MyDappsViewController.validate()
       try _NewTokenViewController.validate()
+      try _RequestViewController.validate()
       try _SendTransactionErrorViewController.validate()
       try _SendViewController.validate()
+      try _SupportViewController.validate()
+      try _TokenViewController.validate()
       try _TransactionConfirmationViewController.validate()
+      try _TransactionViewController.validate()
+    }
+
+    struct _AddHideTokensViewController: Rswift.NibResourceType, Rswift.Validatable {
+      let bundle = R.hostingBundle
+      let name = "AddHideTokensViewController"
+
+      func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
+        return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
+      }
+
+      static func validate() throws {
+        if UIKit.UIImage(named: "background_img", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'background_img' is used in nib 'AddHideTokensViewController', but couldn't be loaded.") }
+        if #available(iOS 11.0, tvOS 11.0, *) {
+        }
+      }
+
+      fileprivate init() {}
     }
 
     struct _BrowserHistoryViewController: Rswift.NibResourceType, Rswift.Validatable {
@@ -15043,6 +15394,23 @@ struct _R: Rswift.Validatable {
       static func validate() throws {
         if UIKit.UIImage(named: "background_img", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'background_img' is used in nib 'BrowserHistoryViewController', but couldn't be loaded.") }
         if UIKit.UIImage(named: "launch_icon", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'launch_icon' is used in nib 'BrowserHistoryViewController', but couldn't be loaded.") }
+        if #available(iOS 11.0, tvOS 11.0, *) {
+        }
+      }
+
+      fileprivate init() {}
+    }
+
+    struct _ChartViewController: Rswift.NibResourceType, Rswift.Validatable {
+      let bundle = R.hostingBundle
+      let name = "ChartViewController"
+
+      func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
+        return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
+      }
+
+      static func validate() throws {
+        if UIKit.UIImage(named: "background_img", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'background_img' is used in nib 'ChartViewController', but couldn't be loaded.") }
         if #available(iOS 11.0, tvOS 11.0, *) {
         }
       }
@@ -15109,6 +15477,24 @@ struct _R: Rswift.Validatable {
       fileprivate init() {}
     }
 
+    struct _RequestViewController: Rswift.NibResourceType, Rswift.Validatable {
+      let bundle = R.hostingBundle
+      let name = "RequestViewController"
+
+      func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
+        return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
+      }
+
+      static func validate() throws {
+        if UIKit.UIImage(named: "background_img", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'background_img' is used in nib 'RequestViewController', but couldn't be loaded.") }
+        if #available(iOS 13.0, *) { if UIKit.UIImage(systemName: "doc.on.doc") == nil { throw Rswift.ValidationError(description: "[R.swift] System image named 'doc.on.doc' is used in nib 'RequestViewController', but couldn't be loaded.") } }
+        if #available(iOS 11.0, tvOS 11.0, *) {
+        }
+      }
+
+      fileprivate init() {}
+    }
+
     struct _SendTransactionErrorViewController: Rswift.NibResourceType, Rswift.Validatable {
       let bundle = R.hostingBundle
       let name = "SendTransactionErrorViewController"
@@ -15146,6 +15532,52 @@ struct _R: Rswift.Validatable {
       fileprivate init() {}
     }
 
+    struct _ShakeShakeViewController: Rswift.NibResourceType {
+      let bundle = R.hostingBundle
+      let name = "ShakeShakeViewController"
+
+      func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
+        return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
+      }
+
+      fileprivate init() {}
+    }
+
+    struct _SupportViewController: Rswift.NibResourceType, Rswift.Validatable {
+      let bundle = R.hostingBundle
+      let name = "SupportViewController"
+
+      func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
+        return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
+      }
+
+      static func validate() throws {
+        if UIKit.UIImage(named: "background_img", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'background_img' is used in nib 'SupportViewController', but couldn't be loaded.") }
+        if #available(iOS 11.0, tvOS 11.0, *) {
+        }
+      }
+
+      fileprivate init() {}
+    }
+
+    struct _TokenViewController: Rswift.NibResourceType, Rswift.Validatable {
+      let bundle = R.hostingBundle
+      let name = "TokenViewController"
+
+      func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
+        return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
+      }
+
+      static func validate() throws {
+        if UIKit.UIImage(named: "background_img", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'background_img' is used in nib 'TokenViewController', but couldn't be loaded.") }
+        if UIKit.UIImage(named: "token-bnb", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'token-bnb' is used in nib 'TokenViewController', but couldn't be loaded.") }
+        if #available(iOS 11.0, tvOS 11.0, *) {
+        }
+      }
+
+      fileprivate init() {}
+    }
+
     struct _TransactionConfirmationViewController: Rswift.NibResourceType, Rswift.Validatable {
       let bundle = R.hostingBundle
       let name = "TransactionConfirmationViewController"
@@ -15160,6 +15592,37 @@ struct _R: Rswift.Validatable {
         if #available(iOS 11.0, tvOS 11.0, *) {
           if UIKit.UIColor(named: "Label Color", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Color named 'Label Color' is used in nib 'TransactionConfirmationViewController', but couldn't be loaded.") }
         }
+      }
+
+      fileprivate init() {}
+    }
+
+    struct _TransactionViewController: Rswift.NibResourceType, Rswift.Validatable {
+      let bundle = R.hostingBundle
+      let name = "TransactionViewController"
+
+      func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
+        return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
+      }
+
+      static func validate() throws {
+        if UIKit.UIImage(named: "background_img", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'background_img' is used in nib 'TransactionViewController', but couldn't be loaded.") }
+        if #available(iOS 13.0, *) { if UIKit.UIImage(systemName: "doc.on.doc") == nil { throw Rswift.ValidationError(description: "[R.swift] System image named 'doc.on.doc' is used in nib 'TransactionViewController', but couldn't be loaded.") } }
+        if #available(iOS 11.0, tvOS 11.0, *) {
+          if UIKit.UIColor(named: "AccentColor", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Color named 'AccentColor' is used in nib 'TransactionViewController', but couldn't be loaded.") }
+          if UIKit.UIColor(named: "white", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Color named 'white' is used in nib 'TransactionViewController', but couldn't be loaded.") }
+        }
+      }
+
+      fileprivate init() {}
+    }
+
+    struct _UnderConstructionViewController: Rswift.NibResourceType {
+      let bundle = R.hostingBundle
+      let name = "UnderConstructionViewController"
+
+      func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
+        return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
       }
 
       fileprivate init() {}

@@ -117,7 +117,7 @@ open class SliderTextFieldCell: Cell<Float>, CellType, UITextFieldDelegate {
         textField.heightAnchor.constraint(equalToConstant: 30).isActive = true
         textField.widthAnchor.constraint(equalToConstant: 140).isActive = true
 
-        let views: [String: Any] = ["titleLabel": titleLabel, "textField": textField, "slider": slider]
+        let views: [String: Any] = ["titleLabel": titleLabel ?? UILabel(), "textField": textField, "slider": slider ?? UISlider()]
         let metrics = ["vPadding": 12, "spacing": 12.0]
         if shouldShowTitle {
             contentView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-[titleLabel]-[textField]-|", options: .alignAllLastBaseline, metrics: metrics, views: views))

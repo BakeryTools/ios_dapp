@@ -1,5 +1,3 @@
-// Copyright SIX DAY LLC. All rights reserved.
-
 import Foundation
 import ObjectiveC
 import web3swift
@@ -78,62 +76,62 @@ struct Config {
         return id
     }
 
-    private static func generateLastFetchedErc20InteractionBlockNumberKey(_ wallet: AlphaWallet.Address) -> String {
+    private static func generateLastFetchedErc20InteractionBlockNumberKey(_ wallet: TBakeWallet.Address) -> String {
         "\(Keys.lastFetchedAutoDetectedTransactedTokenErc20BlockNumber)-\(wallet.eip55String)"
     }
 
-    private static func generateLastFetchedErc721InteractionBlockNumberKey(_ wallet: AlphaWallet.Address) -> String {
+    private static func generateLastFetchedErc721InteractionBlockNumberKey(_ wallet: TBakeWallet.Address) -> String {
         "\(Keys.lastFetchedAutoDetectedTransactedTokenErc721BlockNumber)-\(wallet.eip55String)"
     }
 
-    private static func generateLastFetchedAutoDetectedTransactedTokenErc20BlockNumberKey(_ wallet: AlphaWallet.Address) -> String {
+    private static func generateLastFetchedAutoDetectedTransactedTokenErc20BlockNumberKey(_ wallet: TBakeWallet.Address) -> String {
         "\(Keys.lastFetchedAutoDetectedTransactedTokenErc20BlockNumber)-\(wallet.eip55String)"
     }
 
-    private static func generateLastFetchedAutoDetectedTransactedTokenNonErc20BlockNumberKey(_ wallet: AlphaWallet.Address) -> String {
+    private static func generateLastFetchedAutoDetectedTransactedTokenNonErc20BlockNumberKey(_ wallet: TBakeWallet.Address) -> String {
         "\(Keys.lastFetchedAutoDetectedTransactedTokenNonErc20BlockNumber)-\(wallet.eip55String)"
     }
 
-    static func setLastFetchedErc20InteractionBlockNumber(_ blockNumber: Int, server: RPCServer, wallet: AlphaWallet.Address, defaults: UserDefaults = UserDefaults.standard) {
+    static func setLastFetchedErc20InteractionBlockNumber(_ blockNumber: Int, server: RPCServer, wallet: TBakeWallet.Address, defaults: UserDefaults = UserDefaults.standard) {
         var dictionary: [String: NSNumber] = (defaults.value(forKey: generateLastFetchedErc20InteractionBlockNumberKey(wallet)) as? [String: NSNumber]) ?? .init()
         dictionary["\(server.chainID)"] = NSNumber(value: blockNumber)
         defaults.set(dictionary, forKey: generateLastFetchedErc20InteractionBlockNumberKey(wallet))
     }
 
-    static func getLastFetchedErc20InteractionBlockNumber(_ server: RPCServer, wallet: AlphaWallet.Address, defaults: UserDefaults = UserDefaults.standard) -> Int? {
+    static func getLastFetchedErc20InteractionBlockNumber(_ server: RPCServer, wallet: TBakeWallet.Address, defaults: UserDefaults = UserDefaults.standard) -> Int? {
         guard let dictionary = defaults.value(forKey: generateLastFetchedErc20InteractionBlockNumberKey(wallet)) as? [String: NSNumber] else { return nil }
         return dictionary["\(server.chainID)"]?.intValue
     }
 
-    static func setLastFetchedErc721InteractionBlockNumber(_ blockNumber: Int, server: RPCServer, wallet: AlphaWallet.Address, defaults: UserDefaults = UserDefaults.standard) {
+    static func setLastFetchedErc721InteractionBlockNumber(_ blockNumber: Int, server: RPCServer, wallet: TBakeWallet.Address, defaults: UserDefaults = UserDefaults.standard) {
         var dictionary: [String: NSNumber] = (defaults.value(forKey: generateLastFetchedErc721InteractionBlockNumberKey(wallet)) as? [String: NSNumber]) ?? .init()
         dictionary["\(server.chainID)"] = NSNumber(value: blockNumber)
         defaults.set(dictionary, forKey: generateLastFetchedErc721InteractionBlockNumberKey(wallet))
     }
 
-    static func getLastFetchedErc721InteractionBlockNumber(_ server: RPCServer, wallet: AlphaWallet.Address, defaults: UserDefaults = UserDefaults.standard) -> Int? {
+    static func getLastFetchedErc721InteractionBlockNumber(_ server: RPCServer, wallet: TBakeWallet.Address, defaults: UserDefaults = UserDefaults.standard) -> Int? {
         guard let dictionary = defaults.value(forKey: generateLastFetchedErc721InteractionBlockNumberKey(wallet)) as? [String: NSNumber] else { return nil }
         return dictionary["\(server.chainID)"]?.intValue
     }
 
-    static func setLastFetchedAutoDetectedTransactedTokenErc20BlockNumber(_ blockNumber: Int, server: RPCServer, wallet: AlphaWallet.Address, defaults: UserDefaults = UserDefaults.standard) {
+    static func setLastFetchedAutoDetectedTransactedTokenErc20BlockNumber(_ blockNumber: Int, server: RPCServer, wallet: TBakeWallet.Address, defaults: UserDefaults = UserDefaults.standard) {
         var dictionary: [String: NSNumber] = (defaults.value(forKey: generateLastFetchedAutoDetectedTransactedTokenErc20BlockNumberKey(wallet)) as? [String: NSNumber]) ?? .init()
         dictionary["\(server.chainID)"] = NSNumber(value: blockNumber)
         defaults.set(dictionary, forKey: generateLastFetchedAutoDetectedTransactedTokenErc20BlockNumberKey(wallet))
     }
 
-    static func getLastFetchedAutoDetectedTransactedTokenErc20BlockNumber(_ server: RPCServer, wallet: AlphaWallet.Address, defaults: UserDefaults = UserDefaults.standard) -> Int? {
+    static func getLastFetchedAutoDetectedTransactedTokenErc20BlockNumber(_ server: RPCServer, wallet: TBakeWallet.Address, defaults: UserDefaults = UserDefaults.standard) -> Int? {
         guard let dictionary = defaults.value(forKey: generateLastFetchedAutoDetectedTransactedTokenErc20BlockNumberKey(wallet)) as? [String: NSNumber] else { return nil }
         return dictionary["\(server.chainID)"]?.intValue
     }
 
-    static func setLastFetchedAutoDetectedTransactedTokenNonErc20BlockNumber(_ blockNumber: Int, server: RPCServer, wallet: AlphaWallet.Address, defaults: UserDefaults = UserDefaults.standard) {
+    static func setLastFetchedAutoDetectedTransactedTokenNonErc20BlockNumber(_ blockNumber: Int, server: RPCServer, wallet: TBakeWallet.Address, defaults: UserDefaults = UserDefaults.standard) {
         var dictionary: [String: NSNumber] = (defaults.value(forKey: generateLastFetchedAutoDetectedTransactedTokenNonErc20BlockNumberKey(wallet)) as? [String: NSNumber]) ?? .init()
         dictionary["\(server.chainID)"] = NSNumber(value: blockNumber)
         defaults.set(dictionary, forKey: generateLastFetchedAutoDetectedTransactedTokenNonErc20BlockNumberKey(wallet))
     }
 
-    static func getLastFetchedAutoDetectedTransactedTokenNonErc20BlockNumber(_ server: RPCServer, wallet: AlphaWallet.Address, defaults: UserDefaults = UserDefaults.standard) -> Int? {
+    static func getLastFetchedAutoDetectedTransactedTokenNonErc20BlockNumber(_ server: RPCServer, wallet: TBakeWallet.Address, defaults: UserDefaults = UserDefaults.standard) -> Int? {
         guard let dictionary = defaults.value(forKey: generateLastFetchedAutoDetectedTransactedTokenNonErc20BlockNumberKey(wallet)) as? [String: NSNumber] else { return nil }
         return dictionary["\(server.chainID)"]?.intValue
     }
@@ -179,6 +177,8 @@ struct Config {
         set {
             let chainIds = newValue.map { $0.chainID }
             defaults.set(chainIds, forKey: Keys.enabledServers)
+
+            subscribableEnabledServers.value = newValue
         }
     }
 
@@ -191,8 +191,11 @@ struct Config {
         }
     }
 
+    var subscribableEnabledServers: Subscribable<[RPCServer]>
+
     init(defaults: UserDefaults = UserDefaults.standard) {
         self.defaults = defaults
+        subscribableEnabledServers = .init(nil)
     }
 
     let priceInfoEndpoints = URL(string: "https://api.coingecko.com")!
@@ -209,7 +212,7 @@ struct Config {
     ///Debugging flag. Set to false to disable auto fetching prices, etc to cut down on network calls
     let isAutoFetchingDisabled = false
 
-    func addToWalletAddressesAlreadyPromptedForBackup(address: AlphaWallet.Address) {
+    func addToWalletAddressesAlreadyPromptedForBackup(address: TBakeWallet.Address) {
         var addresses: [String]
         if let value = defaults.array(forKey: Keys.walletAddressesAlreadyPromptedForBackUp) {
             addresses = value as! [String]
@@ -244,10 +247,10 @@ struct Config {
 }
 
 extension Config {
-    var walletNames: [AlphaWallet.Address: String] {
+    var walletNames: [TBakeWallet.Address: String] {
         if let names = defaults.dictionary(forKey: Keys.walletNames) as? [String: String] {
-            let tuples = names.compactMap { key, value -> (AlphaWallet.Address, String)? in
-                guard let address = AlphaWallet.Address(string: key) else { return nil }
+            let tuples = names.compactMap { key, value -> (TBakeWallet.Address, String)? in
+                guard let address = TBakeWallet.Address(string: key) else { return nil }
                 return (address, value)
             }
             return Dictionary(uniqueKeysWithValues: tuples)
@@ -256,13 +259,13 @@ extension Config {
         }
     }
 
-    private func setWalletNames(walletNames: [AlphaWallet.Address: String]) {
+    private func setWalletNames(walletNames: [TBakeWallet.Address: String]) {
         let names = walletNames.map { ($0.key.eip55String, $0.value) }
         let dictionary = Dictionary(names, uniquingKeysWith: { $1 })
         defaults.set(dictionary, forKey: Keys.walletNames)
     }
 
-    func saveWalletName(_ walletName: String, forAddress address: AlphaWallet.Address) {
+    func saveWalletName(_ walletName: String, forAddress address: TBakeWallet.Address) {
         let walletName = walletName.trimmed
         guard !walletName.isEmpty else { return }
         var names = walletNames
@@ -270,7 +273,7 @@ extension Config {
         setWalletNames(walletNames: names)
     }
 
-    func deleteWalletName(forAccount address: AlphaWallet.Address) {
+    func deleteWalletName(forAccount address: TBakeWallet.Address) {
         var names = walletNames
         names[address] = nil
         setWalletNames(walletNames: names)

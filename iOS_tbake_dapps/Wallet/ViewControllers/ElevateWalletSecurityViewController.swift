@@ -2,14 +2,14 @@
 
 import UIKit
 
-protocol ElevateWalletSecurityViewControllerDelegate: class {
+protocol ElevateWalletSecurityViewControllerDelegate: AnyObject {
     func didTapLock(inViewController viewController: ElevateWalletSecurityViewController)
     func didCancelLock(inViewController viewController: ElevateWalletSecurityViewController)
 }
 
 class ElevateWalletSecurityViewController: UIViewController {
     private let keystore: Keystore
-    private let account: AlphaWallet.Address
+    private let account: TBakeWallet.Address
     lazy private var viewModel = ElevateWalletSecurityViewModel(isHdWallet: keystore.isHdWallet(account: account))
     private let roundedBackground = RoundedBackground()
     private let subtitleLabel = UILabel()
@@ -28,7 +28,7 @@ class ElevateWalletSecurityViewController: UIViewController {
 
     weak var delegate: ElevateWalletSecurityViewControllerDelegate?
 
-    init(keystore: Keystore, account: AlphaWallet.Address) {
+    init(keystore: Keystore, account: TBakeWallet.Address) {
         self.keystore = keystore
         self.account = account
         super.init(nibName: nil, bundle: nil)

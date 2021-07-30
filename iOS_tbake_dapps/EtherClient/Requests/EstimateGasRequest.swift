@@ -7,8 +7,8 @@ import BigInt
 struct EstimateGasRequest: JSONRPCKit.Request {
     typealias Response = String
 
-    let from: AlphaWallet.Address
-    let to: AlphaWallet.Address
+    let from: TBakeWallet.Address
+    let to: TBakeWallet.Address
     let value: BigInt
     let data: Data
 

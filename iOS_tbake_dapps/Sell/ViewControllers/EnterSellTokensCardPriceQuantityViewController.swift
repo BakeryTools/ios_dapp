@@ -44,7 +44,7 @@ class EnterSellTokensCardPriceQuantityViewController: UIViewController, TokenVer
         }
     }
 
-    var contract: AlphaWallet.Address {
+    var contract: TBakeWallet.Address {
         return viewModel.token.contractAddress
     }
     var server: RPCServer {

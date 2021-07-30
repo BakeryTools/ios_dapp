@@ -31,7 +31,7 @@ enum AssetInternalValue: Codable {
             return ".openSeaNonFungibleTraits"
         }
     }
-    case address(AlphaWallet.Address)
+    case address(TBakeWallet.Address)
     case string(String)
     case bytes(Data)
     case int(BigInt)
@@ -52,7 +52,7 @@ enum AssetInternalValue: Codable {
         }
     }
 
-    var addressValue: AlphaWallet.Address? {
+    var addressValue: TBakeWallet.Address? {
         guard case .address(let value) = self else { return nil }
         return value
     }
@@ -111,7 +111,7 @@ enum AssetInternalValue: Codable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: Key.self)
 
-        if let address = try? container.decode(AlphaWallet.Address.self, forKey: .address) {
+        if let address = try? container.decode(TBakeWallet.Address.self, forKey: .address) {
             self = .address(address)
             return
         }

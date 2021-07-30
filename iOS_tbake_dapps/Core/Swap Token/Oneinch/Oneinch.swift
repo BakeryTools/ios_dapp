@@ -29,7 +29,7 @@ class Oneinch: TokenActionsProvider, SwapTokenURLProviderType {
         .init(symbol: "ETH", name: "ETH", address: Constants.nativeCryptoAddressInDatabase, decimal: RPCServer.main.decimals)
     ]
     //NOTE: we use dictionary to improve search tokens
-    private var availableTokens: [AlphaWallet.Address: Oneinch.ERC20Token] = [:]
+    private var availableTokens: [TBakeWallet.Address: Oneinch.ERC20Token] = [:]
     private let queue = DispatchQueue(label: "com.Oneinch.updateQueue")
 
     func url(token: TokenActionsServiceKey) -> URL? {
@@ -41,7 +41,7 @@ class Oneinch: TokenActionsProvider, SwapTokenURLProviderType {
         return URL(string: Oneinch.baseURL + pathWithQueryItems)
     }
 
-    private func subpath(inputAddress: AlphaWallet.Address) -> String {
+    private func subpath(inputAddress: TBakeWallet.Address) -> String {
         return [token(address: inputAddress), token(address: defaultOutputAddress(forInput: inputAddress))].compactMap {
             $0?.symbol
         }.joined(separator: "/")
@@ -62,7 +62,7 @@ class Oneinch: TokenActionsProvider, SwapTokenURLProviderType {
         }
     }
 
-    private func token(address: AlphaWallet.Address) -> Oneinch.ERC20Token? {
+    private func token(address: TBakeWallet.Address) -> Oneinch.ERC20Token? {
         return availableTokens[address]
     }
 
@@ -85,10 +85,10 @@ class Oneinch: TokenActionsProvider, SwapTokenURLProviderType {
         })
     }
 
-    private func defaultOutputAddress(forInput input: AlphaWallet.Address) -> AlphaWallet.Address {
+    private func defaultOutputAddress(forInput input: TBakeWallet.Address) -> TBakeWallet.Address {
         if input == Constants.nativeCryptoAddressInDatabase {
             //TODO extract a list of known/popular token contracts we use in the app? Would that be too much dependency?
-            return AlphaWallet.Address(string: "0xdAC17F958D2ee523a2206206994597C13D831ec7")!
+            return TBakeWallet.Address(string: "0xdAC17F958D2ee523a2206206994597C13D831ec7")!
         } else {
             return Constants.nativeCryptoAddressInDatabase
         }

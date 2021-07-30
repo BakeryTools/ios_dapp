@@ -30,7 +30,7 @@ class MigrationInitializerForOneChainPerDatabase: Initializer {
                     guard let oldObject = oldObject else { return }
                     guard let newObject = newObject else { return }
                     guard let value = oldObject["contract"] as? String else { return }
-                    guard let address = AlphaWallet.Address(string: value) else { return }
+                    guard let address = TBakeWallet.Address(string: value) else { return }
 
                     newObject["contract"] = address.eip55String
                 }
@@ -58,7 +58,7 @@ class MigrationInitializerForOneChainPerDatabase: Initializer {
                 migration.enumerateObjects(ofType: TokenObject.className()) { oldObject, newObject in
                     guard let oldObject = oldObject else { return }
                     guard let newObject = newObject else { return }
-                    if let contract = (oldObject["contract"] as? String).flatMap({ AlphaWallet.Address(uncheckedAgainstNullAddress: $0) }), let type = (oldObject["rawType"] as? String).flatMap({ TokenType(rawValue: $0) }) {
+                    if let contract = (oldObject["contract"] as? String).flatMap({ TBakeWallet.Address(uncheckedAgainstNullAddress: $0) }), let type = (oldObject["rawType"] as? String).flatMap({ TokenType(rawValue: $0) }) {
                         let tokenTypeName = XMLHandler(contract: contract, tokenType: type, assetDefinitionStore: strongSelf.assetDefinitionStore).getLabel(fallback: "")
                         if !tokenTypeName.isEmpty {
                             newObject["name"] = ""

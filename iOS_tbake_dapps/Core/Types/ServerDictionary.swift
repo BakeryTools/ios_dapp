@@ -1,5 +1,3 @@
-// Copyright © 2018 Stormbird PTE. LTD.
-
 import Foundation
 
 //This class removes the need to force unwrap in the client code when we access the contents using the subscript operator
@@ -14,6 +12,14 @@ struct ServerDictionary<T> {
         set(value) {
             backingStore[server] = value
         }
+    }
+
+    var keys: Set<RPCServer> {
+        Set(backingStore.keys)
+    }
+
+    mutating func remove(at key: RPCServer) {
+        backingStore.removeValue(forKey: key)
     }
 
     var values: [T] {
@@ -41,6 +47,12 @@ struct ServerDictionary<T> {
 
     func hasKey(_ server: RPCServer) -> Bool {
         backingStore.contains(where: { $0.key == server })
+    }
+}
+
+extension ServerDictionary {
+    subscript(safe index: RPCServer) -> T? {
+        return backingStore[index]
     }
 }
 

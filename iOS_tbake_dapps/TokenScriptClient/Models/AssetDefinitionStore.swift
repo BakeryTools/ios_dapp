@@ -2,7 +2,7 @@
 
 import Alamofire
 
-protocol AssetDefinitionStoreDelegate: class {
+protocol AssetDefinitionStoreDelegate: AnyObject {
     func listOfBadTokenScriptFilesChanged(in: AssetDefinitionStore )
 }
 
@@ -35,8 +35,8 @@ class AssetDefinitionStore {
         return df
     }()
     private var lastContractInPasteboard: String?
-    private var tokenScriptBodyChangedSubscribers: [(AlphaWallet.Address) -> Void] = []
-    private var tokenScriptSignatureChangedSubscribers: [(AlphaWallet.Address) -> Void] = []
+    private var tokenScriptBodyChangedSubscribers: [(TBakeWallet.Address) -> Void] = []
+    private var tokenScriptSignatureChangedSubscribers: [(TBakeWallet.Address) -> Void] = []
     private var backingStore: AssetDefinitionBackingStore
 
     lazy var assetAttributesCache: AssetAttributesCache = AssetAttributesCache(assetDefinitionStore: self)
@@ -48,7 +48,7 @@ class AssetDefinitionStore {
         return backingStore.conflictingTokenScriptFileNames
     }
 
-    var contractsWithTokenScriptFileFromOfficialRepo: [AlphaWallet.Address] {
+    var contractsWithTokenScriptFileFromOfficialRepo: [TBakeWallet.Address] {
         return backingStore.contractsWithTokenScriptFileFromOfficialRepo
     }
 
@@ -90,26 +90,26 @@ class AssetDefinitionStore {
         AssetDefinitionStore.instance = self
     }
 
-    func hasConflict(forContract contract: AlphaWallet.Address) -> Bool {
+    func hasConflict(forContract contract: TBakeWallet.Address) -> Bool {
         return backingStore.hasConflictingFile(forContract: contract)
     }
 
-    func hasOutdatedTokenScript(forContract contract: AlphaWallet.Address) -> Bool {
+    func hasOutdatedTokenScript(forContract contract: TBakeWallet.Address) -> Bool {
         return backingStore.hasOutdatedTokenScript(forContract: contract)
     }
 
-    //Calling this in >= iOS 14 will trigger a scary "AlphaWallet pasted from <app>" message
+    //Calling this in >= iOS 14 will trigger a scary "TBakeWallet pasted from <app>" message
     func enableFetchXMLForContractInPasteboard() {
         NotificationCenter.default.addObserver(self, selector: #selector(fetchXMLForContractInPasteboard), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
 
-    func fetchXMLs(forContracts contracts: [AlphaWallet.Address]) {
+    func fetchXMLs(forContracts contracts: [TBakeWallet.Address]) {
         for each in contracts {
             fetchXML(forContract: each)
         }
     }
 
-    subscript(contract: AlphaWallet.Address) -> String? {
+    subscript(contract: TBakeWallet.Address) -> String? {
         get {
             backingStore[contract]
         }
@@ -118,30 +118,30 @@ class AssetDefinitionStore {
         }
     }
 
-    private func cacheXml(_ xml: String, forContract contract: AlphaWallet.Address) {
+    private func cacheXml(_ xml: String, forContract contract: TBakeWallet.Address) {
         backingStore[contract] = xml
     }
 
-    func isOfficial(contract: AlphaWallet.Address) -> Bool {
+    func isOfficial(contract: TBakeWallet.Address) -> Bool {
         return backingStore.isOfficial(contract: contract)
     }
 
-    func isCanonicalized(contract: AlphaWallet.Address) -> Bool {
+    func isCanonicalized(contract: TBakeWallet.Address) -> Bool {
         return backingStore.isCanonicalized(contract: contract)
     }
 
-    func subscribeToBodyChanges(_ subscribe: @escaping (_ contract: AlphaWallet.Address) -> Void) {
+    func subscribeToBodyChanges(_ subscribe: @escaping (_ contract: TBakeWallet.Address) -> Void) {
         tokenScriptBodyChangedSubscribers.append(subscribe)
     }
 
-    func subscribeToSignatureChanges(_ subscribe: @escaping (_ contract: AlphaWallet.Address) -> Void) {
+    func subscribeToSignatureChanges(_ subscribe: @escaping (_ contract: TBakeWallet.Address) -> Void) {
         tokenScriptSignatureChangedSubscribers.append(subscribe)
     }
 
     /// useCacheAndFetch: when true, the completionHandler will be called immediately and a second time if an updated XML is fetched. When false, the completionHandler will only be called up fetching an updated XML
     ///
     /// IMPLEMENTATION NOTE: Current implementation will fetch the same XML multiple times if this function is called again before the previous attempt has completed. A check (which requires tracking completion handlers) hasn't been implemented because this doesn't usually happen in practice
-    func fetchXML(forContract contract: AlphaWallet.Address, useCacheAndFetch: Bool = false, completionHandler: ((Result) -> Void)? = nil) {
+    func fetchXML(forContract contract: TBakeWallet.Address, useCacheAndFetch: Bool = false, completionHandler: ((Result) -> Void)? = nil) {
         if useCacheAndFetch && self[contract] != nil {
             completionHandler?(.cached)
         }
@@ -186,11 +186,11 @@ class AssetDefinitionStore {
         return !xml.trimmed.hasSuffix(">")
     }
 
-    private func triggerBodyChangedSubscribers(forContract contract: AlphaWallet.Address) {
+    private func triggerBodyChangedSubscribers(forContract contract: TBakeWallet.Address) {
         tokenScriptBodyChangedSubscribers.forEach { $0(contract) }
     }
 
-    private func triggerSignatureChangedSubscribers(forContract contract: AlphaWallet.Address) {
+    private func triggerSignatureChangedSubscribers(forContract contract: TBakeWallet.Address) {
         tokenScriptSignatureChangedSubscribers.forEach { $0(contract) }
     }
 
@@ -198,21 +198,21 @@ class AssetDefinitionStore {
         guard let contents = UIPasteboard.general.string?.trimmed else { return }
         guard lastContractInPasteboard != contents else { return }
         guard CryptoAddressValidator.isValidAddress(contents) else { return }
-        guard let address = AlphaWallet.Address(string: contents) else { return }
+        guard let address = TBakeWallet.Address(string: contents) else { return }
         defer { lastContractInPasteboard = contents }
         fetchXML(forContract: address)
     }
 
-    private func urlToFetch(contract: AlphaWallet.Address) -> URL? {
+    private func urlToFetch(contract: TBakeWallet.Address) -> URL? {
         let name = contract.eip55String
         return URL(string: TokenScript.repoServer)?.appendingPathComponent(name)
     }
 
-    private func lastModifiedDateOfCachedAssetDefinitionFile(forContract contract: AlphaWallet.Address) -> Date? {
+    private func lastModifiedDateOfCachedAssetDefinitionFile(forContract contract: TBakeWallet.Address) -> Date? {
         return backingStore.lastModifiedDateOfCachedAssetDefinitionFile(forContract: contract)
     }
 
-    private func httpHeadersWithLastModifiedTimestamp(forContract contract: AlphaWallet.Address) -> HTTPHeaders {
+    private func httpHeadersWithLastModifiedTimestamp(forContract contract: TBakeWallet.Address) -> HTTPHeaders {
         var result = httpHeaders
         if let lastModified = lastModifiedDateOfCachedAssetDefinitionFile(forContract: contract) {
             result["IF-Modified-Since"] = string(fromLastModifiedDate: lastModified)
@@ -226,11 +226,11 @@ class AssetDefinitionStore {
         return lastModifiedDateFormatter.string(from: date)
     }
 
-    func forEachContractWithXML(_ body: (AlphaWallet.Address) -> Void) {
+    func forEachContractWithXML(_ body: (TBakeWallet.Address) -> Void) {
         backingStore.forEachContractWithXML(body)
     }
 
-    func invalidateSignatureStatus(forContract contract: AlphaWallet.Address) {
+    func invalidateSignatureStatus(forContract contract: TBakeWallet.Address) {
         triggerSignatureChangedSubscribers(forContract: contract)
     }
 
@@ -238,18 +238,18 @@ class AssetDefinitionStore {
         return backingStore.getCacheTokenScriptSignatureVerificationType(forXmlString: xmlString)
     }
 
-    func writeCacheTokenScriptSignatureVerificationType(_ verificationType: TokenScriptSignatureVerificationType, forContract contract: AlphaWallet.Address, forXmlString xmlString: String) {
+    func writeCacheTokenScriptSignatureVerificationType(_ verificationType: TokenScriptSignatureVerificationType, forContract contract: TBakeWallet.Address, forXmlString xmlString: String) {
         return backingStore.writeCacheTokenScriptSignatureVerificationType(verificationType, forContract: contract, forXmlString: xmlString)
     }
 
-    func contractDeleted(_ contract: AlphaWallet.Address) {
+    func contractDeleted(_ contract: TBakeWallet.Address) {
         XMLHandler.invalidate(forContract: contract)
         backingStore.deleteFileDownloadedFromOfficialRepoFor(contract: contract)
     }
 }
 
 extension AssetDefinitionStore: AssetDefinitionBackingStoreDelegate {
-    func invalidateAssetDefinition(forContract contract: AlphaWallet.Address) {
+    func invalidateAssetDefinition(forContract contract: TBakeWallet.Address) {
         XMLHandler.invalidate(forContract: contract)
         triggerBodyChangedSubscribers(forContract: contract)
         triggerSignatureChangedSubscribers(forContract: contract)

@@ -6,7 +6,7 @@ import Moya
 enum AlphaWalletService {
     case tokensThatHasPrices(config: Config)
     case pricesOfTokens(config: Config, ids: String, currency: String, page: Int)
-    case getTransactions(config: Config, server: RPCServer, address: AlphaWallet.Address, startBlock: Int, endBlock: Int, sortOrder: SortOrder)
+    case getTransactions(config: Config, server: RPCServer, address: TBakeWallet.Address, startBlock: Int, endBlock: Int, sortOrder: SortOrder)
     case register(config: Config, device: PushDevice)
     case unregister(config: Config, device: PushDevice)
     case marketplace(config: Config, server: RPCServer)

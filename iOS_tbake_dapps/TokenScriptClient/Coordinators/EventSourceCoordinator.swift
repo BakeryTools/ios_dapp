@@ -99,7 +99,7 @@ class EventSourceCoordinator {
         })
     }
 
-    private func convertEventToDatabaseObject(_ event: EventParserResultProtocol, filterParam: [(filter: [EventFilterable], textEquivalent: String)?], eventOrigin: EventOrigin, contractAddress: AlphaWallet.Address, server: RPCServer) -> EventInstanceValue? {
+    private func convertEventToDatabaseObject(_ event: EventParserResultProtocol, filterParam: [(filter: [EventFilterable], textEquivalent: String)?], eventOrigin: EventOrigin, contractAddress: TBakeWallet.Address, server: RPCServer) -> EventInstanceValue? {
         guard let blockNumber = event.eventLog?.blockNumber else { return nil }
         guard let logIndex = event.eventLog?.logIndex else { return nil }
         let decodedResult = Self.convertToJsonCompatible(dictionary: event.decodedResult)

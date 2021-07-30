@@ -2,7 +2,7 @@
 
 import UIKit
 
-protocol ServersViewControllerDelegate: class {
+protocol ServersViewControllerDelegate: AnyObject {
     func didSelectServer(server: RPCServerOrAuto, in viewController: ServersViewController)
 }
 

@@ -3,7 +3,7 @@
 import UIKit
 import BigInt
 
-protocol ConfigureTransactionViewControllerDelegate: class {
+protocol ConfigureTransactionViewControllerDelegate: AnyObject {
     func didSavedToUseDefaultConfigurationType(_ configurationType: TransactionConfigurationType, in viewController: ConfigureTransactionViewController)
     func didSaved(customConfiguration: TransactionConfiguration, in viewController: ConfigureTransactionViewController)
 }
@@ -35,6 +35,7 @@ class ConfigureTransactionViewController: UIViewController {
 
     override func loadView() {
         view = tableView
+        tableView.backgroundColor = Colors.appBackground
     }
 
     init(viewModel: ConfigureTransactionViewModel) {
@@ -66,12 +67,13 @@ class ConfigureTransactionViewController: UIViewController {
 
         notificationCenter.removeObserver(self)
 
-        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        print("ConfigureTransactionViewController")
+        
         tableView.delegate = self
         tableView.dataSource = self
 
@@ -137,10 +139,8 @@ class ConfigureTransactionViewController: UIViewController {
 
         let endFrame = (info[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         let duration = (info[UIResponder.keyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
-        let curve = UIView.AnimationCurve(rawValue: (info[UIResponder.keyboardAnimationCurveUserInfoKey] as! NSNumber).intValue)!
         let bottom = endFrame.height - UIApplication.shared.bottomSafeAreaHeight
 
-        UIView.setAnimationCurve(curve)
         UIView.animate(withDuration: duration, animations: {
             self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: bottom, right: 0)
             self.tableView.scrollIndicatorInsets = self.tableView.contentInset
@@ -155,9 +155,7 @@ class ConfigureTransactionViewController: UIViewController {
         }
 
         let duration = (info[UIResponder.keyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
-        let curve = UIView.AnimationCurve(rawValue: (info[UIResponder.keyboardAnimationCurveUserInfoKey] as! NSNumber).intValue)!
-
-        UIView.setAnimationCurve(curve)
+       
         UIView.animate(withDuration: duration, animations: {
             self.tableView.contentInset = .zero
             self.tableView.scrollIndicatorInsets = self.tableView.contentInset
@@ -180,8 +178,8 @@ class ConfigureTransactionViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = Fonts.regular(size: 15)
-        label.textColor = R.color.dove()
+        label.font = Screen.TokenCard.Font.subtitle
+        label.textColor = Screen.TokenCard.Color.subtitle
         label.text = R.string.localizable.transactionConfirmationFeeFooterText()
         footer.addSubview(label)
         NSLayoutConstraint.activate([
@@ -195,8 +193,8 @@ class ConfigureTransactionViewController: UIViewController {
 
         let background = UIView()
         background.translatesAutoresizingMaskIntoConstraints = false
-        background.backgroundColor = .init(red: 255, green: 235, blue: 234)
-        background.borderColor = .init(red: 252, green: 187, blue: 183)
+        background.backgroundColor = Colors.appBackground
+        background.borderColor = Colors.tbakeDarkBrown
         background.cornerRadius = 8
         background.borderWidth = 1
         footer.addSubview(background)
@@ -206,20 +204,20 @@ class ConfigureTransactionViewController: UIViewController {
 
         let titleLabel = UILabel()
         titleLabel.textAlignment = .center
-        titleLabel.font = Fonts.semibold(size: 20)
-        titleLabel.textColor = R.color.danger()
+        titleLabel.font = Screen.TokenCard.Font.title
+        titleLabel.textColor = Colors.red
         titleLabel.text = gasPriceWarning.longTitle
 
         let descriptionLabel = UITextView()
         descriptionLabel.backgroundColor = .clear
-        descriptionLabel.textColor = R.color.dove()
+        descriptionLabel.textColor = Screen.TokenCard.Color.grayLabel
         descriptionLabel.textAlignment = .center
         descriptionLabel.isEditable = false
         descriptionLabel.isSelectable = true
         descriptionLabel.isUserInteractionEnabled = true
         descriptionLabel.isScrollEnabled = false
         descriptionLabel.dataDetectorTypes = .link
-        descriptionLabel.font = Fonts.regular(size: 15)
+        descriptionLabel.font = Screen.TokenCard.Font.subtitle
         descriptionLabel.text = gasPriceWarning.description
 
         let row0 = [warningIcon, titleLabel].asStackView(axis: .horizontal, spacing: 6)
@@ -255,7 +253,7 @@ class ConfigureTransactionViewController: UIViewController {
     private func recalculateTotalFeeForCustomGas() {
         cells.totalFee.value = viewModel.gasViewModel.feeText
         let configurationTypes = viewModel.configurationTypes
-        if let indexPath = configurationTypes.index(of: .custom).flatMap({ IndexPath(row: $0, section: ConfigureTransactionViewModel.Section.configurationTypes.rawValue) }), let cell = tableView.cellForRow(at: indexPath) as? GasSpeedTableViewCell {
+        if let indexPath = configurationTypes.firstIndex(of: .custom).flatMap({ IndexPath(row: $0, section: ConfigureTransactionViewModel.Section.configurationTypes.rawValue) }), let cell = tableView.cellForRow(at: indexPath) as? GasSpeedTableViewCell {
             cell.configure(viewModel: viewModel.gasSpeedViewModel(indexPath: indexPath))
         }
         showGasPriceWarning()

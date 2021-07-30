@@ -70,6 +70,8 @@ class SendTransactionErrorViewController: UIViewController {
         self.confirmBtn.layer.cornerRadius = 8.0
         self.cancelBtn.addTarget(self, action: #selector(doDismiss(_:)), for: .touchUpInside)
         self.confirmBtn.addTarget(self, action: #selector(rectifyErrorButtonTapped(_:)), for: .touchUpInside)
+        
+        self.confirmBtn.setTitle(viewModel.rectifyErrorButtonTitle, for: .normal)
     }
 
     @objc private func linkButtonTapped() {

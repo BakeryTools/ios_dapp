@@ -25,8 +25,8 @@ struct WalletsBackupState: Codable {
         var isImported: Bool
     }
 
-    var prompt = [AlphaWallet.Address: Prompt]()
-    var backupState = [AlphaWallet.Address: BackupState]()
+    var prompt = [TBakeWallet.Address: Prompt]()
+    var backupState = [TBakeWallet.Address: BackupState]()
 
     func writeTo(url: URL) {
         let encoder = JSONEncoder()

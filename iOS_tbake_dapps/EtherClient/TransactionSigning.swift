@@ -74,5 +74,5 @@ func rlpHash(_ element: Any) -> Data? {
     guard let data = RLP.encode(element) else {
         return nil
     }
-    return Data(bytes: sha3.calculate(for: data.bytes))
+    return Data(sha3.calculate(for: data.bytes))
 }

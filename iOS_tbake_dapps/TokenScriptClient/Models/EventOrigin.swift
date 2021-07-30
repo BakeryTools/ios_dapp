@@ -22,7 +22,7 @@ struct EventParameter {
 }
 
 struct EventDefinition {
-    let contract: AlphaWallet.Address
+    let contract: TBakeWallet.Address
     let name: String
     let parameters: [EventParameter]
 }
@@ -35,7 +35,7 @@ struct EventOrigin {
     let xmlContext: XmlContext
     let eventFilter: (name: String, value: String)
 
-    var contract: AlphaWallet.Address {
+    var contract: TBakeWallet.Address {
         eventDefinition.contract
     }
     var eventName: String {

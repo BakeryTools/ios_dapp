@@ -3,7 +3,7 @@
 import Foundation
 
 struct TokenUpdate {
-    let address: AlphaWallet.Address
+    let address: TBakeWallet.Address
     let server: RPCServer
     let name: String
     let symbol: String

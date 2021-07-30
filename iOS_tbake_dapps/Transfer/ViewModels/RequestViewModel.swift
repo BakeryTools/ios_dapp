@@ -14,7 +14,7 @@ struct RequestViewModel {
 		return account.address.eip55String
 	}
 
-	var myAddress: AlphaWallet.Address {
+	var myAddress: TBakeWallet.Address {
 		return account.address
 	}
 

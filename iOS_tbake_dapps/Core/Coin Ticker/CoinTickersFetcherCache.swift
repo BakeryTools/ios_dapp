@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol CoinTickersFetcherCacheType: class {
+protocol CoinTickersFetcherCacheType: AnyObject {
     var tickers: [AddressAndRPCServer: CoinTicker] { get set }
     var historyCache: [CoinTicker: [ChartHistoryPeriod: MappedChartHistory]] { get set }
     var lastFetchedDate: Date? { get set }

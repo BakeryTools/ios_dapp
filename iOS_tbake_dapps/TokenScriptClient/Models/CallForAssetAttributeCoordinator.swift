@@ -63,7 +63,7 @@ class CallForAssetAttributeCoordinator {
                     switch functionCall.output.type {
                     case .address:
                         if let value = value as? EthereumAddress {
-                            let result = AlphaWallet.Address(address: value)
+                            let result = TBakeWallet.Address(address: value)
                             seal.fulfill(.address(result))
                         }
                     case .bool:

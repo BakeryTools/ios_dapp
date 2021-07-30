@@ -4,7 +4,7 @@ import UIKit
 import PromiseKit
 import Result
 
-protocol TransactionCoordinatorDelegate: class, CanOpenURL {
+protocol TransactionCoordinatorDelegate: AnyObject, CanOpenURL {
 }
 
 class TransactionCoordinator: Coordinator {
@@ -70,11 +70,12 @@ class TransactionCoordinator: Coordinator {
     }
 
     private func showTransaction(_ transactionRow: TransactionRow, on navigationController: UINavigationController) {
-        let controller = TransactionViewController(analyticsCoordinator: analyticsCoordinator, session: sessions[transactionRow.server], transactionRow: transactionRow, delegate: self)
-        controller.hidesBottomBarWhenPushed = true
-        controller.navigationItem.largeTitleDisplayMode = .never
+        let viewController = TransactionViewController(analyticsCoordinator: analyticsCoordinator, session: sessions[transactionRow.server], transactionRow: transactionRow, delegate: self)
 
-        navigationController.pushViewController(controller, animated: true)
+        viewController.navigationItem.largeTitleDisplayMode = .never
+        viewController.hidesBottomBarWhenPushed = true
+        
+        navigationController.pushViewController(viewController, animated: true)
     }
 
     //TODO duplicate of method showTransaction(_:) to display in a specific UIViewController because we are now showing transactions from outside the transactions tab. Clean up
@@ -114,7 +115,7 @@ extension TransactionCoordinator: TransactionsViewControllerDelegate {
 }
 
 extension TransactionCoordinator: CanOpenURL {
-    func didPressViewContractWebPage(forContract contract: AlphaWallet.Address, server: RPCServer, in viewController: UIViewController) {
+    func didPressViewContractWebPage(forContract contract: TBakeWallet.Address, server: RPCServer, in viewController: UIViewController) {
         delegate?.didPressViewContractWebPage(forContract: contract, server: server, in: viewController)
     }
 

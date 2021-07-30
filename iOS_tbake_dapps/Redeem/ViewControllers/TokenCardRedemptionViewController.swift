@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol TokenCardRedemptionViewControllerDelegate: class, CanOpenURL {
+protocol TokenCardRedemptionViewControllerDelegate: AnyObject, CanOpenURL {
 }
 
 class TokenCardRedemptionViewController: UIViewController, TokenVerifiableStatusViewController {
@@ -22,7 +22,7 @@ class TokenCardRedemptionViewController: UIViewController, TokenVerifiableStatus
     private let token: TokenObject
     private let analyticsCoordinator: AnalyticsCoordinator
 
-    var contract: AlphaWallet.Address {
+    var contract: TBakeWallet.Address {
         return token.contractAddress
     }
     var server: RPCServer {
@@ -196,7 +196,7 @@ extension TokenCardRedemptionViewController: StaticHTMLViewControllerDelegate {
 }
 
 extension TokenCardRedemptionViewController: CanOpenURL {
-    func didPressViewContractWebPage(forContract contract: AlphaWallet.Address, server: RPCServer, in viewController: UIViewController) {
+    func didPressViewContractWebPage(forContract contract: TBakeWallet.Address, server: RPCServer, in viewController: UIViewController) {
         delegate?.didPressViewContractWebPage(forContract: contract, server: server, in: viewController)
     }
 

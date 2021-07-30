@@ -8,16 +8,16 @@ struct TransactionAppearance {
         let titleLabel = UILabel(frame: .zero)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.text = title
-        titleLabel.font = Fonts.regular(size: 18)
+        titleLabel.font = Screen.TokenCard.Font.title
         titleLabel.textAlignment = .left
-        titleLabel.textColor = Colors.darkGray
+        titleLabel.textColor = Screen.TokenCard.Color.title
 
         let subTitleLabel = UILabel(frame: .zero)
         subTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         subTitleLabel.text = subTitle
         subTitleLabel.textAlignment = .left
-        subTitleLabel.textColor = Colors.black
-        subTitleLabel.font = Fonts.light(size: 15)
+        subTitleLabel.textColor = Screen.TokenCard.Color.subtitle
+        subTitleLabel.font = Screen.TokenCard.Font.subtitle
         subTitleLabel.numberOfLines = 0
 
         let textLabelsStackView = [

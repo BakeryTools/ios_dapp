@@ -13,8 +13,8 @@ class TokenViewControllerTransactionCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        let row0StackView = [.spacerWidth(30), dateLabel, .spacerWidth(30)].asStackView(alignment: .center)
-        let row1StackView = [.spacerWidth(30), typeImageView, .spacerWidth(7), typeLabel, amountLabel, .spacerWidth(10), accessoryImageView, .spacerWidth(30)].asStackView(alignment: .center)
+        let row0StackView = [.spacerWidth(15), dateLabel, .spacerWidth(30)].asStackView(alignment: .center)
+        let row1StackView = [.spacerWidth(15), typeLabel, amountLabel, .spacerWidth(10), accessoryImageView, .spacerWidth(30)].asStackView(alignment: .center)
 
         let mainStackView = [
             .spacer(height: 14),
@@ -30,8 +30,8 @@ class TokenViewControllerTransactionCell: UITableViewCell {
             accessoryImageView.widthAnchor.constraint(equalToConstant: 10),
             accessoryImageView.widthAnchor.constraint(equalTo: accessoryImageView.heightAnchor),
 
-            typeImageView.widthAnchor.constraint(equalToConstant: 12),
-            typeImageView.widthAnchor.constraint(equalTo: typeImageView.heightAnchor),
+//            typeImageView.widthAnchor.constraint(equalToConstant: 12),
+//            typeImageView.widthAnchor.constraint(equalTo: typeImageView.heightAnchor),
 
             mainStackView.anchorsConstraint(to: self),
         ])
@@ -60,6 +60,8 @@ class TokenViewControllerTransactionCell: UITableViewCell {
 
         accessoryImageView.contentMode = .scaleAspectFill
         accessoryImageView.image = viewModel.accessoryImage
+        
+        backgroundColor = Colors.backgroundClear
     }
 
     //Really should not happen, but let's just be careful

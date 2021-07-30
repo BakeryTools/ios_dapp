@@ -12,7 +12,7 @@ class GetSymbolCoordinator {
     }
 
     func getSymbol(
-        for contract: AlphaWallet.Address,
+        for contract: TBakeWallet.Address,
         completion: @escaping (Result<String, AnyError>) -> Void
     ) {
         let functionName = "symbol"

@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol RenameWalletViewControllerDelegate: class {
+protocol RenameWalletViewControllerDelegate: AnyObject {
     func didFinish(in viewController: RenameWalletViewController)
 }
 
@@ -127,7 +127,7 @@ class RenameWalletViewController: UIViewController {
         delegate?.didFinish(in: self)
     }
 
-    private func fulfillTextField(account: AlphaWallet.Address) {
+    private func fulfillTextField(account: TBakeWallet.Address) {
         let serverToResolveEns = RPCServer.main
         ENSReverseLookupCoordinator(server: serverToResolveEns).getENSNameFromResolver(forAddress: account) { result in
             guard let ensName = result.value else { return }

@@ -2,13 +2,13 @@
 
 import UIKit
 
-protocol ActivityViewControllerDelegate: class {
+protocol ActivityViewControllerDelegate: AnyObject {
     func reinject(viewController: ActivityViewController)
     func goToToken(viewController: ActivityViewController)
     func speedupTransaction(transactionId: String, server: RPCServer, viewController: ActivityViewController)
     func cancelTransaction(transactionId: String, server: RPCServer, viewController: ActivityViewController)
     func goToTransaction(viewController: ActivityViewController)
-    func didPressViewContractWebPage(_ contract: AlphaWallet.Address, server: RPCServer, viewController: ActivityViewController)
+    func didPressViewContractWebPage(_ contract: TBakeWallet.Address, server: RPCServer, viewController: ActivityViewController)
 }
 
 class ActivityViewController: UIViewController {

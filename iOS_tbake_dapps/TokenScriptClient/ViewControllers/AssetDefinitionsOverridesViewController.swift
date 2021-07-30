@@ -2,7 +2,7 @@
 
 import UIKit
 
-protocol AssetDefinitionsOverridesViewControllerDelegate: class {
+protocol AssetDefinitionsOverridesViewControllerDelegate: AnyObject {
     func didDelete(overrideFileForContract file: URL, in viewController: AssetDefinitionsOverridesViewController)
     func didTapShare(file: URL, in viewController: AssetDefinitionsOverridesViewController)
 }

@@ -66,8 +66,8 @@ struct Uniswap: TokenActionsProvider, SwapTokenURLProviderType {
             static let output = "outputCurrency"
         }
 
-        case inputOutput(from: AlphaWallet.Address, to: AddressOrEnsName)
-        case input(AlphaWallet.Address)
+        case inputOutput(from: TBakeWallet.Address, to: AddressOrEnsName)
+        case input(TBakeWallet.Address)
         case none
 
         var urlQueryItems: [URLQueryItem] {
@@ -105,6 +105,8 @@ extension UITraitCollection {
             case .dark:
                 return .dark
             case .light, .unspecified:
+                return .light
+            @unknown default:
                 return .light
             }
         } else {

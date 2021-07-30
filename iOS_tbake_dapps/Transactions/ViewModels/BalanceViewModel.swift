@@ -1,5 +1,3 @@
-// Copyright SIX DAY LLC. All rights reserved.
-
 import Foundation
 import UIKit
 import BigInt
@@ -8,6 +6,8 @@ struct BalanceViewModel: BalanceBaseViewModel {
     private let server: RPCServer
     private let balance: Balance?
     private let rate: CurrencyRate?
+
+    var ticker: CoinTicker? { nil }
 
     init(
         server: RPCServer,

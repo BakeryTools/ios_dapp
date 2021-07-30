@@ -7,7 +7,7 @@ import RealmSwift
 import Result
 
 // swiftlint:disable file_length
-protocol InCoordinatorDelegate: class {
+protocol InCoordinatorDelegate: AnyObject {
     func didCancel(in coordinator: InCoordinator)
     func didUpdateAccounts(in coordinator: InCoordinator)
     func didShowWallet(in coordinator: InCoordinator)
@@ -15,7 +15,7 @@ protocol InCoordinatorDelegate: class {
     func importUniversalLink(url: URL, forCoordinator coordinator: InCoordinator)
     func handleUniversalLink(_ url: URL, forCoordinator coordinator: InCoordinator)
     func handleCustomUrlScheme(_ url: URL, forCoordinator coordinator: InCoordinator)
-    func didShowWallets(in coordinator: InCoordinator)
+    func showWallets(in coordinator: InCoordinator)
     func didRestart(in coordinator: InCoordinator, wallet: Wallet)
 }
 
@@ -63,7 +63,7 @@ class InCoordinator: NSObject, Coordinator {
     lazy private var eventsActivityDataStore: EventsActivityDataStore = EventsActivityDataStore(realm: realm)
     private var eventSourceCoordinator: EventSourceCoordinator?
     private var eventSourceCoordinatorForActivities: EventSourceCoordinatorForActivities?
-    private lazy var coinTickersFetcher: CoinTickersFetcherType = CoinTickersFetcher(provider: AlphaWalletProviderFactory.makeProvider(), config: config)
+    private let coinTickersFetcher: CoinTickersFetcherType
     var tokensStorages = ServerDictionary<TokensDataStore>()
     private var claimOrderCoordinatorCompletionBlock: ((Bool) -> Void)?
 
@@ -74,9 +74,7 @@ class InCoordinator: NSObject, Coordinator {
         return createEtherBalancesSubscribablesForAllChains()
     }()
     private var transactionCoordinator: TransactionCoordinator? {
-        return coordinators.compactMap {
-            $0 as? TransactionCoordinator
-        }.first
+        return coordinators.compactMap { $0 as? TransactionCoordinator }.first
     }
     private var tokensCoordinator: TokensCoordinator? {
         return coordinators.compactMap { $0 as? TokensCoordinator }.first
@@ -104,6 +102,8 @@ class InCoordinator: NSObject, Coordinator {
     var keystore: Keystore
     var urlSchemeCoordinator: UrlSchemeCoordinatorType
     weak var delegate: InCoordinatorDelegate?
+
+    private let walletBalanceCoordinator: WalletBalanceCoordinatorType
 
     private lazy var realm = Self.realm(forAccount: wallet)
     private lazy var oneInchSwapService = Oneinch()
@@ -133,6 +133,7 @@ class InCoordinator: NSObject, Coordinator {
 
     lazy var tabBarController: UITabBarController = {
         let tabBarController = TabBarController()
+        tabBarController.delegate = self
         tabBarController.tabBar.isTranslucent = false
         return tabBarController
     }()
@@ -149,7 +150,9 @@ class InCoordinator: NSObject, Coordinator {
             restartQueue: RestartTaskQueue,
             urlSchemeCoordinator: UrlSchemeCoordinatorType,
             promptBackupCoordinator: PromptBackupCoordinator,
-            accountsCoordinator: AccountsCoordinator
+            accountsCoordinator: AccountsCoordinator,
+            walletBalanceCoordinator: WalletBalanceCoordinatorType,
+            coinTickersFetcher: CoinTickersFetcherType
     ) {
         self.navigationController = navigationController
         self.wallet = wallet
@@ -162,6 +165,8 @@ class InCoordinator: NSObject, Coordinator {
         self.urlSchemeCoordinator = urlSchemeCoordinator
         self.promptBackupCoordinator = promptBackupCoordinator
         self.accountsCoordinator = accountsCoordinator
+        self.walletBalanceCoordinator = walletBalanceCoordinator
+        self.coinTickersFetcher = coinTickersFetcher
         //Disabled for now. Refer to function's comment
         //self.assetDefinitionStore.enableFetchXMLForContractInPasteboard()
 
@@ -169,23 +174,19 @@ class InCoordinator: NSObject, Coordinator {
     }
 
     deinit {
+        XMLHandler.callForAssetAttributeCoordinators = nil
         //NOTE: Clear all smart contract calls
         clearSmartContractCallsCache()
-    }
-
-    private func createPromptBackupCoordinator() -> PromptBackupCoordinator {
-        return PromptBackupCoordinator(keystore: keystore, wallet: wallet, config: config, analyticsCoordinator: analyticsCoordinator)
     }
 
     func start(animated: Bool) {
         showTabBar(for: wallet, animated: animated)
         checkDevice()
-        
+
         helpUsCoordinator.start()
         addCoordinator(helpUsCoordinator)
         fetchXMLAssetDefinitions()
         listOfBadTokenScriptFilesChanged(fileNames: assetDefinitionStore.listOfBadTokenScriptFiles + assetDefinitionStore.conflictingTokenScriptFileNames.all)
-        
         setupWatchingTokenScriptFileChangesToFetchEvents()
 
         urlSchemeCoordinator.processPendingURL(in: self)
@@ -219,7 +220,7 @@ class InCoordinator: NSObject, Coordinator {
         }
     }
 
-    private func fetchEvents(forTokenContract contract: AlphaWallet.Address, server: RPCServer) {
+    private func fetchEvents(forTokenContract contract: TBakeWallet.Address, server: RPCServer) {
         let tokensDataStore = tokensStorages[server]
         guard let token = tokensDataStore.token(forContract: contract) else { return }
         eventsDataStore.deleteEvents(forTokenContract: contract)
@@ -243,9 +244,10 @@ class InCoordinator: NSObject, Coordinator {
         assert(!tokensStorages.isEmpty)
 
         let tokensStorage = tokensStorages[server]
-        let etherToken = TokensDataStore.etherToken(forServer: server)
+
         tokensStorage.tokensModel.subscribe { [weak self, weak tokensStorage] tokensModel in
             guard let strongSelf = self, let tokensStorage = tokensStorage else { return }
+            let etherToken = TokensDataStore.etherToken(forServer: server)
             guard let tokens = tokensModel, let eth = tokens.first(where: { $0 == etherToken }) else { return }
             //Defensive. Sometimes crash right after switch networks if price is refreshed just before the TokensStorage is destroyed
             guard strongSelf.nativeCryptoCurrencyPrices.hasKey(server) else { return }
@@ -328,9 +330,9 @@ class InCoordinator: NSObject, Coordinator {
         for each in config.enabledServers {
             nativeCryptoCurrencyBalances[each] = createCryptoCurrencyBalanceSubscribable(forServer: each)
             let tokensStorage = tokensStorages[each]
-            let etherToken = TokensDataStore.etherToken(forServer: each)
 
             tokensStorage.tokensModel.subscribe { [weak self] tokensModel in
+                let etherToken = TokensDataStore.etherToken(forServer: each)
                 guard let strongSelf = self, let tokens = tokensModel, let eth = tokens.first(where: { $0 == etherToken }) else {
                     return
                 }
@@ -438,6 +440,8 @@ class InCoordinator: NSObject, Coordinator {
 
         logEnabledChains()
         logWallets()
+        logDynamicTypeSetting()
+        promptBackupCoordinator.start()
     }
 
     private func createTokensCoordinator(promptBackupCoordinator: PromptBackupCoordinator) -> TokensCoordinator {
@@ -481,7 +485,7 @@ class InCoordinator: NSObject, Coordinator {
                 tokensStorages: tokensStorages,
                 promptBackupCoordinator: promptBackupCoordinator
         )
-        coordinator.rootViewController.tabBarItem = UITabBarItem(title: R.string.localizable.transactionsTabbarItemTitle(), image: UIImage(systemName: "chart.bar"), selectedImage: nil)
+        coordinator.rootViewController.tabBarItem = UITabBarItem(title: R.string.localizable.chartTabbarItemTitle(), image: UIImage(systemName: "chart.bar"), selectedImage: nil)
         coordinator.delegate = self
         coordinator.start()
         addCoordinator(coordinator)
@@ -524,7 +528,8 @@ class InCoordinator: NSObject, Coordinator {
                 restartQueue: restartQueue,
                 promptBackupCoordinator: promptBackupCoordinator,
                 analyticsCoordinator: analyticsCoordinator,
-                walletConnectCoordinator: walletConnectCoordinator
+            walletConnectCoordinator: walletConnectCoordinator,
+            walletBalanceCoordinator: walletBalanceCoordinator
         )
         coordinator.rootViewController.tabBarItem = UITabBarItem(title: R.string.localizable.aSettingsNavigationTitle(), image: UIImage(systemName: "gearshape"), selectedImage: nil)
         coordinator.delegate = self
@@ -541,13 +546,16 @@ class InCoordinator: NSObject, Coordinator {
         configureNavigationControllerForLargeTitles(tokensCoordinator.navigationController)
         viewControllers.append(tokensCoordinator.navigationController)
 
+        let transactionCoordinator = createTransactionCoordinator(promptBackupCoordinator: promptBackupCoordinator)
+        configureNavigationControllerForLargeTitles(transactionCoordinator.navigationController)
         if Features.isActivityEnabled {
-            let activityCoordinator = createActivityCoordinator()
-            configureNavigationControllerForLargeTitles(activityCoordinator.navigationController)
-            viewControllers.append(activityCoordinator.navigationController)
+//            let activityCoordinator = createActivityCoordinator()
+//            configureNavigationControllerForLargeTitles(activityCoordinator.navigationController)
+            let chartViewController = ChartViewController(nibName: "ChartViewController", bundle: nil)
+            chartViewController.tabBarItem = UITabBarItem(title: R.string.localizable.chartTabbarItemTitle(), image: UIImage(systemName: "chart.bar"), selectedImage: nil)
+            chartViewController.delegate = self
+            viewControllers.append(UINavigationController(rootViewController: chartViewController))
         } else {
-            let transactionCoordinator = createTransactionCoordinator(promptBackupCoordinator: promptBackupCoordinator)
-            configureNavigationControllerForLargeTitles(transactionCoordinator.navigationController)
             viewControllers.append(transactionCoordinator.navigationController)
         }
 
@@ -559,8 +567,6 @@ class InCoordinator: NSObject, Coordinator {
         viewControllers.append(settingsCoordinator.navigationController)
 
         tabBarController.viewControllers = viewControllers
-
-        promptBackupCoordinator.start()
     }
 
     private func configureNavigationControllerForLargeTitles(_ navigationController: UINavigationController) {
@@ -676,7 +682,7 @@ class InCoordinator: NSObject, Coordinator {
         coordinator.start()
     }
 
-    func addImported(contract: AlphaWallet.Address, forServer server: RPCServer) {
+    func addImported(contract: TBakeWallet.Address, forServer server: RPCServer) {
         //Useful to check because we are/might action-only TokenScripts for native crypto currency
         guard !contract.sameContract(as: Constants.nativeCryptoAddressInDatabase) else { return }
         let tokensCoordinator = coordinators.first { $0 is TokensCoordinator } as? TokensCoordinator
@@ -790,7 +796,7 @@ class InCoordinator: NSObject, Coordinator {
     private func removeServer(_ server: CustomRPC) {
         //Must disable server first because we (might) not have done that if the user had disabled and then remove the server in the UI at the same time. And if we fallback to mainnet when an enabled server's chain ID is not found, this can lead to mainnet appearing twice in the Wallet tab
         let servers = config.enabledServers.filter { $0.chainID != server.chainID }
-        var config = config
+        var config = self.config
         config.enabledServers = servers
         guard let i = RPCServer.customRpcs.firstIndex(of: server) else { return }
         RPCServer.customRpcs.remove(at: i)
@@ -842,7 +848,7 @@ extension InCoordinator: CanOpenURL {
         viewController.present(controller, animated: true)
     }
 
-    func didPressViewContractWebPage(forContract contract: AlphaWallet.Address, server: RPCServer, in viewController: UIViewController) {
+    func didPressViewContractWebPage(forContract contract: TBakeWallet.Address, server: RPCServer, in viewController: UIViewController) {
         if contract.sameContract(as: Constants.nativeCryptoAddressInDatabase) {
             guard let url = server.etherscanContractDetailsWebPageURL(for: wallet.address) else { return }
             logExplorerUse(type: .wallet)
@@ -918,7 +924,7 @@ extension InCoordinator: SettingsCoordinatorDelegate {
         }
     }
 
-    func restartToAddEnableAAndSwitchBrowserToServer(in coordinator: SettingsCoordinator) {
+    func restartToAddEnableAndSwitchBrowserToServer(in coordinator: SettingsCoordinator) {
         processRestartQueueAndRestartUI()
     }
 
@@ -943,7 +949,7 @@ extension InCoordinator: UrlSchemeResolver {
 extension InCoordinator: TokensCoordinatorDelegate {
 
     func blockieSelected(in coordinator: TokensCoordinator) {
-        delegate?.didShowWallets(in: self)
+        delegate?.showWallets(in: self)
     }
 
     func didTapSwap(forTransactionType transactionType: TransactionType, service: SwapTokenURLProviderType, in coordinator: TokensCoordinator) {
@@ -1046,7 +1052,7 @@ extension InCoordinator: DappBrowserCoordinatorDelegate {
         delegate?.handleCustomUrlScheme(url, forCoordinator: self)
     }
 
-    func restartToAddEnableAAndSwitchBrowserToServer(inCoordinator coordinator: DappBrowserCoordinator) {
+    func restartToAddEnableAndSwitchBrowserToServer(inCoordinator coordinator: DappBrowserCoordinator) {
         processRestartQueueAndRestartUI()
     }
 
@@ -1059,7 +1065,7 @@ extension InCoordinator: StaticHTMLViewControllerDelegate {
 }
 
 extension InCoordinator: TransactionsStorageDelegate {
-    func didAddTokensWith(contracts: [AlphaWallet.Address], inTransactionsStorage: TransactionsStorage) {
+    func didAddTokensWith(contracts: [TBakeWallet.Address], inTransactionsStorage: TransactionsStorage) {
         for each in contracts {
             assetDefinitionStore.fetchXML(forContract: each)
         }
@@ -1112,7 +1118,7 @@ extension InCoordinator: ActivitiesCoordinatorDelegate {
         transactionCoordinator?.showTransaction(withId: transactionId, server: server, inViewController: viewController)
     }
 
-    func didPressViewContractWebPage(forContract contract: AlphaWallet.Address, server: RPCServer, fromCoordinator coordinator: ActivitiesCoordinator, inViewController viewController: UIViewController) {
+    func didPressViewContractWebPage(forContract contract: TBakeWallet.Address, server: RPCServer, fromCoordinator coordinator: ActivitiesCoordinator, inViewController viewController: UIViewController) {
         didPressViewContractWebPage(forContract: contract, server: server, in: viewController)
     }
 }
@@ -1152,6 +1158,11 @@ extension InCoordinator {
         analyticsCoordinator.setUser(property: Analytics.UserProperties.watchedWalletsCount, value: watchedWalletsCount)
     }
 
+    private func logDynamicTypeSetting() {
+        let setting = UIApplication.shared.preferredContentSizeCategory.rawValue
+        analyticsCoordinator.setUser(property: Analytics.UserProperties.dynamicTypeSetting, value: setting)
+    }
+
     private func logTappedSwap(service: SwapTokenURLProviderType) {
         analyticsCoordinator.log(navigation: Analytics.Navigation.tokenSwap, properties: [Analytics.Properties.name.rawValue: service.analyticsName])
     }
@@ -1182,6 +1193,27 @@ extension InCoordinator: ReplaceTransactionCoordinatorDelegate {
 extension InCoordinator: TokensDataStorePriceDelegate {
     func updatePrice(forTokenDataStore tokensDataStore: TokensDataStore) {
         fetchTokenPrices()
+    }
+}
+
+extension InCoordinator: UITabBarControllerDelegate {
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+
+        guard let fromView = tabBarController.selectedViewController?.view, let toView = viewController.view else {
+            return false // Make sure you want this as false
+          }
+
+          if fromView != toView {
+            UIView.transition(from: fromView, to: toView, duration: 0.23, options: [.transitionCrossDissolve], completion: nil)
+          }
+
+          return true
+    }
+}
+
+extension InCoordinator: ChartViewControllerDelegate {
+    func underConstruction() {
+        tabBarController.selectedIndex = 0
     }
 }
 // swiftlint:enable file_length

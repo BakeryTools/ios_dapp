@@ -4,12 +4,13 @@ import UIKit
 
 class AccountViewCell: UITableViewCell {
     private let addressLabel = UILabel()
-    private let balanceLabel = UILabel()
-    private let apprecation24hourLabel = UILabel()
+    let apprecation24hourLabel = UILabel()
+    let balanceLabel = UILabel()
     private let blockieImageView = BlockieImageView()
 
     var viewModel: AccountViewModel?
     var account: Wallet?
+    var balanceSubscribtionKey: Subscribable<WalletBalance>.SubscribableKey?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -19,13 +20,13 @@ class AccountViewCell: UITableViewCell {
         addressLabel.lineBreakMode = .byTruncatingMiddle
 
         let leftStackView = [
-            [balanceLabel, .spacerWidth(10), apprecation24hourLabel, .spacerWidth(10)].asStackView(axis: .horizontal, distribution: .fill, spacing: 0),
-            [addressLabel, .spacerWidth(10)].asStackView(axis: .horizontal, distribution: .fill, spacing: 0)
-        ].asStackView(axis: .vertical, distribution: .fillProportionally, spacing: 0)
+            [balanceLabel, apprecation24hourLabel].asStackView(spacing: 10),
+            addressLabel
+        ].asStackView(axis: .vertical)
 
-        let stackView = [blockieImageView, leftStackView].asStackView(spacing: 12, alignment: .fill)
+        let stackView = [blockieImageView, leftStackView, .spacerWidth(10)].asStackView(spacing: 10, alignment: .top)
         stackView.translatesAutoresizingMaskIntoConstraints = false
-
+        
         addressLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         balanceLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
 
@@ -38,9 +39,9 @@ class AccountViewCell: UITableViewCell {
             blockieImageView.widthAnchor.constraint(equalToConstant: 40),
 
             stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
             stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
-            stackView.rightAnchor.constraint(equalTo: rightAnchor, constant: -25)
+            stackView.rightAnchor.constraint(equalTo: rightAnchor, constant: -15)
         ])
     }
 
@@ -53,8 +54,6 @@ class AccountViewCell: UITableViewCell {
 
         backgroundColor = viewModel.backgroundColor
 
-        apprecation24hourLabel.attributedText = viewModel.apprecation24hourAttributedString
-        balanceLabel.attributedText = viewModel.balanceAttributedString
         addressLabel.attributedText = viewModel.addressesAttrinutedString
 
         accessoryType = viewModel.accessoryType

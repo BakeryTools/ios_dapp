@@ -7,11 +7,11 @@ import PromiseKit
 import RealmSwift
 import web3swift
 
-protocol UniversalLinkCoordinatorDelegate: class, CanOpenURL {
-	func viewControllerForPresenting(in coordinator: UniversalLinkCoordinator) -> UIViewController?
-	func completed(in coordinator: UniversalLinkCoordinator)
+protocol UniversalLinkCoordinatorDelegate: AnyObject, CanOpenURL {
+    func viewControllerForPresenting(in coordinator: UniversalLinkCoordinator) -> UIViewController?
+    func completed(in coordinator: UniversalLinkCoordinator)
     func importPaidSignedOrder(signedOrder: SignedOrder, tokenObject: TokenObject, inViewController viewController: ImportMagicTokenViewController, completion: @escaping (Bool) -> Void)
-    func didImported(contract: AlphaWallet.Address, in coordinator: UniversalLinkCoordinator)
+    func didImported(contract: TBakeWallet.Address, in coordinator: UniversalLinkCoordinator)
     func handle(walletConnectUrl url: WalletConnectURL)
 }
 
@@ -27,7 +27,7 @@ class UniversalLinkCoordinator: Coordinator {
     private let analyticsCoordinator: AnalyticsCoordinator
     private let wallet: Wallet
     private let config: Config
-	private var importTokenViewController: ImportMagicTokenViewController?
+    private var importTokenViewController: ImportMagicTokenViewController?
     private let ethPrice: Subscribable<Double>
     private let ethBalance: Subscribable<BigInt>
     private var hasCompleted = false
@@ -97,12 +97,12 @@ class UniversalLinkCoordinator: Coordinator {
         self.server = server
     }
 
-	func start() {
-	}
+    func start() {
+    }
 
     private func createHTTPParametersForCurrencyLinksToPaymentServer(
             signedOrder: SignedOrder,
-            recipient: AlphaWallet.Address
+            recipient: TBakeWallet.Address
     ) -> (Parameters, String) {
         let signature = signedOrder.signature.drop0x
         let parameters: Parameters = [
@@ -282,7 +282,7 @@ class UniversalLinkCoordinator: Coordinator {
         }
     }
 
-    private func handleNormalLinks(signedOrder: SignedOrder, recoverAddress: AlphaWallet.Address, contractAsAddress: AlphaWallet.Address) {
+    private func handleNormalLinks(signedOrder: SignedOrder, recoverAddress: TBakeWallet.Address, contractAsAddress: TBakeWallet.Address) {
         getERC875TokenBalanceCoordinator = GetERC875BalanceCoordinator(forServer: server)
         getERC875TokenBalanceCoordinator?.getERC875TokenBalance(for: recoverAddress, contract: contractAsAddress) { [weak self] result in
             guard let strongSelf = self else { return }
@@ -363,7 +363,7 @@ class UniversalLinkCoordinator: Coordinator {
         let recoveredSigner = ecrecover(signedOrder: signedOrder)
         switch recoveredSigner {
         case .success(let ethereumAddress):
-            let recoverAddress = AlphaWallet.Address(address: ethereumAddress)
+            let recoverAddress = TBakeWallet.Address(address: ethereumAddress)
             if signedOrder.order.nativeCurrencyDrop {
                 handleNativeCurrencyDrop(signedOrder: signedOrder)
             } else if signedOrder.order.spawnable, let tokens = signedOrder.order.tokenIds {
@@ -382,7 +382,7 @@ class UniversalLinkCoordinator: Coordinator {
         return true
     }
 
-    private func checkPaymentServerSupportsContract(contractAddress: AlphaWallet.Address, completionHandler: @escaping (Bool) -> Void) {
+    private func checkPaymentServerSupportsContract(contractAddress: TBakeWallet.Address, completionHandler: @escaping (Bool) -> Void) {
         let parameters: Parameters = [
             "contractAddress": contractAddress.eip55String
         ]
@@ -420,7 +420,7 @@ class UniversalLinkCoordinator: Coordinator {
     }
     private func ecrecover(signedOrder: SignedOrder) -> ResultResult<web3swift.EthereumAddress, web3swift.Web3Error>.t {
         //need to hash message here because the web3swift implementation adds prefix
-        let messageHash = Data(bytes: signedOrder.message).sha3(.keccak256)
+        let messageHash = Data(signedOrder.message).sha3(.keccak256)
         //note: web3swift takes the v value as v - 27, so we need to manually convert this
         let vValue = signedOrder.signature.drop0x.substring(from: 128)
         let vInt = Int(vValue, radix: 16)! - 27
@@ -432,7 +432,7 @@ class UniversalLinkCoordinator: Coordinator {
 
         return web3swift.web3.Personal(provider: provider, web3: web3Instance).ecrecover(
             hash: messageHash,
-            signature: Data(bytes: signature.hexToBytes)
+            signature: Data(signature.hexToBytes)
         )
     }
 
@@ -488,7 +488,7 @@ class UniversalLinkCoordinator: Coordinator {
         for i in 0..<indices.count {
             let token: String = balance[Int(indices[i])]
             //all of the indices provided should map to a valid non null token
-            if isZeroBalance(token) {
+            if isZeroBalance(token, tokenType: .erc875) {
                 //if null token at any index then the deal cannot happen
                 return [String]()
             }
@@ -497,7 +497,7 @@ class UniversalLinkCoordinator: Coordinator {
         return filteredTokens
     }
 
-    private func makeTokenHolder(_ bytes32Tokens: [String], _ contractAddress: AlphaWallet.Address) {
+    private func makeTokenHolder(_ bytes32Tokens: [String], _ contractAddress: TBakeWallet.Address) {
         assetDefinitionStore.fetchXML(forContract: contractAddress, useCacheAndFetch: true) { [weak self] _ in
             guard let strongSelf = self else { return }
 
@@ -526,7 +526,7 @@ class UniversalLinkCoordinator: Coordinator {
         }
     }
 
-    private func makeTokenHolderImpl(name: String, symbol: String, type: TokenType? = nil, bytes32Tokens: [String], contractAddress: AlphaWallet.Address) {
+    private func makeTokenHolderImpl(name: String, symbol: String, type: TokenType? = nil, bytes32Tokens: [String], contractAddress: TBakeWallet.Address) {
         //TODO pass in the wallet instead
         guard let tokenType = type ?? (tokensDatastore.token(forContract: contractAddress)?.type) else { return }
         var tokens = [Token]()
@@ -545,8 +545,8 @@ class UniversalLinkCoordinator: Coordinator {
         )
     }
 
-	private func preparingToImportUniversalLink() {
-		guard let viewController = delegate?.viewControllerForPresenting(in: self) else { return }
+    private func preparingToImportUniversalLink() {
+        guard let viewController = delegate?.viewControllerForPresenting(in: self) else { return }
         importTokenViewController = ImportMagicTokenViewController(analyticsCoordinator: analyticsCoordinator, server: server, assetDefinitionStore: assetDefinitionStore)
         guard let vc = importTokenViewController else { return }
         vc.delegate = self
@@ -554,7 +554,7 @@ class UniversalLinkCoordinator: Coordinator {
         let nc = UINavigationController(rootViewController: vc)
         nc.makePresentationFullScreenForiOS13Migration()
         viewController.present(nc, animated: true)
-	}
+    }
 
     private func updateTokenFields() {
         guard let tokenHolder = tokenHolder else { return }
@@ -580,17 +580,17 @@ class UniversalLinkCoordinator: Coordinator {
         hasCompleted = state.hasCompleted
     }
 
-	private func promptImportUniversalLink(cost: ImportMagicTokenViewControllerViewModel.Cost) {
-		updateImportTokenController(with: .promptImport, cost: cost)
+    private func promptImportUniversalLink(cost: ImportMagicTokenViewControllerViewModel.Cost) {
+        updateImportTokenController(with: .promptImport, cost: cost)
     }
 
-	private func showImportSuccessful() {
-		updateImportTokenController(with: .succeeded)
-	}
+    private func showImportSuccessful() {
+        updateImportTokenController(with: .succeeded)
+    }
 
     private func showImportError(errorMessage: String, cost: ImportMagicTokenViewControllerViewModel.Cost? = nil) {
         updateImportTokenController(with: .failed(errorMessage: errorMessage), cost: cost)
-	}
+    }
 
     private func importPaidSignedOrder(signedOrder: SignedOrder, tokenObject: TokenObject) {
         guard let importTokenViewController = importTokenViewController else { return }
@@ -607,8 +607,8 @@ class UniversalLinkCoordinator: Coordinator {
         }
     }
 
-	private func importFreeTransfer(query: String, parameters: Parameters) {
-		updateImportTokenController(with: .processing)
+    private func importFreeTransfer(query: String, parameters: Parameters) {
+        updateImportTokenController(with: .processing)
 
         Alamofire.request(
                 query,
@@ -621,7 +621,7 @@ class UniversalLinkCoordinator: Coordinator {
             if let response = result.response {
                 if response.statusCode < 300 {
                     successful = true
-                    if let contract = parameters["contractAddress"] as? AlphaWallet.Address {
+                    if let contract = parameters["contractAddress"] as? TBakeWallet.Address {
                         strongSelf.delegate?.didImported(contract: contract, in: strongSelf)
                     }
                 }
@@ -652,12 +652,12 @@ class UniversalLinkCoordinator: Coordinator {
 // swiftlint:enable type_body_length
 
 extension UniversalLinkCoordinator: ImportMagicTokenViewControllerDelegate {
-	func didPressDone(in viewController: ImportMagicTokenViewController) {
-		viewController.dismiss(animated: true)
-		delegate?.completed(in: self)
-	}
+    func didPressDone(in viewController: ImportMagicTokenViewController) {
+        viewController.dismiss(animated: true)
+        delegate?.completed(in: self)
+    }
 
-	func didPressImport(in viewController: ImportMagicTokenViewController) {
+    func didPressImport(in viewController: ImportMagicTokenViewController) {
         guard let transactionType = transactionType else { return }
         switch transactionType {
         case .freeTransfer(let query, let parameters):
@@ -665,11 +665,11 @@ extension UniversalLinkCoordinator: ImportMagicTokenViewControllerDelegate {
         case .paid(let signedOrder, let tokenObject):
             importPaidSignedOrder(signedOrder: signedOrder, tokenObject: tokenObject)
         }
-	}
+    }
 }
 
 extension UniversalLinkCoordinator: CanOpenURL {
-    func didPressViewContractWebPage(forContract contract: AlphaWallet.Address, server: RPCServer, in viewController: UIViewController) {
+    func didPressViewContractWebPage(forContract contract: TBakeWallet.Address, server: RPCServer, in viewController: UIViewController) {
         delegate?.didPressViewContractWebPage(forContract: contract, server: server, in: viewController)
     }
 

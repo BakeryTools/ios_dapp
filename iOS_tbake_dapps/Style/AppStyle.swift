@@ -162,7 +162,7 @@ enum DataEntry {
         static let secondary = Colors.appGrayLabel
         static let textFieldError = R.color.danger()!
         static let textFieldShadowWhileEditing = Colors.tbakeDarkBrown
-        static let textFieldBackground = UIColor(hex: "FBFBFB")
+        static let textFieldBackground = Colors.appBackground
         static let placeholder = UIColor(hex: "919191")
         static let ensText = UIColor(red: 117, green: 185, blue: 67)
         static let searchTextFieldBackground = UIColor(red: 243, green: 244, blue: 245)
@@ -272,6 +272,8 @@ enum Screen {
             static let valueChangeLabel = Fonts.regular(size: 13)
             static let placeholderLabel = Fonts.regular(size: 14)
             static let valueChangeValue = Fonts.medium(size: 15)
+            static let smallText = Fonts.regular(size: 12)
+            static let smallBold = Fonts.semibold(size: 13)
         }
 
         enum Color {

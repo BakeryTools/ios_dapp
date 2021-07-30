@@ -4,7 +4,7 @@ import UIKit
 import BigInt
 import Result
 
-protocol ReplaceTransactionCoordinatorDelegate: class, CanOpenURL {
+protocol ReplaceTransactionCoordinatorDelegate: AnyObject, CanOpenURL {
     func didSendTransaction(_ transaction: SentTransaction, inCoordinator coordinator: ReplaceTransactionCoordinator)
     func didFinish(_ result: ConfirmResult, in coordinator: ReplaceTransactionCoordinator)
 }
@@ -26,20 +26,20 @@ class ReplaceTransactionCoordinator: Coordinator {
     private let mode: Mode
     private var transactionConfirmationResult: TransactionConfirmationResult = .noData
 
-    private var recipient: AlphaWallet.Address? {
+    private var recipient: TBakeWallet.Address? {
         switch transactionType {
         case .nativeCryptocurrency:
-            return AlphaWallet.Address(string: transaction.to)
+            return TBakeWallet.Address(string: transaction.to)
         case .dapp, .ERC20Token, .ERC875Token, .ERC875TokenOrder, .ERC721Token, .ERC721ForTicketToken, .tokenScript, .claimPaidErc875MagicLink:
             return nil
         }
     }
-    private var contract: AlphaWallet.Address? {
+    private var contract: TBakeWallet.Address? {
         switch transactionType {
         case .nativeCryptocurrency:
             return nil
         case .dapp, .ERC20Token, .ERC875Token, .ERC875TokenOrder, .ERC721Token, .ERC721ForTicketToken, .tokenScript, .claimPaidErc875MagicLink:
-            return AlphaWallet.Address(string: transaction.to)
+            return TBakeWallet.Address(string: transaction.to)
         }
     }
     private var transactionType: TransactionType {
@@ -168,7 +168,7 @@ extension ReplaceTransactionCoordinator: TransactionInProgressCoordinatorDelegat
 }
 
 extension ReplaceTransactionCoordinator: CanOpenURL {
-    func didPressViewContractWebPage(forContract contract: AlphaWallet.Address, server: RPCServer, in viewController: UIViewController) {
+    func didPressViewContractWebPage(forContract contract: TBakeWallet.Address, server: RPCServer, in viewController: UIViewController) {
         delegate?.didPressViewContractWebPage(forContract: contract, server: server, in: viewController)
     }
 

@@ -80,7 +80,7 @@ enum OpenSeaNonFungibleTokenDisplayHelper: String {
         "3 days"
     ]
 
-    init(contract: AlphaWallet.Address) {
+    init(contract: TBakeWallet.Address) {
         self = OpenSeaNonFungibleTokenDisplayHelper(rawValue: contract.eip55String.lowercased()) ?? .others
     }
 

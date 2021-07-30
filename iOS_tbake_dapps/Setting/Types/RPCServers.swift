@@ -11,13 +11,13 @@ enum RPCServer: Hashable, CaseIterable {
             if let data = try? JSONEncoder().encode(customRpcs), let json = String(data: data, encoding: .utf8) {
                 var c = Config()
                 c.customRpcServersJson = json
-                servers = customRpcs.map { RPCServer.custom($0) }
+                customServers = customRpcs.map { RPCServer.custom($0) }
             } else {
                 //no-op
             }
         }
     }
-    private(set) static var servers: [Self] = customRpcs.map { RPCServer.custom($0) }
+    private(set) static var customServers: [Self] = customRpcs.map { RPCServer.custom($0) }
 
     case main
     case kovan
@@ -265,31 +265,28 @@ enum RPCServer: Hashable, CaseIterable {
     }
 
     var etherscanApiKey: String? {
-        switch etherscanCompatibleType {
-        case .etherscan:
-            //TODO this is quite correct too. Sometimes the etherscan-compatible site is based on Etherscan, but the API keys wouldn't work. But it's harmless to send them, for now
+        switch self {
+        case .main, .kovan, .ropsten, .rinkeby, .goerli, .optimistic, .optimisticKovan:
             return Constants.Credentials.etherscanKey
-        case .blockscout:
+        case .binance_smart_chain:
+            //Key not needed for testnet (empirically)
+            return Constants.Credentials.binanceSmartChainExplorerApiKey
+        case .fantom, .heco, .heco_testnet, .binance_smart_chain_testnet, .polygon:
             return nil
-        case .unknown:
+        case .poa, .sokol, .classic, .xDai, .artis_sigma1, .artis_tau1, .mumbai_testnet, .callisto, .fantom_testnet, .avalanche, .avalanche_testnet, .custom:
             return nil
         }
     }
 
-    func getEtherscanURLForGeneralTransactionHistory(for address: AlphaWallet.Address, startBlock: Int?) -> URL? {
+    func getEtherscanURLForGeneralTransactionHistory(for address: TBakeWallet.Address, startBlock: Int?) -> URL? {
          etherscanURLForGeneralTransactionHistory.flatMap {
-             let url = $0.appendingQueryString("address=\(address.eip55String)&apikey=\(etherscanApiKey ?? "")")
-             if let startBlock = startBlock {
-                 return url?.appendingQueryString("startblock=\(startBlock)")
-             } else {
-                 return url
-             }
-         }
-    }
-
-    func getEtherscanURLForTokenTransactionHistory(for address: AlphaWallet.Address, startBlock: Int?) -> URL? {
-        etherscanURLForTokenTransactionHistory.flatMap {
-            let url = $0.appendingQueryString("address=\(address.eip55String)&apikey=\(etherscanApiKey ?? "")")
+            let apiKeyParameter: String
+            if let apiKey = etherscanApiKey {
+                apiKeyParameter = "&apikey=\(apiKey)"
+            } else {
+                apiKeyParameter = ""
+            }
+            let url = $0.appendingQueryString("address=\(address.eip55String)\(apiKeyParameter)")
             if let startBlock = startBlock {
                 return url?.appendingQueryString("startblock=\(startBlock)")
             } else {
@@ -298,9 +295,32 @@ enum RPCServer: Hashable, CaseIterable {
         }
     }
 
-    func getEtherscanURLForERC721TransactionHistory(for address: AlphaWallet.Address, startBlock: Int?) -> URL? {
+    func getEtherscanURLForTokenTransactionHistory(for address: TBakeWallet.Address, startBlock: Int?) -> URL? {
+        etherscanURLForTokenTransactionHistory.flatMap {
+            let apiKeyParameter: String
+            if let apiKey = etherscanApiKey {
+                apiKeyParameter = "&apikey=\(apiKey)"
+            } else {
+                apiKeyParameter = ""
+            }
+            let url = $0.appendingQueryString("address=\(address.eip55String)\(apiKeyParameter)")
+            if let startBlock = startBlock {
+                return url?.appendingQueryString("startblock=\(startBlock)")
+            } else {
+                return url
+            }
+        }
+    }
+
+    func getEtherscanURLForERC721TransactionHistory(for address: TBakeWallet.Address, startBlock: Int?) -> URL? {
         etherscanURLForERC721TransactionHistory.flatMap {
-            let url = $0.appendingQueryString("address=\(address.eip55String)&apikey=\(etherscanApiKey ?? "")")
+            let apiKeyParameter: String
+            if let apiKey = etherscanApiKey {
+                apiKeyParameter = "&apikey=\(apiKey)"
+            } else {
+                apiKeyParameter = ""
+            }
+            let url = $0.appendingQueryString("address=\(address.eip55String)\(apiKeyParameter)")
             if let startBlock = startBlock {
                 return url?.appendingQueryString("startblock=\(startBlock)")
             } else {
@@ -310,7 +330,7 @@ enum RPCServer: Hashable, CaseIterable {
     }
 
     //Can't use https://blockscout.com/poa/dai/address/ even though it ultimately redirects there because blockscout (tested on 20190620), blockscout.com is only able to show that URL after the address has been searched (with the ?q= URL)
-    func etherscanContractDetailsWebPageURL(for address: AlphaWallet.Address) -> URL? {
+    func etherscanContractDetailsWebPageURL(for address: TBakeWallet.Address) -> URL? {
         switch etherscanCompatibleType {
         case .etherscan:
             return etherscanWebpageRoot?.appendingPathComponent("address").appendingPathComponent(address.eip55String)
@@ -324,7 +344,7 @@ enum RPCServer: Hashable, CaseIterable {
     //We assume that only Etherscan supports this and only for Ethereum mainnet: The token page instead of contract page
     //TODO check if other Etherscan networks can support this
     //TODO check if Blockscout can support this
-    func etherscanTokenDetailsWebPageURL(for address: AlphaWallet.Address) -> URL? {
+    func etherscanTokenDetailsWebPageURL(for address: TBakeWallet.Address) -> URL? {
         switch self {
         case .main:
             return etherscanWebpageRoot?.appendingPathComponent("token").appendingPathComponent(address.eip55String)
@@ -333,16 +353,16 @@ enum RPCServer: Hashable, CaseIterable {
         }
     }
 
-    var priceID: AlphaWallet.Address {
+    var priceID: TBakeWallet.Address {
         switch self {
         case .main, .ropsten, .rinkeby, .kovan, .sokol, .custom, .xDai, .goerli, .artis_sigma1, .artis_tau1, .binance_smart_chain, .binance_smart_chain_testnet, .heco, .heco_testnet, .fantom, .fantom_testnet, .avalanche, .avalanche_testnet, .polygon, .mumbai_testnet, .optimistic, .optimisticKovan:
-            return AlphaWallet.Address(string: "0x000000000000000000000000000000000000003c")!
+            return TBakeWallet.Address(string: "0x000000000000000000000000000000000000003c")!
         case .poa:
-            return AlphaWallet.Address(string: "0x00000000000000000000000000000000000000AC")!
+            return TBakeWallet.Address(string: "0x00000000000000000000000000000000000000AC")!
         case .classic:
-            return AlphaWallet.Address(string: "0x000000000000000000000000000000000000003D")!
+            return TBakeWallet.Address(string: "0x000000000000000000000000000000000000003D")!
         case .callisto:
-            return AlphaWallet.Address(string: "0x0000000000000000000000000000000000000334")!
+            return TBakeWallet.Address(string: "0x0000000000000000000000000000000000000334")!
         }
     }
 
@@ -488,7 +508,7 @@ enum RPCServer: Hashable, CaseIterable {
             case .xDai: return "https://dai.poa.network"
             case .artis_sigma1: return "https://rpc.sigma1.artis.network"
             case .artis_tau1: return "https://rpc.tau1.artis.network"
-            case .binance_smart_chain: return "https://bsc-dataseed1.binance.org:443"
+            case .binance_smart_chain: return "https://bsc-dataseed.binance.org"
             case .binance_smart_chain_testnet: return "https://data-seed-prebsc-1-s1.binance.org:8545"
             case .heco: return "https://http-mainnet.hecochain.com"
             case .heco_testnet: return "https://http-testnet.hecochain.com"
@@ -516,7 +536,7 @@ enum RPCServer: Hashable, CaseIterable {
         }
     }
 
-    var ensRegistrarContract: AlphaWallet.Address {
+    var ensRegistrarContract: TBakeWallet.Address {
         switch self {
         case .main: return Constants.ENSRegistrarAddress
         case .ropsten: return Constants.ENSRegistrarRopsten
@@ -647,69 +667,13 @@ enum RPCServer: Hashable, CaseIterable {
     }
 
     init(name: String) {
-        self = {
-            switch name {
-            case RPCServer.main.name: return .main
-            case RPCServer.classic.name: return .classic
-            case RPCServer.callisto.name: return .callisto
-            case RPCServer.kovan.name: return .kovan
-            case RPCServer.ropsten.name: return .ropsten
-            case RPCServer.rinkeby.name: return .rinkeby
-            case RPCServer.poa.name: return .poa
-            case RPCServer.sokol.name: return .sokol
-            case RPCServer.xDai.name: return .xDai
-            case RPCServer.goerli.name: return .goerli
-            case RPCServer.artis_sigma1.name: return .artis_sigma1
-            case RPCServer.artis_tau1.name: return .artis_tau1
-            case RPCServer.binance_smart_chain.name: return .binance_smart_chain
-            case RPCServer.binance_smart_chain_testnet.name: return .binance_smart_chain_testnet
-            case RPCServer.heco.name: return .heco
-            case RPCServer.heco_testnet.name: return .heco_testnet
-            case RPCServer.fantom.name: return .fantom
-            case RPCServer.fantom_testnet.name: return .fantom_testnet
-            case RPCServer.avalanche.name: return .avalanche
-            case RPCServer.avalanche_testnet.name: return .avalanche_testnet
-            case RPCServer.polygon.name: return .polygon
-            case RPCServer.mumbai_testnet.name: return .mumbai_testnet
-            case RPCServer.optimistic.name: return .optimistic
-            case RPCServer.optimisticKovan.name: return .optimisticKovan
-            default:
-                return RPCServer.servers.first { $0.name == name } ?? .main
-            }
-        }()
+        //TODO defaulting to .main is bad
+        self = Self.allCases.first { $0.name == name } ?? .main
     }
 
     init(chainID: Int) {
-        self = {
-            switch chainID {
-            case RPCServer.main.chainID: return .main
-            case RPCServer.classic.chainID: return .classic
-            case RPCServer.callisto.chainID: return .callisto
-            case RPCServer.kovan.chainID: return .kovan
-            case RPCServer.ropsten.chainID: return .ropsten
-            case RPCServer.rinkeby.chainID: return .rinkeby
-            case RPCServer.poa.chainID: return .poa
-            case RPCServer.sokol.chainID: return .sokol
-            case RPCServer.xDai.chainID: return .xDai
-            case RPCServer.goerli.chainID: return .goerli
-            case RPCServer.artis_sigma1.chainID: return .artis_sigma1
-            case RPCServer.artis_tau1.chainID: return .artis_tau1
-            case RPCServer.binance_smart_chain.chainID: return .binance_smart_chain
-            case RPCServer.binance_smart_chain_testnet.chainID: return .binance_smart_chain_testnet
-            case RPCServer.heco.chainID: return .heco
-            case RPCServer.heco_testnet.chainID: return .heco_testnet
-            case RPCServer.fantom.chainID: return .fantom
-            case RPCServer.fantom_testnet.chainID: return .fantom_testnet
-            case RPCServer.avalanche.chainID: return .avalanche
-            case RPCServer.avalanche_testnet.chainID: return .avalanche_testnet
-            case RPCServer.polygon.chainID: return .polygon
-            case RPCServer.mumbai_testnet.chainID: return .mumbai_testnet
-            case RPCServer.optimistic.chainID: return .optimistic
-            case RPCServer.optimisticKovan.chainID: return .optimisticKovan
-            default:
-                return RPCServer.servers.first { $0.chainID == chainID } ?? .main
-            }
-        }()
+        //TODO defaulting to .main is bad
+        self = Self.allCases.first { $0.chainID == chainID } ?? .main
     }
 
     init?(withMagicLinkHost magicLinkHost: String) {
@@ -783,7 +747,7 @@ enum RPCServer: Hashable, CaseIterable {
             .mumbai_testnet,
             .optimistic,
             .optimisticKovan,
-        ] + RPCServer.servers
+        ] + RPCServer.customServers
     }
 
     private static func convertJsonToCustomRpcs(_ json: String?) -> [CustomRPC] {

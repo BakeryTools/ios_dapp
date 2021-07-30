@@ -24,7 +24,7 @@ class ENSReverseLookupCoordinator {
 
     //TODO make calls from multiple callers at the same time for the same address more efficient
     func getENSNameFromResolver(
-            forAddress input: AlphaWallet.Address,
+            forAddress input: TBakeWallet.Address,
             completion: @escaping (Result<String, AnyError>) -> Void
     ) {
         let node = "\(input.eip55String.drop0x).addr.reverse".lowercased().nameHash
@@ -39,7 +39,7 @@ class ENSReverseLookupCoordinator {
                     completion(.failure(AnyError(Web3Error(description: "Null address returned"))))
                 } else {
                     let function = ENSReverseLookupEncode()
-                    callSmartContract(withServer: self.server, contract: AlphaWallet.Address(address: resolver), functionName: function.name, abiString: function.abi, parameters: [node] as [AnyObject]).done { result in
+                    callSmartContract(withServer: self.server, contract: TBakeWallet.Address(address: resolver), functionName: function.name, abiString: function.abi, parameters: [node] as [AnyObject]).done { result in
                         guard let ensName = result["0"] as? String, ensName.contains(".") else {
                             completion(.failure(AnyError(Web3Error(description: "Incorrect data output from ENS resolver"))))
                             return

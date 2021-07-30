@@ -12,7 +12,7 @@ class GetDecimalsCoordinator {
     }
 
     func getDecimals(
-        for contract: AlphaWallet.Address,
+        for contract: TBakeWallet.Address,
         completion: @escaping (Result<UInt8, AnyError>) -> Void
     ) {
         let functionName = "decimals"

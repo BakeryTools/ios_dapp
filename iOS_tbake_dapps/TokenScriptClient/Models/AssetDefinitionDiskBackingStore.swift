@@ -36,9 +36,9 @@ class AssetDefinitionDiskBackingStore: AssetDefinitionBackingStore {
         }
     }
 
-    var contractsWithTokenScriptFileFromOfficialRepo: [AlphaWallet.Address] {
+    var contractsWithTokenScriptFileFromOfficialRepo: [TBakeWallet.Address] {
         guard let urls = try? FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil) else { return .init() }
-        return urls.compactMap { AlphaWallet.Address(string: $0.deletingPathExtension().lastPathComponent) }
+        return urls.compactMap { TBakeWallet.Address(string: $0.deletingPathExtension().lastPathComponent) }
     }
 
     init(directoryName: String = officialDirectoryName) {
@@ -108,23 +108,23 @@ class AssetDefinitionDiskBackingStore: AssetDefinitionBackingStore {
         tokenScriptFileIndices.write(toUrl: indicesFileUrl)
     }
 
-    private func localURLOfXML(for contract: AlphaWallet.Address) -> URL {
+    private func localURLOfXML(for contract: TBakeWallet.Address) -> URL {
         assert(isOfficial)
         return directory.appendingPathComponent(filename(fromContract: contract))
     }
 
     ///Only return XML contents if there is exactly 1 file that matches the contract
-    private func xml(forContract contract: AlphaWallet.Address) -> String? {
+    private func xml(forContract contract: TBakeWallet.Address) -> String? {
         guard let fileName = tokenScriptFileIndices.nonConflictingFileName(forContract: contract) else { return nil }
         let path = directory.appendingPathComponent(fileName)
         return try? String(contentsOf: path)
     }
 
-    private func filename(fromContract contract: AlphaWallet.Address) -> String {
+    private func filename(fromContract contract: TBakeWallet.Address) -> String {
         return "\(contract.eip55String).\(AssetDefinitionDiskBackingStore.fileExtension)"
     }
 
-    subscript(contract: AlphaWallet.Address) -> String? {
+    subscript(contract: TBakeWallet.Address) -> String? {
         get {
             guard var xmlContents = xml(forContract: contract) else { return nil }
             guard let fileName = tokenScriptFileIndices.nonConflictingFileName(forContract: contract) else { return xmlContents }
@@ -146,12 +146,12 @@ class AssetDefinitionDiskBackingStore: AssetDefinitionBackingStore {
         }
     }
 
-    func isOfficial(contract: AlphaWallet.Address) -> Bool {
+    func isOfficial(contract: TBakeWallet.Address) -> Bool {
         return isOfficial
     }
 
     ///We don't bother to check if there's a conflict inside this function because if there's a conflict, the files should be ignored anyway
-    func isCanonicalized(contract: AlphaWallet.Address) -> Bool {
+    func isCanonicalized(contract: TBakeWallet.Address) -> Bool {
         if let filename = tokenScriptFileIndices.contractsToFileNames[contract]?.first {
             return filename.hasSuffix(".\(AssetDefinitionDiskBackingStore.fileExtension)")
         } else {
@@ -160,11 +160,11 @@ class AssetDefinitionDiskBackingStore: AssetDefinitionBackingStore {
         }
     }
 
-    func hasConflictingFile(forContract contract: AlphaWallet.Address) -> Bool {
+    func hasConflictingFile(forContract contract: TBakeWallet.Address) -> Bool {
         return tokenScriptFileIndices.hasConflictingFile(forContract: contract)
     }
 
-    func hasOutdatedTokenScript(forContract contract: AlphaWallet.Address) -> Bool {
+    func hasOutdatedTokenScript(forContract contract: TBakeWallet.Address) -> Bool {
         return !tokenScriptFileIndices.contractsToOldTokenScriptFileNames[contract].isEmpty
     }
 
@@ -172,13 +172,13 @@ class AssetDefinitionDiskBackingStore: AssetDefinitionBackingStore {
         return tokenScriptFileIndices.signatureVerificationTypes[tokenScriptFileIndices.hash(contents: xmlString)]
     }
 
-    func writeCacheTokenScriptSignatureVerificationType(_ verificationType: TokenScriptSignatureVerificationType, forContract contract: AlphaWallet.Address, forXmlString xmlString: String) {
+    func writeCacheTokenScriptSignatureVerificationType(_ verificationType: TokenScriptSignatureVerificationType, forContract contract: TBakeWallet.Address, forXmlString xmlString: String) {
         tokenScriptFileIndices.signatureVerificationTypes[tokenScriptFileIndices.hash(contents: xmlString)] = verificationType
         tokenScriptFileIndices.write(toUrl: indicesFileUrl)
     }
 
     //When we remove a contract from our database, we must remove the TokenScript file (from the standard repo) that is named after it because this file wouldn't be pulled from the server anymore. If the TokenScript file applies to more than 1 contract, having the outdated file around will mean 2 copies of the same file — with 1 outdated, 1 up-to-date, causing TokenScript client to see a conflict
-    func deleteFileDownloadedFromOfficialRepoFor(contract: AlphaWallet.Address) {
+    func deleteFileDownloadedFromOfficialRepoFor(contract: TBakeWallet.Address) {
         guard isOfficial else { return }
         let filename = self.filename(fromContract: contract)
         let url = directory.appendingPathComponent(filename)
@@ -201,7 +201,7 @@ class AssetDefinitionDiskBackingStore: AssetDefinitionBackingStore {
     }
 
     //Must only return the last modified date for a file if it's for the current schema version otherwise, a file using the old schema might have a more recent timestamp (because it was recently downloaded) than a newer version on the server (which was not yet made available by the time the user downloaded the version with the old schema)
-    func lastModifiedDateOfCachedAssetDefinitionFile(forContract contract: AlphaWallet.Address) -> Date? {
+    func lastModifiedDateOfCachedAssetDefinitionFile(forContract contract: TBakeWallet.Address) -> Date? {
         assert(isOfficial)
         let path = localURLOfXML(for: contract)
         guard let lastModified = try? path.resourceValues(forKeys: [.contentModificationDateKey]) else { return nil }
@@ -209,13 +209,13 @@ class AssetDefinitionDiskBackingStore: AssetDefinitionBackingStore {
         return lastModified.contentModificationDate
     }
 
-    func forEachContractWithXML(_ body: (AlphaWallet.Address) -> Void) {
+    func forEachContractWithXML(_ body: (TBakeWallet.Address) -> Void) {
         for (contract, _) in tokenScriptFileIndices.contractsToFileNames {
             body(contract)
         }
     }
 
-    func watchDirectoryContents(changeHandler: @escaping (AlphaWallet.Address) -> Void) {
+    func watchDirectoryContents(changeHandler: @escaping (TBakeWallet.Address) -> Void) {
         guard directoryWatcher == nil else { return }
         directoryWatcher = DirectoryContentsWatcher.Local(path: directory.path)
         try? directoryWatcher?.start { [weak self] results in
@@ -231,9 +231,9 @@ class AssetDefinitionDiskBackingStore: AssetDefinitionBackingStore {
         }
     }
 
-    private func handleTokenScriptFileChanged(withFilename fileName: String, changeHandler: @escaping (AlphaWallet.Address) -> Void) {
+    private func handleTokenScriptFileChanged(withFilename fileName: String, changeHandler: @escaping (TBakeWallet.Address) -> Void) {
         let url = directory.appendingPathComponent(fileName)
-        var contractsAffected: [AlphaWallet.Address]
+        var contractsAffected: [TBakeWallet.Address]
         if url.pathExtension == AssetDefinitionDiskBackingStore.fileExtension || url.pathExtension == "xml" {
             let contractsPreviouslyForThisXmlFile = tokenScriptFileIndices.contractsToFileNames.filter { _, fileNames in
                 return fileNames.contains(fileName)
@@ -249,7 +249,7 @@ class AssetDefinitionDiskBackingStore: AssetDefinitionBackingStore {
             tokenScriptFileIndices.contractsToEntities.removeValue(forKey: fileName)
             tokenScriptFileIndices.removeHash(forFile: fileName)
 
-            let contracts: [AlphaWallet.Address]
+            let contracts: [TBakeWallet.Address]
             if let contents = try? String(contentsOf: url) {
                 if let holdingContracts = XMLHandler.getHoldingContracts(forTokenScript: contents)?.map({ $0.0 }) {
                     contracts = holdingContracts
@@ -274,7 +274,7 @@ class AssetDefinitionDiskBackingStore: AssetDefinitionBackingStore {
 
             contractsAffected = contracts + contractsPreviouslyForThisXmlFile
         } else {
-            contractsAffected = [AlphaWallet.Address]()
+            contractsAffected = [TBakeWallet.Address]()
             for (xmlFileName, entities) in tokenScriptFileIndices.contractsToEntities {
                 if entities.contains(where: { $0.fileName == fileName }) {
                     let contracts = tokenScriptFileIndices.contracts(inFileName: xmlFileName)
@@ -287,7 +287,7 @@ class AssetDefinitionDiskBackingStore: AssetDefinitionBackingStore {
         delegate?.badTokenScriptFilesChanged(in: self)
     }
 
-    private func purgeCacheFor(contracts: [AlphaWallet.Address], changeHandler: @escaping (AlphaWallet.Address) -> Void) {
+    private func purgeCacheFor(contracts: [TBakeWallet.Address], changeHandler: @escaping (TBakeWallet.Address) -> Void) {
         //Import to clear the signature cache (which includes conflicts) because a file which was in conflict with another earlier might no longer be
         //TODO clear the cache more intelligently rather than purge it entirely. It might be hard or impossible to know which other contracts are affected
         tokenScriptFileIndices.signatureVerificationTypes = .init()

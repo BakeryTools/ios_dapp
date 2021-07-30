@@ -8,7 +8,7 @@
 import UIKit
 import LocalAuthentication
 
-protocol ShowSeedPhraseCoordinatorDelegate: class {
+protocol ShowSeedPhraseCoordinatorDelegate: AnyObject {
     func didCancel(in coordinator: ShowSeedPhraseCoordinator)
 }
 
@@ -18,7 +18,7 @@ class ShowSeedPhraseCoordinator: Coordinator {
         navigationController.viewControllers.compactMap { $0 as? ShowSeedPhraseViewController }.first
     }
 
-    private let account: AlphaWallet.Address
+    private let account: TBakeWallet.Address
     private let keystore: Keystore
     private var _context: LAContext?
     private var context: LAContext {
@@ -44,7 +44,7 @@ class ShowSeedPhraseCoordinator: Coordinator {
     var coordinators: [Coordinator] = []
     weak var delegate: ShowSeedPhraseCoordinatorDelegate?
 
-    init(navigationController: UINavigationController, keystore: Keystore, account: AlphaWallet.Address) {
+    init(navigationController: UINavigationController, keystore: Keystore, account: TBakeWallet.Address) {
         self.navigationController = navigationController
         self.keystore = keystore
         self.account = account
@@ -102,12 +102,12 @@ extension ShowSeedPhraseCoordinator: ShowSeedPhraseViewControllerDelegate {
         return context
     }
 
-    func didTapTestSeedPhrase(for account: AlphaWallet.Address, inViewController viewController: ShowSeedPhraseViewController) {
+    func didTapTestSeedPhrase(for account: TBakeWallet.Address, inViewController viewController: ShowSeedPhraseViewController) {
         navigationController.popToRootViewController(animated: true)
         delegate?.didCancel(in: self)
     }
 
-    func biometricsFailed(for account: AlphaWallet.Address, inViewController viewController: ShowSeedPhraseViewController) {
+    func biometricsFailed(for account: TBakeWallet.Address, inViewController viewController: ShowSeedPhraseViewController) {
         clearContext()
     }
 }

@@ -2,7 +2,7 @@
 
 import UIKit
 
-protocol AddressTextFieldDelegate: class {
+protocol AddressTextFieldDelegate: AnyObject {
     func displayError(error: Error, for textField: AddressTextField)
     func openQRCodeReader(for textField: AddressTextField)
     func didPaste(in textField: AddressTextField)
@@ -46,7 +46,7 @@ class AddressTextField: UIControl {
         button.setTitleColor(DataEntry.Color.icon, for: .normal)
         button.setBackgroundColor(.clear, forState: .normal)
         button.contentHorizontalAlignment = .right
-
+        
         return button
     }()
 

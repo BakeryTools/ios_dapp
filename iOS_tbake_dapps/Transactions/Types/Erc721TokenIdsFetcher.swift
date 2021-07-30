@@ -3,6 +3,6 @@
 import Foundation
 import PromiseKit
 
-protocol Erc721TokenIdsFetcher: class {
-    func tokenIdsForErc721Token(contract: AlphaWallet.Address, inAccount account: AlphaWallet.Address) -> Promise<[String]>
+protocol Erc721TokenIdsFetcher: AnyObject {
+    func tokenIdsForErc721Token(contract: TBakeWallet.Address, inAccount account: TBakeWallet.Address) -> Promise<[String]>
 }

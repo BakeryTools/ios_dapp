@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol SelectAssetCoordinatorDelegate: class {
+protocol SelectAssetCoordinatorDelegate: AnyObject {
     func coordinator(_ coordinator: SelectAssetCoordinator, didSelectToken token: TokenObject)
     func selectAssetDidCancel(in coordinator: SelectAssetCoordinator)
 }

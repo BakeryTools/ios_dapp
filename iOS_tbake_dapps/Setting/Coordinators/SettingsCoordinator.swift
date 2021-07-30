@@ -10,7 +10,7 @@ enum RestartReason {
     case serverChange
 }
 
-protocol SettingsCoordinatorDelegate: class, CanOpenURL {
+protocol SettingsCoordinatorDelegate: AnyObject, CanOpenURL {
     func didRestart(with account: Wallet, in coordinator: SettingsCoordinator, reason: RestartReason)
 	func didUpdateAccounts(in coordinator: SettingsCoordinator)
 	func didCancel(in coordinator: SettingsCoordinator)
@@ -18,7 +18,7 @@ protocol SettingsCoordinatorDelegate: class, CanOpenURL {
 	func assetDefinitionsOverrideViewController(for: SettingsCoordinator) -> UIViewController?
     func showConsole(in coordinator: SettingsCoordinator)
 	func delete(account: Wallet, in coordinator: SettingsCoordinator)
-    func restartToAddEnableAAndSwitchBrowserToServer(in coordinator: SettingsCoordinator)
+    func restartToAddEnableAndSwitchBrowserToServer(in coordinator: SettingsCoordinator)
     func restartToRemoveServer(in coordinator: SettingsCoordinator)
 }
 
@@ -30,6 +30,7 @@ class SettingsCoordinator: Coordinator {
     private let _promptBackupCoordinator: PromptBackupCoordinator
 	private let analyticsCoordinator: AnalyticsCoordinator
     private let walletConnectCoordinator: WalletConnectCoordinator
+    private let walletBalanceCoordinator: WalletBalanceCoordinatorType
 	private var account: Wallet {
 		return sessions.anyValue.account
 	}
@@ -53,7 +54,8 @@ class SettingsCoordinator: Coordinator {
         restartQueue: RestartTaskQueue,
         promptBackupCoordinator: PromptBackupCoordinator,
         analyticsCoordinator: AnalyticsCoordinator,
-        walletConnectCoordinator: WalletConnectCoordinator
+        walletConnectCoordinator: WalletConnectCoordinator,
+        walletBalanceCoordinator: WalletBalanceCoordinatorType
 	) {
 		self.navigationController = navigationController
 		self.navigationController.modalPresentationStyle = .formSheet
@@ -64,6 +66,7 @@ class SettingsCoordinator: Coordinator {
         self._promptBackupCoordinator = promptBackupCoordinator
 		self.analyticsCoordinator = analyticsCoordinator
         self.walletConnectCoordinator = walletConnectCoordinator
+        self.walletBalanceCoordinator = walletBalanceCoordinator
 		promptBackupCoordinator.subtlePromptDelegate = self
 	}
 
@@ -132,7 +135,8 @@ extension SettingsCoordinator: SettingsViewControllerDelegate {
                 keystore: keystore,
                 promptBackupCoordinator: promptBackupCoordinator,
 				analyticsCoordinator: analyticsCoordinator,
-                viewModel: .init(configuration: .changeWallets, animatedPresentation: true)
+                viewModel: .init(configuration: .changeWallets, animatedPresentation: true),
+                walletBalanceCoordinator: walletBalanceCoordinator
         )
         coordinator.delegate = self
         coordinator.start()
@@ -150,6 +154,7 @@ extension SettingsCoordinator: SettingsViewControllerDelegate {
                     navigationController: navigationController,
                     keystore: keystore,
                     account: account,
+                    walletAccount: keystore.currentWallet,
 					analyticsCoordinator: analyticsCoordinator
             )
             coordinator.delegate = self
@@ -183,7 +188,7 @@ extension SettingsCoordinator: ShowSeedPhraseCoordinatorDelegate {
 }
 
 extension SettingsCoordinator: CanOpenURL {
-	func didPressViewContractWebPage(forContract contract: AlphaWallet.Address, server: RPCServer, in viewController: UIViewController) {
+	func didPressViewContractWebPage(forContract contract: TBakeWallet.Address, server: RPCServer, in viewController: UIViewController) {
 		delegate?.didPressViewContractWebPage(forContract: contract, server: server, in: viewController)
 	}
 
@@ -260,8 +265,8 @@ extension SettingsCoordinator: EnabledServersCoordinatorDelegate {
 		removeCoordinator(coordinator)
 	}
 
-    func restartToAddEnableAAndSwitchBrowserToServer(in coordinator: EnabledServersCoordinator) {
-        delegate?.restartToAddEnableAAndSwitchBrowserToServer(in: self)
+    func restartToAddEnableAndSwitchBrowserToServer(in coordinator: EnabledServersCoordinator) {
+        delegate?.restartToAddEnableAndSwitchBrowserToServer(in: self)
         removeCoordinator(coordinator)
     }
 
@@ -286,7 +291,7 @@ extension SettingsCoordinator: BackupCoordinatorDelegate {
 		removeCoordinator(coordinator)
 	}
 
-	func didFinish(account: AlphaWallet.Address, in coordinator: BackupCoordinator) {
+    func didFinish(walletAccount: Wallet, account: TBakeWallet.Address, in coordinator: BackupCoordinator) {
 		_promptBackupCoordinator.markBackupDone()
 		_promptBackupCoordinator.showHideCurrentPrompt()
 		removeCoordinator(coordinator)

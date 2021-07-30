@@ -7,7 +7,7 @@ import JSONRPCKit
 import PromiseKit
 import TrustKeystore
 
-protocol TransactionConfiguratorDelegate: class {
+protocol TransactionConfiguratorDelegate: AnyObject {
     func configurationChanged(in configurator: TransactionConfigurator)
     func gasLimitEstimateUpdated(to estimate: BigInt, in configurator: TransactionConfigurator)
     func gasPriceEstimateUpdated(to estimate: BigInt, in configurator: TransactionConfigurator)
@@ -67,7 +67,7 @@ class TransactionConfigurator {
         }
     }
 
-    private let account: AlphaWallet.Address
+    private let account: TBakeWallet.Address
 
     private var isGasLimitSpecifiedByTransaction: Bool {
         transaction.gasLimit != nil
@@ -95,7 +95,7 @@ class TransactionConfigurator {
         return currentConfiguration.gasPrice * currentConfiguration.gasLimit
     }
 
-    var toAddress: AlphaWallet.Address? {
+    var toAddress: TBakeWallet.Address? {
         switch transaction.transactionType {
         case .nativeCryptocurrency:
             return transaction.recipient
@@ -313,7 +313,7 @@ class TransactionConfigurator {
         TransactionConfiguration(gasPrice: TransactionConfigurator.computeDefaultGasPrice(server: server, transaction: transaction), gasLimit: gasLimit, data: data)
     }
 
-    private static func createConfiguration(server: RPCServer, transaction: UnconfirmedTransaction, account: AlphaWallet.Address) -> TransactionConfiguration {
+    private static func createConfiguration(server: RPCServer, transaction: UnconfirmedTransaction, account: TBakeWallet.Address) -> TransactionConfiguration {
         do {
             switch transaction.transactionType {
             case .dapp:

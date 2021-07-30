@@ -4,24 +4,26 @@ import Foundation
 import UIKit
 import Result
 
-protocol BackupCoordinatorDelegate: class {
+protocol BackupCoordinatorDelegate: AnyObject {
     func didCancel(coordinator: BackupCoordinator)
-    func didFinish(account: AlphaWallet.Address, in coordinator: BackupCoordinator)
+    func didFinish(walletAccount: Wallet, account: TBakeWallet.Address, in coordinator: BackupCoordinator)
 }
 
 class BackupCoordinator: Coordinator {
     private let keystore: Keystore
-    private let account: AlphaWallet.Address
+    private let account: TBakeWallet.Address
+    private let walletAccount: Wallet
     private let analyticsCoordinator: AnalyticsCoordinator
 
     let navigationController: UINavigationController
     weak var delegate: BackupCoordinatorDelegate?
     var coordinators: [Coordinator] = []
 
-    init(navigationController: UINavigationController, keystore: Keystore, account: AlphaWallet.Address, analyticsCoordinator: AnalyticsCoordinator) {
+    init(navigationController: UINavigationController, keystore: Keystore, account: TBakeWallet.Address, walletAccount: Wallet, analyticsCoordinator: AnalyticsCoordinator) {
         self.navigationController = navigationController
         self.keystore = keystore
         self.account = account
+        self.walletAccount = walletAccount
         self.analyticsCoordinator = analyticsCoordinator
         
         navigationController.setNavigationBarHidden(false, animated: true)
@@ -35,13 +37,13 @@ class BackupCoordinator: Coordinator {
     private func finish(result: Result<Bool, AnyError>) {
         switch result {
         case .success:
-            delegate?.didFinish(account: account, in: self)
+            delegate?.didFinish(walletAccount: self.walletAccount, account: self.account, in: self)
         case .failure:
             delegate?.didCancel(coordinator: self)
         }
     }
 
-    private func presentActivityViewController(for account: AlphaWallet.Address, newPassword: String, completion: @escaping (Result<Bool, AnyError>) -> Void) {
+    private func presentActivityViewController(for account: TBakeWallet.Address, newPassword: String, completion: @escaping (Result<Bool, AnyError>) -> Void) {
         navigationController.displayLoading(
             text: R.string.localizable.exportPresentBackupOptionsLabelTitle()
         )
@@ -126,17 +128,17 @@ class BackupCoordinator: Coordinator {
 //        removeCoordinator(coordinator)
 //    }
 //
-//    func didEnterPassword(password: String, account: AlphaWallet.Address, in coordinator: EnterPasswordCoordinator) {
+//    func didEnterPassword(password: String, account: TBakeWallet.Address, in coordinator: EnterPasswordCoordinator) {
 //        presentShareActivity(for: account, newPassword: password)
 //    }
 //}
 
 extension BackupCoordinator: BackupSeedPhraseCoordinatorDelegate {
-    func didClose(forAccount account: AlphaWallet.Address, inCoordinator coordinator: BackupSeedPhraseCoordinator) {
+    func didClose(forAccount account: TBakeWallet.Address, inCoordinator coordinator: BackupSeedPhraseCoordinator) {
         self.removeCoordinator(coordinator)
     }
 
-    func didVerifySeedPhraseSuccessfully(forAccount account: AlphaWallet.Address, inCoordinator coordinator: BackupSeedPhraseCoordinator) {
+    func didVerifySeedPhraseSuccessfully(forAccount account: TBakeWallet.Address, inCoordinator coordinator: BackupSeedPhraseCoordinator) {
         self.doneBackup()
     }
 }

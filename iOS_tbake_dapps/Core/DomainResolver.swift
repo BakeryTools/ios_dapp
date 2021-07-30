@@ -1,6 +1,6 @@
 //
 //  DomainResolver.swift
-//  AlphaWallet
+//  TBakeWallet
 //
 //  Created by Vladyslav Shepitko on 02.11.2020.
 //
@@ -31,7 +31,7 @@ class DomainResolver {
     }
 
     private let server: RPCServer
-    private static var cache: [ENSLookupKey: AlphaWallet.Address] = [:]
+    private static var cache: [ENSLookupKey: TBakeWallet.Address] = [:]
     private var resolution: Resolution?
     private let ticker: String = "eth" //Not sure what `ticker` do we need to use here
 
@@ -40,9 +40,9 @@ class DomainResolver {
         self.resolution = Resolution(server: server)
     }
 
-    func resolveAddress(_ input: String) -> Promise<AlphaWallet.Address> {
+    func resolveAddress(_ input: String) -> Promise<TBakeWallet.Address> {
         //if already an address, send back the address
-        if let value = AlphaWallet.Address(string: input) {
+        if let value = TBakeWallet.Address(string: input) {
             return .value(value)
         }
 
@@ -57,7 +57,7 @@ class DomainResolver {
             resolution.addr(domain: input, ticker: self.ticker) { result in
                 switch result {
                 case .success(let value):
-                    if let address = AlphaWallet.Address(string: value) {
+                    if let address = TBakeWallet.Address(string: value) {
                         self.cache(forNode: node, result: address)
 
                         seal.fulfill(address)
@@ -71,18 +71,18 @@ class DomainResolver {
         }
     }
 
-    private func cachedResult(forNode node: String) -> AlphaWallet.Address? {
+    private func cachedResult(forNode node: String) -> TBakeWallet.Address? {
         return DomainResolver.cache[ENSLookupKey(name: node, server: server)]
     }
 
-    private func cache(forNode node: String, result: AlphaWallet.Address) {
+    private func cache(forNode node: String, result: TBakeWallet.Address) {
         DomainResolver.cache[ENSLookupKey(name: node, server: server)] = result
     }
 }
 
 extension GetENSAddressCoordinator {
 
-    func getENSAddressFromResolverPromise(value: String) -> Promise<AlphaWallet.Address> {
+    func getENSAddressFromResolverPromise(value: String) -> Promise<TBakeWallet.Address> {
         return Promise { seal in
             GetENSAddressCoordinator(server: server).getENSAddressFromResolver(for: value) { result in
                 switch result {

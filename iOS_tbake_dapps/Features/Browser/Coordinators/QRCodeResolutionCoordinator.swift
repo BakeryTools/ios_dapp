@@ -9,8 +9,8 @@ import Foundation
 import BigInt
 import PromiseKit
 
-protocol QRCodeResolutionCoordinatorDelegate: class {
-    func coordinator(_ coordinator: QRCodeResolutionCoordinator, didResolveAddress address: AlphaWallet.Address, action: ScanQRCodeAction)
+protocol QRCodeResolutionCoordinatorDelegate: AnyObject {
+    func coordinator(_ coordinator: QRCodeResolutionCoordinator, didResolveAddress address: TBakeWallet.Address, action: ScanQRCodeAction)
     func coordinator(_ coordinator: QRCodeResolutionCoordinator, didResolveTransactionType transactionType: TransactionType, token: TokenObject)
     func coordinator(_ coordinator: QRCodeResolutionCoordinator, didResolveWalletConnectURL url: WalletConnectURL)
     func coordinator(_ coordinator: QRCodeResolutionCoordinator, didResolveString value: String)
@@ -127,7 +127,7 @@ extension QRCodeResolutionCoordinator: ScanQRCodeCoordinatorDelegate {
         resolveScanResult(result)
     }
 
-    private func availableActions(forContract contract: AlphaWallet.Address) -> [ScanQRCodeAction] {
+    private func availableActions(forContract contract: TBakeWallet.Address) -> [ScanQRCodeAction] {
         switch usage {
         case .all(let tokensDataStores, _):
             let isTokenFound = tokensDataStores.contains { $0.token(forContract: contract) != nil }

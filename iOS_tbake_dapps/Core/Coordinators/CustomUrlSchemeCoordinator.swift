@@ -1,10 +1,8 @@
-// Copyright © 2018 Stormbird PTE. LTD.
-
 import Foundation
 import BigInt
 import PromiseKit
 
-protocol CustomUrlSchemeCoordinatorResolver: class {
+protocol CustomUrlSchemeCoordinatorResolver: AnyObject {
     func openSendPaymentFlow(_ paymentFlow: PaymentFlow, server: RPCServer, inCoordinator coordinator: CustomUrlSchemeCoordinator)
 }
 
@@ -30,14 +28,16 @@ class CustomUrlSchemeCoordinator: Coordinator {
         case .eip681(let protocolName, let address, let functionName, let params):
             firstly {
                 Eip681Parser(protocolName: protocolName, address: address, functionName: functionName, params: params).parse()
-            }.done { result in
+            }.done { [weak self] result in
+                guard let strongSelf = self else { return }
+
                 guard let (contract: contract, optionalServer, recipient, amount) = result.parameters else { return }
                 let server = optionalServer ?? .main
-                let tokensDatastore = self.tokensDatastores[server]
+                let tokensDatastore = strongSelf.tokensDatastores[server]
                 if tokensDatastore.token(forContract: contract) != nil {
-                    self.openSendPayFlowFor(server: server, contract: contract, recipient: recipient, amount: amount)
+                    strongSelf.openSendPayFlowFor(server: server, contract: contract, recipient: recipient, amount: amount)
                 } else {
-                    fetchContractDataFor(address: contract, storage: tokensDatastore, assetDefinitionStore: self.assetDefinitionStore) { data in
+                    fetchContractDataFor(address: contract, storage: tokensDatastore, assetDefinitionStore: strongSelf.assetDefinitionStore) { data in
                         switch data {
                         case .name, .symbol, .balance, .decimals:
                             break
@@ -57,7 +57,7 @@ class CustomUrlSchemeCoordinator: Coordinator {
                                     balance: ["0"]
                             )
                             tokensDatastore.addCustom(token: token)
-                            self.openSendPayFlowFor(server: server, contract: contract, recipient: recipient, amount: amount)
+                            strongSelf.openSendPayFlowFor(server: server, contract: contract, recipient: recipient, amount: amount)
                         case .delegateTokenComplete:
                             break
                         case .failed:
@@ -70,7 +70,7 @@ class CustomUrlSchemeCoordinator: Coordinator {
         return true
     }
 
-    private func openSendPayFlowFor(server: RPCServer, contract: AlphaWallet.Address, recipient: AddressOrEnsName?, amount: String) {
+    private func openSendPayFlowFor(server: RPCServer, contract: TBakeWallet.Address, recipient: AddressOrEnsName?, amount: String) {
         let tokensDatastore = tokensDatastores[server]
         guard let tokenObject = tokensDatastore.token(forContract: contract) else { return }
         let amountConsideringDecimals: String

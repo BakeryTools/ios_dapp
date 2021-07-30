@@ -31,7 +31,7 @@ class GetIsERC721ContractCoordinator {
     }
 
     func getIsERC721Contract(
-            for contract: AlphaWallet.Address,
+            for contract: TBakeWallet.Address,
             completion: @escaping (ResultResult<Bool, AnyError>.t) -> Void
     ) {
         let server = self.server

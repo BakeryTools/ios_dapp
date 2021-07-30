@@ -6,8 +6,8 @@ class TokenImageView: UIView {
     private var subscriptionKey: Subscribable<TokenImage>.SubscribableKey?
     private let symbolLabel: UILabel = {
         let label = UILabel()
-        label.textColor = Colors.backgroundClear
-        label.font = UIFont.systemFont(ofSize: 13)
+        label.textColor = Colors.appWhite
+        label.font = Screen.TokenCard.Font.smallBold
         label.textAlignment = .center
         label.adjustsFontSizeToFitWidth = true
         return label

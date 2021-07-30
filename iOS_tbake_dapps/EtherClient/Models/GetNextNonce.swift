@@ -7,14 +7,14 @@ import PromiseKit
 
 class GetNextNonce {
     private let rpcURL: URL
-    private let wallet: AlphaWallet.Address
+    private let wallet: TBakeWallet.Address
 
-    init(server: RPCServer, wallet: AlphaWallet.Address) {
+    init(server: RPCServer, wallet: TBakeWallet.Address) {
         self.rpcURL = server.rpcURL
         self.wallet = wallet
     }
 
-    init(rpcURL: URL, wallet: AlphaWallet.Address) {
+    init(rpcURL: URL, wallet: TBakeWallet.Address) {
         self.rpcURL = rpcURL
         self.wallet = wallet
     }

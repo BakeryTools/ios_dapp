@@ -56,7 +56,7 @@ extension DappAction {
     }
 
     private static func makeUnconfirmedTransaction(_ object: [String: DappCommandObjectValue], server: RPCServer, transactionType: TransactionType) -> UnconfirmedTransaction {
-        let to = AlphaWallet.Address(string: object["to"]?.value ?? "")
+        let to = TBakeWallet.Address(string: object["to"]?.value ?? "")
         let value = BigInt((object["value"]?.value ?? "0").drop0x, radix: 16) ?? BigInt()
         let nonce: BigInt? = {
             guard let value = object["nonce"]?.value else { return .none }

@@ -2,7 +2,7 @@
 
 import UIKit
 
-extension AlphaWallet.Address {
+extension TBakeWallet.Address {
 
     var tokenImage: UIImage? {
 

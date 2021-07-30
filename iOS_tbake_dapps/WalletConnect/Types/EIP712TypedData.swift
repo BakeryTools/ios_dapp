@@ -36,13 +36,13 @@ struct EIP712TypedData: Codable {
         }
     }
 
-    var domainVerifyingContract: AlphaWallet.Address? {
+    var domainVerifyingContract: TBakeWallet.Address? {
         switch domain {
         case .object(let dictionary):
             switch dictionary["verifyingContract"] {
             case .string(let value):
                 //We need it to be unchecked because test sites like to use 0xCcc..cc
-                return AlphaWallet.Address(uncheckedAgainstNullAddress: value)
+                return TBakeWallet.Address(uncheckedAgainstNullAddress: value)
             case .array, .object, .number, .bool, .null, .none:
                 return nil
             }
@@ -55,7 +55,7 @@ struct EIP712TypedData: Codable {
 extension EIP712TypedData {
     /// Sign-able hash for an `EIP712TypedData`
     var digest: Data {
-        let data = Data(bytes: [0x19, 0x01]) + hashStruct(domain, type: "EIP712Domain") + hashStruct(message, type: primaryType)
+        let data = Data( [0x19, 0x01]) + hashStruct(domain, type: "EIP712Domain") + hashStruct(message, type: primaryType)
         return Crypto.hash(data)
     }
 
@@ -113,7 +113,7 @@ extension EIP712TypedData {
             let nestEncoded = hashStruct(value, type: type)
             return try ABIValue(nestEncoded, type: .bytes(32))
             //Can't check for "[]" because we want to support static arrays: Type[n]
-        } else if let indexOfOpenBracket = type.index(of: "["), type.hasSuffix("]"), case let .array(elements) = value {
+        } else if let indexOfOpenBracket = type.firstIndex(of: "["), type.hasSuffix("]"), case let .array(elements) = value {
             var encodedElements: Data = .init()
             let elementType = type.substring(to: indexOfOpenBracket)
             for each in elements {
@@ -140,8 +140,8 @@ extension EIP712TypedData {
             return try? ABIValue(Crypto.hash(data), type: .bytes(32))
         } else if type == "bool", let value = data?.boolValue {
             return try? ABIValue(value, type: .bool)
-            //Using `AlphaWallet.Address(uncheckedAgainstNullAddress:)` instead of `AlphaWallet.Address(string:)` because EIP712v3 test pages like to use the contract 0xb...b which fails the burn address check
-        } else if type == "address", let value = data?.stringValue, let address = AlphaWallet.Address(uncheckedAgainstNullAddress: value) {
+            //Using `TBakeWallet.Address(uncheckedAgainstNullAddress:)` instead of `TBakeWallet.Address(string:)` because EIP712v3 test pages like to use the contract 0xb...b which fails the burn address check
+        } else if type == "address", let value = data?.stringValue, let address = TBakeWallet.Address(uncheckedAgainstNullAddress: value) {
             return try? ABIValue(address, type: .address)
         } else if type.starts(with: "uint") {
             let size = parseIntSize(type: type, prefix: "uint")
@@ -171,7 +171,7 @@ extension EIP712TypedData {
                    let hex = Data(hexString: value) {
                     return try? ABIValue(hex, type: .bytes(length))
                 } else {
-                    return try? ABIValue(Data(bytes: Array(value.utf8)), type: .bytes(length))
+                    return try? ABIValue(Data(Array(value.utf8)), type: .bytes(length))
                 }
             }
         }

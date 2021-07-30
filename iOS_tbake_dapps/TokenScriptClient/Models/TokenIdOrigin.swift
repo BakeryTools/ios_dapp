@@ -24,7 +24,7 @@ struct TokenIdOrigin {
         let number: BigUInt = (`bitmask` & tokenId) >> bitShift
         switch asType {
         case .address:
-            return String(numberEncodingUtf8String: number).flatMap { AlphaWallet.Address(string: $0) }.flatMap { .address($0) }
+            return String(numberEncodingUtf8String: number).flatMap { TBakeWallet.Address(string: $0) }.flatMap { .address($0) }
         case .uint:
             return .uint(number)
         case .utf8:
@@ -51,6 +51,6 @@ struct TokenIdOrigin {
 
 extension String {
     init?(numberEncodingUtf8String number: BigUInt) {
-        self.init(data: Data(bytes: String(number, radix: 16).hexToBytes), encoding: .utf8)
+        self.init(data: Data(String(number, radix: 16).hexToBytes), encoding: .utf8)
     }
 }

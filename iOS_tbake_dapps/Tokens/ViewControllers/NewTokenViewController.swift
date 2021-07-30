@@ -5,7 +5,7 @@ import UIKit
 
 protocol NewTokenViewControllerDelegate: AnyObject {
     func didAddToken(token: ERCToken, in viewController: NewTokenViewController)
-    func didAddAddress(address: AlphaWallet.Address, in viewController: NewTokenViewController)
+    func didAddAddress(address: TBakeWallet.Address, in viewController: NewTokenViewController)
     func didTapChangeServer(in viewController: NewTokenViewController)
     func openQRCode(in controller: NewTokenViewController)
     func didClose(viewController: NewTokenViewController)
@@ -35,7 +35,7 @@ enum RPCServerOrAuto: Hashable {
 }
 
 enum NewTokenInitialState {
-    case address(AlphaWallet.Address)
+    case address(TBakeWallet.Address)
     case empty
 
     var addressStringValue: String {
@@ -131,7 +131,6 @@ class NewTokenViewController: UIViewController {
         self.changeServerButton.setTitleColor(Colors.navigationButtonTintColor, for: .normal)
         self.changeServerButton.addTarget(self, action: #selector(changeServerAction(_:)), for: .touchUpInside)
         self.navigationItem.rightBarButtonItem = .init(customView: self.changeServerButton)
-        self.navigationItem.largeTitleDisplayMode = .never
     }
     
     private func setupTextField() {
@@ -188,7 +187,7 @@ class NewTokenViewController: UIViewController {
         pasteButton.titleLabel?.font = DataEntry.Font.accessory
         pasteButton.setTitleColor(DataEntry.Color.icon, for: .normal)
         pasteButton.backgroundColor = Colors.backgroundClear
-        pasteButton.setBackgroundColor(.clear, forState: .normal)
+        pasteButton.tintColor = .none
         
         let stackView = [
             pasteButton,
@@ -314,7 +313,7 @@ class NewTokenViewController: UIViewController {
         //TODO looks wrong to mention ERC875TokenBalance specifically
         var balance: [String] = viewModel.ERC875TokenBalance
 
-        guard let address = AlphaWallet.Address(string: contract) else {
+        guard let address = TBakeWallet.Address(string: contract) else {
             self.contractAddressErrorLbl.isHidden = false
             self.contractAddressErrorLbl.text = Errors.invalidAddress.errorDescription
             return
@@ -344,7 +343,7 @@ class NewTokenViewController: UIViewController {
     private func updateContractValue(value: String) {
         self.tokenType = nil
         self.contractAddressTextField.text = value
-        guard let address = AlphaWallet.Address(string: value) else { return }
+        guard let address = TBakeWallet.Address(string: value) else { return }
         self.delegate?.didAddAddress(address: address, in: self)
     }
 
@@ -357,7 +356,7 @@ class NewTokenViewController: UIViewController {
 
     func redetectToken() {
         let contract = self.contractAddressTextField.text?.trimmed ?? ""
-        if let contract = AlphaWallet.Address(string: contract) {
+        if let contract = TBakeWallet.Address(string: contract) {
             updateContractValue(value: contract.eip55String)
         }
     }

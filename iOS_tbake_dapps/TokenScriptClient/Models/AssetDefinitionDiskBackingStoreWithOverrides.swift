@@ -19,7 +19,7 @@ class AssetDefinitionDiskBackingStoreWithOverrides: AssetDefinitionBackingStore 
         return (official: official, overrides: overrides, all: official + overrides)
     }
 
-    var contractsWithTokenScriptFileFromOfficialRepo: [AlphaWallet.Address] {
+    var contractsWithTokenScriptFileFromOfficialRepo: [TBakeWallet.Address] {
         return officialStore.contractsWithTokenScriptFileFromOfficialRepo
     }
 
@@ -38,7 +38,7 @@ class AssetDefinitionDiskBackingStoreWithOverrides: AssetDefinitionBackingStore 
         self.overridesStore.delegate = self
     }
 
-    subscript(contract: AlphaWallet.Address) -> String? {
+    subscript(contract: TBakeWallet.Address) -> String? {
         get {
             return overridesStore[contract] ?? officialStore[contract]
         }
@@ -47,14 +47,14 @@ class AssetDefinitionDiskBackingStoreWithOverrides: AssetDefinitionBackingStore 
         }
     }
 
-    func isOfficial(contract: AlphaWallet.Address) -> Bool {
+    func isOfficial(contract: TBakeWallet.Address) -> Bool {
         if overridesStore[contract] != nil {
             return false
         }
         return officialStore.isOfficial(contract: contract)
     }
 
-    func isCanonicalized(contract: AlphaWallet.Address) -> Bool {
+    func isCanonicalized(contract: TBakeWallet.Address) -> Bool {
         if overridesStore[contract] != nil {
             return overridesStore.isCanonicalized(contract: contract)
         } else {
@@ -62,7 +62,7 @@ class AssetDefinitionDiskBackingStoreWithOverrides: AssetDefinitionBackingStore 
         }
     }
 
-    func hasConflictingFile(forContract contract: AlphaWallet.Address) -> Bool {
+    func hasConflictingFile(forContract contract: TBakeWallet.Address) -> Bool {
         let official = officialStore.hasConflictingFile(forContract: contract)
         let overrides = overridesStore.hasConflictingFile(forContract: contract)
         if overrides {
@@ -72,7 +72,7 @@ class AssetDefinitionDiskBackingStoreWithOverrides: AssetDefinitionBackingStore 
         }
     }
 
-    func hasOutdatedTokenScript(forContract contract: AlphaWallet.Address) -> Bool {
+    func hasOutdatedTokenScript(forContract contract: TBakeWallet.Address) -> Bool {
         if overridesStore[contract] != nil {
             return overridesStore.hasOutdatedTokenScript(forContract: contract)
         } else {
@@ -80,13 +80,13 @@ class AssetDefinitionDiskBackingStoreWithOverrides: AssetDefinitionBackingStore 
         }
     }
 
-    func lastModifiedDateOfCachedAssetDefinitionFile(forContract contract: AlphaWallet.Address) -> Date? {
+    func lastModifiedDateOfCachedAssetDefinitionFile(forContract contract: TBakeWallet.Address) -> Date? {
         //Even with an override, we just want to fetch the latest official version. Doesn't imply we'll use the official version
         return officialStore.lastModifiedDateOfCachedAssetDefinitionFile(forContract: contract)
     }
 
-    func forEachContractWithXML(_ body: (AlphaWallet.Address) -> Void) {
-        var overriddenContracts = [AlphaWallet.Address]()
+    func forEachContractWithXML(_ body: (TBakeWallet.Address) -> Void) {
+        var overriddenContracts = [TBakeWallet.Address]()
         overridesStore.forEachContractWithXML { contract in
             overriddenContracts.append(contract)
             body(contract)
@@ -103,7 +103,7 @@ class AssetDefinitionDiskBackingStoreWithOverrides: AssetDefinitionBackingStore 
     }
 
     ///The implementation assumes that we never verifies the signature files in the official store when there's an override available
-    func writeCacheTokenScriptSignatureVerificationType(_ verificationType: TokenScriptSignatureVerificationType, forContract contract: AlphaWallet.Address, forXmlString xmlString: String) {
+    func writeCacheTokenScriptSignatureVerificationType(_ verificationType: TokenScriptSignatureVerificationType, forContract contract: TBakeWallet.Address, forXmlString xmlString: String) {
         if let xml = overridesStore[contract], xml == xmlString {
             overridesStore.writeCacheTokenScriptSignatureVerificationType(verificationType, forContract: contract, forXmlString: xmlString)
             return
@@ -114,13 +114,13 @@ class AssetDefinitionDiskBackingStoreWithOverrides: AssetDefinitionBackingStore 
         }
     }
 
-    func deleteFileDownloadedFromOfficialRepoFor(contract: AlphaWallet.Address) {
+    func deleteFileDownloadedFromOfficialRepoFor(contract: TBakeWallet.Address) {
         officialStore.deleteFileDownloadedFromOfficialRepoFor(contract: contract)
     }
 }
 
 extension AssetDefinitionDiskBackingStoreWithOverrides: AssetDefinitionBackingStoreDelegate {
-    func invalidateAssetDefinition(forContract contract: AlphaWallet.Address) {
+    func invalidateAssetDefinition(forContract contract: TBakeWallet.Address) {
         //do nothing
     }
 
