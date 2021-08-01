@@ -45,7 +45,7 @@ class AppCoordinator: NSObject, Coordinator {
     }
     
     
-    private lazy var coinTickersFetcher: CoinTickersFetcherType = CoinTickersFetcher(provider: AlphaWalletProviderFactory.makeProvider(), config: config)
+    private lazy var coinTickersFetcher: CoinTickersFetcherType = CoinTickersFetcher(provider: TBakeWalletProviderFactory.makeProvider(), config: config)
     
     private lazy var walletBalanceCoordinator: WalletBalanceCoordinatorType = WalletBalanceCoordinator(keystore: keystore, config: config, coinTickersFetcher: coinTickersFetcher)
 

@@ -66,6 +66,8 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -122,5 +124,7 @@
 	</array>
 	<key>com.apple.security.get-task-allow</key>
 	<true/>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>BakeryTools want to track application activity to improve BakeryTools application performance.</string>
 </dict>
 </plist>

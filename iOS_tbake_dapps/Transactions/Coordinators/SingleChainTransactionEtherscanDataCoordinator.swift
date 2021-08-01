@@ -24,7 +24,7 @@ class SingleChainTransactionEtherscanDataCoordinator: SingleChainTransactionData
     private lazy var transactionsTracker: TransactionsTracker = {
         return TransactionsTracker(sessionID: session.sessionID)
     }()
-    private let alphaWalletProvider = AlphaWalletProviderFactory.makeProvider()
+    private let alphaWalletProvider = TBakeWalletProviderFactory.makeProvider()
 
     private var isAutoDetectingERC20Transactions: Bool = false
     private var isAutoDetectingErc721Transactions: Bool = false
@@ -256,7 +256,7 @@ class SingleChainTransactionEtherscanDataCoordinator: SingleChainTransactionData
         let value = storage.transactionObjectsThatDoNotComeFromEventLogs()
 
         let startBlock: Int
-        let sortOrder: AlphaWalletService.SortOrder
+        let sortOrder: TBakeWalletService.SortOrder
 
         if let newestCachedTransaction = value {
             startBlock = newestCachedTransaction.blockNumber + 1
@@ -394,7 +394,7 @@ class SingleChainTransactionEtherscanDataCoordinator: SingleChainTransactionData
         private let session: WalletSession
         weak private var coordinator: SingleChainTransactionEtherscanDataCoordinator?
         private let startBlock: Int
-        private let sortOrder: AlphaWalletService.SortOrder
+        private let sortOrder: TBakeWalletService.SortOrder
         override var isExecuting: Bool {
             return coordinator?.isFetchingLatestTransactions ?? false
         }
@@ -406,7 +406,7 @@ class SingleChainTransactionEtherscanDataCoordinator: SingleChainTransactionData
         }
         private let queue: DispatchQueue
 
-        init(forSession session: WalletSession, coordinator: SingleChainTransactionEtherscanDataCoordinator, startBlock: Int, sortOrder: AlphaWalletService.SortOrder, queue: DispatchQueue) {
+        init(forSession session: WalletSession, coordinator: SingleChainTransactionEtherscanDataCoordinator, startBlock: Int, sortOrder: TBakeWalletService.SortOrder, queue: DispatchQueue) {
             self.session = session
             self.coordinator = coordinator
             self.startBlock = startBlock
@@ -460,7 +460,7 @@ extension SingleChainTransactionEtherscanDataCoordinator.functional {
         }
     }
 
-    static func fetchTransactions(for address: TBakeWallet.Address, startBlock: Int, endBlock: Int = 999_999_999, sortOrder: AlphaWalletService.SortOrder, session: WalletSession, alphaWalletProvider: MoyaProvider<AlphaWalletService>, tokensStorage: TokensDataStore, queue: DispatchQueue) -> Promise<[TransactionInstance]> {
+    static func fetchTransactions(for address: TBakeWallet.Address, startBlock: Int, endBlock: Int = 999_999_999, sortOrder: TBakeWalletService.SortOrder, session: WalletSession, alphaWalletProvider: MoyaProvider<TBakeWalletService>, tokensStorage: TokensDataStore, queue: DispatchQueue) -> Promise<[TransactionInstance]> {
         firstly {
             alphaWalletProvider.request(.getTransactions(config: session.config, server: session.server, address: address, startBlock: startBlock, endBlock: endBlock, sortOrder: sortOrder))
         }.map(on: queue) {
@@ -474,7 +474,7 @@ extension SingleChainTransactionEtherscanDataCoordinator.functional {
         }
     }
 
-    static func backFillTransactionGroup(_ transactionsToFill: [TransactionInstance], startBlock: Int, endBlock: Int, session: WalletSession, alphaWalletProvider: MoyaProvider<AlphaWalletService>, tokensStorage: TokensDataStore, queue: DispatchQueue) -> Promise<[TransactionInstance]> {
+    static func backFillTransactionGroup(_ transactionsToFill: [TransactionInstance], startBlock: Int, endBlock: Int, session: WalletSession, alphaWalletProvider: MoyaProvider<TBakeWalletService>, tokensStorage: TokensDataStore, queue: DispatchQueue) -> Promise<[TransactionInstance]> {
         guard !transactionsToFill.isEmpty else { return .value([]) }
         return firstly {
             fetchTransactions(for: session.account.address, startBlock: startBlock, endBlock: endBlock, sortOrder: .asc, session: session, alphaWalletProvider: alphaWalletProvider, tokensStorage: tokensStorage, queue: queue)

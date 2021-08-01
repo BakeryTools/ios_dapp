@@ -87,8 +87,8 @@ class SingleChainTokenCoordinator: Coordinator {
         //Since this is called at launch, we don't want it to block launching
         DispatchQueue.global().async {
             DispatchQueue.main.async { [weak self] in
-                self?.autoDetectTransactedTokens()
-                self?.autoDetectPartnerTokens()
+                guard let self = self else { return }
+                self.autoDetectTransactedTokens()
             }
         }
     }
@@ -159,32 +159,6 @@ class SingleChainTokenCoordinator: Coordinator {
                 }
             }
         }.asVoid()
-    }
-
-    private func autoDetectPartnerTokens() {
-        guard !session.config.isAutoFetchingDisabled else { return }
-        switch server {
-        case .main:
-            autoDetectMainnetPartnerTokens()
-        case .xDai:
-            autoDetectXDaiPartnerTokens()
-        case .rinkeby:
-            autoDetectRinkebyPartnerTokens()
-        case .kovan, .ropsten, .poa, .sokol, .classic, .callisto, .goerli, .artis_sigma1, .binance_smart_chain, .binance_smart_chain_testnet, .artis_tau1, .custom, .heco_testnet, .heco, .fantom, .fantom_testnet, .avalanche, .avalanche_testnet, .polygon, .mumbai_testnet, .optimistic, .optimisticKovan:
-            break
-        }
-    }
-
-    private func autoDetectMainnetPartnerTokens() {
-        autoDetectTokens(withContracts: Constants.partnerContracts)
-    }
-
-    private func autoDetectXDaiPartnerTokens() {
-        autoDetectTokens(withContracts: Constants.ethDenverXDaiPartnerContracts)
-    }
-
-    private func autoDetectRinkebyPartnerTokens() {
-        autoDetectTokens(withContracts: Constants.rinkebyPartnerContracts)
     }
 
     private func autoDetectTokens(withContracts contractsToDetect: [(name: String, contract: TBakeWallet.Address)]) {

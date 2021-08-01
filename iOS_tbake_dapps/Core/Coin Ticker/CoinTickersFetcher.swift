@@ -55,20 +55,20 @@ class CoinTickersFetcher: CoinTickersFetcherType {
     }
     private static let queue: DispatchQueue = DispatchQueue(label: "com.CoinTickersFetcher.updateQueue")
 
-    private let provider: MoyaProvider<AlphaWalletService>
+    private let provider: MoyaProvider<TBakeWalletService>
     private let config: Config
     private let cache: CoinTickersFetcherCacheType
 
     private var historyCache: [CoinTicker: [ChartHistoryPeriod: (history: ChartHistory, fetchDate: Date)]] = [:]
 
-    init(provider: MoyaProvider<AlphaWalletService>, config: Config, cache: CoinTickersFetcherCacheType = CoinTickersFetcherFileCache()) {
+    init(provider: MoyaProvider<TBakeWalletService>, config: Config, cache: CoinTickersFetcherCacheType = CoinTickersFetcherFileCache()) {
         self.provider = provider
         self.config = config
         self.cache = cache
     }
 
     //Important in implementation to not cache the returned promise (which is used to further fetch prices). We only want to cache the promise/request for fetching supported tickers
-    private static func fetchSupportedTickers(config: Config, provider: MoyaProvider<AlphaWalletService>, shouldRetry: Bool = true) -> Promise<[Ticker]> {
+    private static func fetchSupportedTickers(config: Config, provider: MoyaProvider<TBakeWalletService>, shouldRetry: Bool = true) -> Promise<[Ticker]> {
         if let promise = fetchSupportedTokensPromise { return promise }
 
         let promise: Promise<[Ticker]> = firstly {

@@ -99,6 +99,11 @@
 		29363FD726A13D3800F27297 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29363FCD26A13D3600F27297 /* Coordinator.swift */; };
 		29363FD826A13D3800F27297 /* EtherNumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29363FCE26A13D3800F27297 /* EtherNumberFormatter.swift */; };
 		2936E02826A9BE1D00E3F912 /* TokenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2936E02726A9BE1D00E3F912 /* TokenViewController.xib */; };
+		29408E8E26B669E400F8D1EF /* TBakeWalletAddress+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29408E8D26B669E300F8D1EF /* TBakeWalletAddress+UI.swift */; };
+		29408E9026B66A2800F8D1EF /* TBakeWalletAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29408E8F26B66A2800F8D1EF /* TBakeWalletAddress.swift */; };
+		29408E9226B66A6100F8D1EF /* TBakeWalletAddressExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29408E9126B66A6100F8D1EF /* TBakeWalletAddressExtension.swift */; };
+		29408E9426B66AB100F8D1EF /* TBakeWalletService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29408E9326B66AB100F8D1EF /* TBakeWalletService.swift */; };
+		29408E9626B66B2900F8D1EF /* TBakeWalletProviderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29408E9526B66B2900F8D1EF /* TBakeWalletProviderFactory.swift */; };
 		294302CC265671A900A297B4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294302CB265671A900A297B4 /* AppDelegate.swift */; };
 		294302CE265671A900A297B4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 294302CD265671A900A297B4 /* SceneDelegate.swift */; };
 		294302D5265671AC00A297B4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 294302D4265671AC00A297B4 /* Assets.xcassets */; };
@@ -258,9 +263,7 @@
 		29F64BF326A1430800A24C53 /* RateLimiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64BEB26A1430000A24C53 /* RateLimiter.swift */; };
 		29F64BF426A1430800A24C53 /* CanOpenContractWebPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64BEC26A1430200A24C53 /* CanOpenContractWebPage.swift */; };
 		29F64BF526A1430800A24C53 /* TrustRealmConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64BED26A1430300A24C53 /* TrustRealmConfiguration.swift */; };
-		29F64BF626A1430800A24C53 /* AlphaWalletAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64BEE26A1430500A24C53 /* AlphaWalletAddress.swift */; };
 		29F64BF726A1430800A24C53 /* ServerDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64BEF26A1430700A24C53 /* ServerDictionary.swift */; };
-		29F64BF826A1430800A24C53 /* AlphaWalletAddressExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64BF026A1430800A24C53 /* AlphaWalletAddressExtension.swift */; };
 		29F64BFA26A1433F00A24C53 /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64BF926A1433F00A24C53 /* CurrencyFormatter.swift */; };
 		29F64BFF26A1438800A24C53 /* SwapTokenService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64BFE26A1438800A24C53 /* SwapTokenService.swift */; };
 		29F64C0226A143AB00A24C53 /* Uniswap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64C0026A143AA00A24C53 /* Uniswap.swift */; };
@@ -573,7 +576,6 @@
 		29F64EBD26A1653700A24C53 /* BalanceCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64EB526A1652A00A24C53 /* BalanceCoordinator.swift */; };
 		29F64EBE26A1653700A24C53 /* TokensCardCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64EB626A1652C00A24C53 /* TokensCardCoordinator.swift */; };
 		29F64EBF26A1653700A24C53 /* TransactionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64EB726A1652E00A24C53 /* TransactionCoordinator.swift */; };
-		29F64EC026A1653700A24C53 /* AlphaWalletProviderFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64EB826A1653000A24C53 /* AlphaWalletProviderFactory.swift */; };
 		29F64EC126A1653700A24C53 /* TransactionDataCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64EB926A1653300A24C53 /* TransactionDataCoordinator.swift */; };
 		29F64EC226A1653700A24C53 /* SingleChainTransactionDataCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64EBA26A1653600A24C53 /* SingleChainTransactionDataCoordinator.swift */; };
 		29F64EC326A1653700A24C53 /* SingleChainTransactionEtherscanDataCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64EBB26A1653700A24C53 /* SingleChainTransactionEtherscanDataCoordinator.swift */; };
@@ -627,7 +629,6 @@
 		29F64F2F26A1684300A24C53 /* RLP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64F2426A1684100A24C53 /* RLP.swift */; };
 		29F64F3026A1684300A24C53 /* TransactionSigning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64F2526A1684300A24C53 /* TransactionSigning.swift */; };
 		29F64F3226A1686300A24C53 /* GetNextNonce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64F3126A1686300A24C53 /* GetNextNonce.swift */; };
-		29F64F3426A1689500A24C53 /* AlphaWalletService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64F3326A1689500A24C53 /* AlphaWalletService.swift */; };
 		29F64F3A26A168BF00A24C53 /* LocalizedOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64F3626A168BA00A24C53 /* LocalizedOperation.swift */; };
 		29F64F3B26A168BF00A24C53 /* OperationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64F3726A168BB00A24C53 /* OperationType.swift */; };
 		29F64F3C26A168BF00A24C53 /* RawTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64F3826A168BD00A24C53 /* RawTransaction.swift */; };
@@ -660,7 +661,6 @@
 		29F64F8526A16E6800A24C53 /* FloatLabelTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64F6C26A16E5100A24C53 /* FloatLabelTextField.swift */; };
 		29F64F8626A16E6800A24C53 /* Scrollable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64F6D26A16E5300A24C53 /* Scrollable.swift */; };
 		29F64F8726A16E6800A24C53 /* ButtonsBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64F6E26A16E5400A24C53 /* ButtonsBar.swift */; };
-		29F64F8826A16E6800A24C53 /* AlphaWalletAddress+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64F6F26A16E5600A24C53 /* AlphaWalletAddress+UI.swift */; };
 		29F64F8926A16E6800A24C53 /* RoundedBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64F7026A16E5800A24C53 /* RoundedBackground.swift */; };
 		29F64F8A26A16E6800A24C53 /* NumberStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64F7126A16E5900A24C53 /* NumberStepper.swift */; };
 		29F64F8B26A16E6800A24C53 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F64F7226A16E5B00A24C53 /* ErrorView.swift */; };
@@ -898,6 +898,11 @@
 		29363FCD26A13D3600F27297 /* Coordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		29363FCE26A13D3800F27297 /* EtherNumberFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EtherNumberFormatter.swift; sourceTree = "<group>"; };
 		2936E02726A9BE1D00E3F912 /* TokenViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokenViewController.xib; sourceTree = "<group>"; };
+		29408E8D26B669E300F8D1EF /* TBakeWalletAddress+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TBakeWalletAddress+UI.swift"; sourceTree = "<group>"; };
+		29408E8F26B66A2800F8D1EF /* TBakeWalletAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBakeWalletAddress.swift; sourceTree = "<group>"; };
+		29408E9126B66A6100F8D1EF /* TBakeWalletAddressExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBakeWalletAddressExtension.swift; sourceTree = "<group>"; };
+		29408E9326B66AB100F8D1EF /* TBakeWalletService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBakeWalletService.swift; sourceTree = "<group>"; };
+		29408E9526B66B2900F8D1EF /* TBakeWalletProviderFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBakeWalletProviderFactory.swift; sourceTree = "<group>"; };
 		294302C8265671A900A297B4 /* iOS_tbake_dapps.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOS_tbake_dapps.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		294302CB265671A900A297B4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		294302CD265671A900A297B4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -1064,9 +1069,7 @@
 		29F64BEB26A1430000A24C53 /* RateLimiter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RateLimiter.swift; sourceTree = "<group>"; };
 		29F64BEC26A1430200A24C53 /* CanOpenContractWebPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanOpenContractWebPage.swift; sourceTree = "<group>"; };
 		29F64BED26A1430300A24C53 /* TrustRealmConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrustRealmConfiguration.swift; sourceTree = "<group>"; };
-		29F64BEE26A1430500A24C53 /* AlphaWalletAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlphaWalletAddress.swift; sourceTree = "<group>"; };
 		29F64BEF26A1430700A24C53 /* ServerDictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerDictionary.swift; sourceTree = "<group>"; };
-		29F64BF026A1430800A24C53 /* AlphaWalletAddressExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlphaWalletAddressExtension.swift; sourceTree = "<group>"; };
 		29F64BF926A1433F00A24C53 /* CurrencyFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyFormatter.swift; sourceTree = "<group>"; };
 		29F64BFE26A1438800A24C53 /* SwapTokenService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwapTokenService.swift; sourceTree = "<group>"; };
 		29F64C0026A143AA00A24C53 /* Uniswap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Uniswap.swift; sourceTree = "<group>"; };
@@ -1379,7 +1382,6 @@
 		29F64EB526A1652A00A24C53 /* BalanceCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BalanceCoordinator.swift; sourceTree = "<group>"; };
 		29F64EB626A1652C00A24C53 /* TokensCardCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokensCardCoordinator.swift; sourceTree = "<group>"; };
 		29F64EB726A1652E00A24C53 /* TransactionCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionCoordinator.swift; sourceTree = "<group>"; };
-		29F64EB826A1653000A24C53 /* AlphaWalletProviderFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlphaWalletProviderFactory.swift; sourceTree = "<group>"; };
 		29F64EB926A1653300A24C53 /* TransactionDataCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionDataCoordinator.swift; sourceTree = "<group>"; };
 		29F64EBA26A1653600A24C53 /* SingleChainTransactionDataCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleChainTransactionDataCoordinator.swift; sourceTree = "<group>"; };
 		29F64EBB26A1653700A24C53 /* SingleChainTransactionEtherscanDataCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleChainTransactionEtherscanDataCoordinator.swift; sourceTree = "<group>"; };
@@ -1433,7 +1435,6 @@
 		29F64F2426A1684100A24C53 /* RLP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RLP.swift; sourceTree = "<group>"; };
 		29F64F2526A1684300A24C53 /* TransactionSigning.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionSigning.swift; sourceTree = "<group>"; };
 		29F64F3126A1686300A24C53 /* GetNextNonce.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetNextNonce.swift; sourceTree = "<group>"; };
-		29F64F3326A1689500A24C53 /* AlphaWalletService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlphaWalletService.swift; sourceTree = "<group>"; };
 		29F64F3626A168BA00A24C53 /* LocalizedOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalizedOperation.swift; sourceTree = "<group>"; };
 		29F64F3726A168BB00A24C53 /* OperationType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperationType.swift; sourceTree = "<group>"; };
 		29F64F3826A168BD00A24C53 /* RawTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawTransaction.swift; sourceTree = "<group>"; };
@@ -1466,7 +1467,6 @@
 		29F64F6C26A16E5100A24C53 /* FloatLabelTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatLabelTextField.swift; sourceTree = "<group>"; };
 		29F64F6D26A16E5300A24C53 /* Scrollable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scrollable.swift; sourceTree = "<group>"; };
 		29F64F6E26A16E5400A24C53 /* ButtonsBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonsBar.swift; sourceTree = "<group>"; };
-		29F64F6F26A16E5600A24C53 /* AlphaWalletAddress+UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AlphaWalletAddress+UI.swift"; sourceTree = "<group>"; };
 		29F64F7026A16E5800A24C53 /* RoundedBackground.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedBackground.swift; sourceTree = "<group>"; };
 		29F64F7126A16E5900A24C53 /* NumberStepper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumberStepper.swift; sourceTree = "<group>"; };
 		29F64F7226A16E5B00A24C53 /* ErrorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
@@ -2574,8 +2574,8 @@
 		29F64BA426A1405B00A24C53 /* Types */ = {
 			isa = PBXGroup;
 			children = (
-				29F64BEE26A1430500A24C53 /* AlphaWalletAddress.swift */,
-				29F64BF026A1430800A24C53 /* AlphaWalletAddressExtension.swift */,
+				29408E8F26B66A2800F8D1EF /* TBakeWalletAddress.swift */,
+				29408E9126B66A6100F8D1EF /* TBakeWalletAddressExtension.swift */,
 				29F64BEA26A142FF00A24C53 /* AppTracker.swift */,
 				29F64BEC26A1430200A24C53 /* CanOpenContractWebPage.swift */,
 				29F64BEB26A1430000A24C53 /* RateLimiter.swift */,
@@ -3213,7 +3213,7 @@
 		29F64E6126A1647100A24C53 /* Coordinators */ = {
 			isa = PBXGroup;
 			children = (
-				29F64EB826A1653000A24C53 /* AlphaWalletProviderFactory.swift */,
+				29408E9526B66B2900F8D1EF /* TBakeWalletProviderFactory.swift */,
 				29F64EB526A1652A00A24C53 /* BalanceCoordinator.swift */,
 				29F64EB426A1652800A24C53 /* ReplaceTransactionCoordinator.swift */,
 				29F64EBA26A1653600A24C53 /* SingleChainTransactionDataCoordinator.swift */,
@@ -3419,7 +3419,7 @@
 			isa = PBXGroup;
 			children = (
 				29F64F3526A1689C00A24C53 /* Models */,
-				29F64F3326A1689500A24C53 /* AlphaWalletService.swift */,
+				29408E9326B66AB100F8D1EF /* TBakeWalletService.swift */,
 			);
 			path = TrustClient;
 			sourceTree = "<group>";
@@ -3475,7 +3475,7 @@
 			isa = PBXGroup;
 			children = (
 				29F64F7326A16E5D00A24C53 /* AddressTextField.swift */,
-				29F64F6F26A16E5600A24C53 /* AlphaWalletAddress+UI.swift */,
+				29408E8D26B669E300F8D1EF /* TBakeWalletAddress+UI.swift */,
 				29F64F7426A16E5E00A24C53 /* BoxView.swift */,
 				29F64F6226A16E4200A24C53 /* Button.swift */,
 				29F64F6E26A16E5400A24C53 /* ButtonsBar.swift */,
@@ -3897,7 +3897,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$SRCROOT/iOS_tbake_dapps/R.generated.swift",
+				$SRCROOT/iOS_tbake_dapps/R.generated.swift,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -4176,7 +4176,6 @@
 				29F64EC326A1653700A24C53 /* SingleChainTransactionEtherscanDataCoordinator.swift in Sources */,
 				29F64CFF26A15DD200A24C53 /* CurrencyRate.swift in Sources */,
 				29F64F2C26A1684300A24C53 /* EtherServiceRequest.swift in Sources */,
-				29F64F3426A1689500A24C53 /* AlphaWalletService.swift in Sources */,
 				297642B026A1804B00F60C6B /* WalletConnectSessionCellViewModel.swift in Sources */,
 				29F64E4A26A1644000A24C53 /* TokenCollection.swift in Sources */,
 				29F6504126A1703F00A24C53 /* TokenScriptSelection.swift in Sources */,
@@ -4391,7 +4390,9 @@
 				29F64C9926A14B2B00A24C53 /* SignatureConfirmationConfirmationViewModel.swift in Sources */,
 				29F6502B26A1702100A24C53 /* EventSourceCoordinatorForActivities.swift in Sources */,
 				29F64E7526A1648100A24C53 /* GetNativeCryptoCurrencyBalanceCoordinator.swift in Sources */,
+				29408E9626B66B2900F8D1EF /* TBakeWalletProviderFactory.swift in Sources */,
 				29F6504626A1703F00A24C53 /* AssetAttributesCache.swift in Sources */,
+				29408E9226B66A6100F8D1EF /* TBakeWalletAddressExtension.swift in Sources */,
 				29F64E1F26A163F400A24C53 /* SegmentedControlViewModel.swift in Sources */,
 				29F64EFD26A1663A00A24C53 /* ShowSeedPhraseIntroductionViewModel.swift in Sources */,
 				29F64BB426A140DA00A24C53 /* ImageCache.swift in Sources */,
@@ -4401,6 +4402,7 @@
 				29F64C9126A14B2B00A24C53 /* ConfirmationHeaderViewModel.swift in Sources */,
 				29F64E2226A163F400A24C53 /* TokenInstanceViewModel.swift in Sources */,
 				29F64FAA26A16EB900A24C53 /* TextView.swift in Sources */,
+				29408E8E26B669E400F8D1EF /* TBakeWalletAddress+UI.swift in Sources */,
 				29F64EA226A164E100A24C53 /* TransactionsViewModel.swift in Sources */,
 				29363FA926A13C8600F27297 /* Favicon.swift in Sources */,
 				29F64BC026A1412400A24C53 /* BlockieImageView.swift in Sources */,
@@ -4453,7 +4455,6 @@
 				29F64BF726A1430800A24C53 /* ServerDictionary.swift in Sources */,
 				29F64F8726A16E6800A24C53 /* ButtonsBar.swift in Sources */,
 				297642C326A1815400F60C6B /* WalletConnectSessionCoordinator.swift in Sources */,
-				29F64F8826A16E6800A24C53 /* AlphaWalletAddress+UI.swift in Sources */,
 				29363F3826A133B300F27297 /* LockEnterPasscodeViewController.swift in Sources */,
 				29F64C9326A14B2B00A24C53 /* SignatureConfirmationDetailsViewModel.swift in Sources */,
 				29F64F5026A168E900A24C53 /* SendRawTransactionRequest.swift in Sources */,
@@ -4539,6 +4540,7 @@
 				29363F7526A13BFB00F27297 /* DappsHomeViewControllerViewModel.swift in Sources */,
 				29F64CDF26A15D7B00A24C53 /* SettingTableViewCell.swift in Sources */,
 				29F64FDA26A16F4E00A24C53 /* UIGestureRecognizer+Closure.swift in Sources */,
+				29408E9026B66A2800F8D1EF /* TBakeWalletAddress.swift in Sources */,
 				29F64CC526A14BB100A24C53 /* SendTransactionCoordinator.swift in Sources */,
 				29F64E1226A163F400A24C53 /* TokensCardViewControllerHeaderViewModel.swift in Sources */,
 				29363F8E26A13C6B00F27297 /* DappViewCell.swift in Sources */,
@@ -4573,7 +4575,6 @@
 				29F64D2526A15F0400A24C53 /* EnabledServersCoordinator.swift in Sources */,
 				29F6506526A1703F00A24C53 /* TokenInterfaceType.swift in Sources */,
 				29363FD826A13D3800F27297 /* EtherNumberFormatter.swift in Sources */,
-				29F64BF626A1430800A24C53 /* AlphaWalletAddress.swift in Sources */,
 				29F64F0726A1663A00A24C53 /* EnterPasswordViewModel.swift in Sources */,
 				29363FB626A13CBB00F27297 /* DappsAutoCompletionViewController.swift in Sources */,
 				29F64F8026A16E6800A24C53 /* FloatLabelCell.swift in Sources */,
@@ -4634,7 +4635,6 @@
 				29F64FD126A16F4E00A24C53 /* Optional.swift in Sources */,
 				29F6500226A16F9E00A24C53 /* GetERC721BalanceEncode.swift in Sources */,
 				29F5F93B265A5CD50038B7C0 /* Utilities.swift in Sources */,
-				29F64BF826A1430800A24C53 /* AlphaWalletAddressExtension.swift in Sources */,
 				297642E626A182FA00F60C6B /* DefaultActivityView.swift in Sources */,
 				29F64E4126A1644000A24C53 /* ChartHistory.swift in Sources */,
 				29F64CB326A14B6200A24C53 /* UnconfirmedTransaction.swift in Sources */,
@@ -4649,6 +4649,7 @@
 				29F64F3226A1686300A24C53 /* GetNextNonce.swift in Sources */,
 				297642F326A1833000F60C6B /* GroupActivityCellViewModel.swift in Sources */,
 				297642DA26A182A900F60C6B /* PromptBackupWalletViewViewModel.swift in Sources */,
+				29408E9426B66AB100F8D1EF /* TBakeWalletService.swift in Sources */,
 				29F64F4826A168E900A24C53 /* BlockNumber.swift in Sources */,
 				29F64DEA26A1639A00A24C53 /* TokenInstanceViewController.swift in Sources */,
 				29F64E4826A1644000A24C53 /* DeletedContract.swift in Sources */,
@@ -4730,7 +4731,6 @@
 				29F64CB226A14B6200A24C53 /* ConfigureTransactionError.swift in Sources */,
 				29F64E4926A1644000A24C53 /* TokenInstanceAction.swift in Sources */,
 				297642AE26A1804B00F60C6B /* WalletConnectToSessionViewModel.swift in Sources */,
-				29F64EC026A1653700A24C53 /* AlphaWalletProviderFactory.swift in Sources */,
 				29F6503F26A1703F00A24C53 /* AssetAttribute.swift in Sources */,
 				29363F7426A13BFB00F27297 /* BrowserHistoryCellViewModel.swift in Sources */,
 				29F64EA726A164E200A24C53 /* TransactionViewController.swift in Sources */,
@@ -4953,8 +4953,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = iOS_tbake_dapps/iOS_tbake_dapps.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1001;
+				CURRENT_PROJECT_VERSION = 1002;
 				DEVELOPMENT_TEAM = 7KA6NPATXZ;
 				INFOPLIST_FILE = iOS_tbake_dapps/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -4964,6 +4965,7 @@
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bakerytools.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -4976,8 +4978,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = iOS_tbake_dapps/iOS_tbake_dapps.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1001;
+				CURRENT_PROJECT_VERSION = 1002;
 				DEVELOPMENT_TEAM = 7KA6NPATXZ;
 				INFOPLIST_FILE = iOS_tbake_dapps/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -4987,6 +4990,7 @@
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bakerytools.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

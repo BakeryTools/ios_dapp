@@ -294,14 +294,6 @@ func compositeTokenName(forContract contract: TBakeWallet.Address, fromContractN
     let compositeName: String
     //TODO improve and remove the check for "N/A". Maybe a constant
     //Special case for FIFA tickets, otherwise, we just show the name from the XML
-    if contract.isFifaTicketContract {
-        if contractName.isEmpty {
-            compositeName = localizedNameFromAssetDefinition
-        } else {
-            compositeName = "\(contractName) \(localizedNameFromAssetDefinition)"
-        }
-    } else {
-        compositeName = localizedNameFromAssetDefinition
-    }
+    compositeName = localizedNameFromAssetDefinition
     return compositeName
 }

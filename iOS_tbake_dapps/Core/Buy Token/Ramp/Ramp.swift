@@ -59,7 +59,7 @@ struct Ramp: TokenActionsProvider, BuyTokenURLProviderType {
 
     func fetchSupportedTokens() {
         let config = Config()
-        let provider = AlphaWalletProviderFactory.makeProvider()
+        let provider = TBakeWalletProviderFactory.makeProvider()
 
         provider.request(.rampAssets(config: config), callbackQueue: queue).map(on: queue, { response -> RampAssetsResponse in
             try JSONDecoder().decode(RampAssetsResponse.self, from: response.data)
@@ -68,7 +68,7 @@ struct Ramp: TokenActionsProvider, BuyTokenURLProviderType {
         }).done(on: queue, { response in
             Self.assets = response
         }).catch(on: queue, { error in
-            let service = AlphaWalletService.rampAssets(config: config)
+            let service = TBakeWalletService.rampAssets(config: config)
             let url = service.baseURL.appendingPathComponent(service.path)
             RemoteLogger.instance.logRpcOrOtherWebError("Ramp error | \(error)", url: url.absoluteString)
         })

@@ -5,8 +5,8 @@
 //  Created by Vladyslav Shepitko on 06.11.2020.
 //
 
-import Foundation
 import UIKit
+import AppTrackingTransparency
 
 protocol AnalyticsServiceType: AnalyticsCoordinator {
     func applicationDidBecomeActive()
@@ -27,13 +27,32 @@ class AnalyticsService: NSObject, AnalyticsServiceType {
 
     override init() {
         super.init()
-        if Constants.Credentials.analyticsKey.nonEmpty && !Self.isTestFlight {
-            mixpanelService = MixpanelCoordinator(withKey: Constants.Credentials.analyticsKey)
+        
+        if #available(iOS 14, *) {
+            ATTrackingManager.requestTrackingAuthorization { status in
+                if status == .authorized {
+                    if Constants.Credentials.analyticsKey.nonEmpty && !Self.isTestFlight {
+                        self.mixpanelService = MixpanelCoordinator(withKey: Constants.Credentials.analyticsKey)
+                    }
+                }
+            }
+        } else {
+            if Constants.Credentials.analyticsKey.nonEmpty && !Self.isTestFlight {
+                self.mixpanelService = MixpanelCoordinator(withKey: Constants.Credentials.analyticsKey)
+            }
         }
     }
 
     func add(pushDeviceToken token: Data) {
-        mixpanelService?.add(pushDeviceToken: token)
+        if #available(iOS 14, *) {
+            ATTrackingManager.requestTrackingAuthorization { status in
+                if status == .authorized {
+                    self.mixpanelService?.add(pushDeviceToken: token)
+                }
+            }
+        } else {
+            self.mixpanelService?.add(pushDeviceToken: token)
+        }
     }
 
     func applicationDidBecomeActive() {
@@ -57,22 +76,62 @@ class AnalyticsService: NSObject, AnalyticsServiceType {
     }
 
     func log(navigation: AnalyticsNavigation, properties: [String: AnalyticsEventPropertyValue]?) {
-        mixpanelService?.log(navigation: navigation, properties: properties)
+        if #available(iOS 14, *) {
+            ATTrackingManager.requestTrackingAuthorization { status in
+                if status == .authorized {
+                    self.mixpanelService?.log(navigation: navigation, properties: properties)
+                }
+            }
+        } else {
+            self.mixpanelService?.log(navigation: navigation, properties: properties)
+        }
     }
 
     func log(action: AnalyticsAction, properties: [String: AnalyticsEventPropertyValue]?) {
-        mixpanelService?.log(action: action, properties: properties)
+        if #available(iOS 14, *) {
+            ATTrackingManager.requestTrackingAuthorization { status in
+                if status == .authorized {
+                    self.mixpanelService?.log(action: action, properties: properties)
+                }
+            }
+        } else {
+            self.mixpanelService?.log(action: action, properties: properties)
+        }
     }
 
     func setUser(property: AnalyticsUserProperty, value: AnalyticsEventPropertyValue) {
-        mixpanelService?.setUser(property: property, value: value)
+        if #available(iOS 14, *) {
+            ATTrackingManager.requestTrackingAuthorization { status in
+                if status == .authorized {
+                    self.mixpanelService?.setUser(property: property, value: value)
+                }
+            }
+        } else {
+            self.mixpanelService?.setUser(property: property, value: value)
+        }
     }
 
     func incrementUser(property: AnalyticsUserProperty, by value: Int) {
-        mixpanelService?.incrementUser(property: property, by: value)
+        if #available(iOS 14, *) {
+            ATTrackingManager.requestTrackingAuthorization { status in
+                if status == .authorized {
+                    self.mixpanelService?.incrementUser(property: property, by: value)
+                }
+            }
+        } else {
+            self.mixpanelService?.incrementUser(property: property, by: value)
+        }
     }
 
     func incrementUser(property: AnalyticsUserProperty, by value: Double) {
-        mixpanelService?.incrementUser(property: property, by: value)
+        if #available(iOS 14, *) {
+            ATTrackingManager.requestTrackingAuthorization { status in
+                if status == .authorized {
+                    self.mixpanelService?.incrementUser(property: property, by: value)
+                }
+            }
+        } else {
+            self.mixpanelService?.incrementUser(property: property, by: value)
+        }
     }
 }

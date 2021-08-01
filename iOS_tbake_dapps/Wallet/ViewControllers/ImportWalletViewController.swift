@@ -135,11 +135,17 @@ class ImportWalletViewController: UIViewController {
         footerBar.backgroundColor = .clear
         roundedBackground.addSubview(footerBar)
 
-        footerBar.addSubview(buttonsBar)
+        let buttonStackView = [
+            self.buttonsBar,
+            .spacer(height: 15),
+        ].asStackView(axis: .vertical)
+        
+        buttonStackView.translatesAutoresizingMaskIntoConstraints = false
+        footerBar.addSubview(buttonStackView)
 
         let heightThatFitsPrivateKeyNicely = CGFloat(ScreenChecker().isNarrowScreen ? 80 : 100)
 
-        footerBottomConstraint = footerBar.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        footerBottomConstraint = footerBar.bottomAnchor.constraint(equalTo:  view.safeAreaLayoutGuide.bottomAnchor)
         footerBottomConstraint.constant = -UIApplication.shared.bottomSafeAreaHeight
         keyboardChecker.constraint = footerBottomConstraint
 
@@ -162,9 +168,14 @@ class ImportWalletViewController: UIViewController {
             importSeedDescriptionLabel.trailingAnchor.constraint(equalTo: footerBar.trailingAnchor, constant: -30),
             importSeedDescriptionLabel.bottomAnchor.constraint(equalTo: footerBar.topAnchor, constant: -labelButtonInset),
 
+            buttonsBar.leadingAnchor.constraint(equalTo: footerBar.leadingAnchor),
+            buttonsBar.trailingAnchor.constraint(equalTo: footerBar.trailingAnchor),
+            buttonsBar.topAnchor.constraint(equalTo: footerBar.topAnchor),
+            buttonsBar.heightAnchor.constraint(equalToConstant: ButtonsBar.buttonsHeight),
+            
+            footerBar.heightAnchor.constraint(equalToConstant: ButtonsBar.buttonsHeight + 15),
             footerBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             footerBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            footerBar.heightAnchor.constraint(equalToConstant: ButtonsBar.buttonsHeight),
             footerBottomConstraint,
 
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -172,7 +183,7 @@ class ImportWalletViewController: UIViewController {
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: footerBar.topAnchor),
 
-        ] + roundedBackground.createConstraintsWithContainer(view: view) + buttonsBar.anchorsConstraint(to: footerBar))
+        ] + roundedBackground.createConstraintsWithContainer(view: view))
 
         configure()
         showMnemonicControlsOnly()

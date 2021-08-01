@@ -514,17 +514,9 @@ private class PrivateXMLHandler {
         case .erc20:
             actions = [.erc20Send, .erc20Receive]
         case .erc721:
-            if contractAddress.isUEFATicketContract {
-                actions = [.nftRedeem, .nonFungibleTransfer]
-            } else {
-                actions = [.nonFungibleTransfer]
-            }
+            actions = [.nonFungibleTransfer]
         case .erc875:
-            if contractAddress.isFifaTicketContract {
-                actions = [.nftRedeem, .nftSell, .nonFungibleTransfer]
-            } else {
-                actions = [.nftSell, .nonFungibleTransfer]
-            }
+            actions = [.nftSell, .nonFungibleTransfer]
         }
         return actions.map { .init(type: $0) }
     }
@@ -535,17 +527,9 @@ private class PrivateXMLHandler {
         case .erc20, .nativeCryptocurrency:
             actions = [.erc20Send, .erc20Receive]
         case .erc721, .erc721ForTickets:
-            if contractAddress.isUEFATicketContract {
-                actions = [.nftRedeem, .nonFungibleTransfer]
-            } else {
-                actions = [.nonFungibleTransfer]
-            }
+            actions = [.nonFungibleTransfer]
         case .erc875:
-            if contractAddress.isFifaTicketContract {
-                actions = [.nftRedeem, .nftSell, .nonFungibleTransfer]
-            } else {
-                actions = [.nftSell, .nonFungibleTransfer]
-            }
+            actions = [.nftSell, .nonFungibleTransfer]
         }
         return actions.map { .init(type: $0) }
     }

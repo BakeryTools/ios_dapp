@@ -110,13 +110,19 @@ class ShowSeedPhraseViewController: UIViewController {
         footerBar.backgroundColor = .clear
         roundedBackground.addSubview(footerBar)
 
-        footerBar.addSubview(buttonsBar)
+        let buttonStackView = [
+            self.buttonsBar,
+            .spacer(height: 15),
+        ].asStackView(axis: .vertical)
+        
+        buttonStackView.translatesAutoresizingMaskIntoConstraints = false
+        footerBar.addSubview(buttonStackView)
 
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: footerBar.topAnchor, constant: -7),
+            stackView.bottomAnchor.constraint(equalTo: footerBar.topAnchor, constant: 15),
             
             self.backgroundImage.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             self.backgroundImage.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -128,10 +134,10 @@ class ShowSeedPhraseViewController: UIViewController {
             buttonsBar.topAnchor.constraint(equalTo: footerBar.topAnchor),
             buttonsBar.heightAnchor.constraint(equalToConstant: ButtonsBar.buttonsHeight),
 
+            footerBar.heightAnchor.constraint(equalToConstant: ButtonsBar.buttonsHeight + 15),
             footerBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             footerBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            footerBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -ButtonsBar.buttonsHeight - ButtonsBar.marginAtBottomScreen),
-            footerBar.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            footerBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
 
             roundedBackground.createConstraintsWithContainer(view: view),
         ])

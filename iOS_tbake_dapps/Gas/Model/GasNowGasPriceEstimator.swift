@@ -5,7 +5,7 @@ import PromiseKit
 
 class GasNowGasPriceEstimator {
     func fetch() -> Promise<GasNowPriceEstimates> {
-        let alphaWalletProvider = AlphaWalletProviderFactory.makeProvider()
+        let alphaWalletProvider = TBakeWalletProviderFactory.makeProvider()
         return alphaWalletProvider.request(.gasPriceEstimate).map { response -> GasNowPriceEstimates in
             try response.map(GasNowPriceEstimates.self)
         }

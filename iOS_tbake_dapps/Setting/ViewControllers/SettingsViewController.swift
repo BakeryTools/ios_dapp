@@ -65,8 +65,8 @@ class SettingsViewController: UIViewController {
             self.tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
-        tableView.dataSource = self
-        tableView.delegate = self
+        self.tableView.dataSource = self
+        self.tableView.delegate = self
     }
 
     override func viewDidLoad() {

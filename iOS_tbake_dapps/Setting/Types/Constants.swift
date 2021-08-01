@@ -10,53 +10,53 @@ public struct Constants {
         [0x58, 0x44, 0x41, 0x49, 0x44, 0x52, 0x4F, 0x50]
     ).hex()
 
-    public static let mainnetMagicLinkHost = "aw.app"
-    public static let legacyMagicLinkHost = "app.awallet.io"
-    public static let classicMagicLinkHost = "classic.aw.app"
-    public static let callistoMagicLinkHost = "callisto.aw.app"
-    public static let kovanMagicLinkHost = "kovan.aw.app"
-    public static let ropstenMagicLinkHost = "ropsten.aw.app"
-    public static let rinkebyMagicLinkHost = "rinkeby.aw.app"
-    public static let poaMagicLinkHost = "poa.aw.app"
-    public static let sokolMagicLinkHost = "sokol.aw.app"
-    public static let xDaiMagicLinkHost = "xdai.aw.app"
-    public static let goerliMagicLinkHost = "goerli.aw.app"
-    public static let artisSigma1MagicLinkHost = "artis_sigma1.aw.app"
-    public static let artisTau1MagicLinkHost = "artis_tau1.aw.app"
-    public static let binanceMagicLinkHost = "binance.aw.app"
-    public static let binanceTestMagicLinkHost = "test-binance.aw.app"
-    public static let hecoMagicLinkHost = "heco.aw.app"
-    public static let hecoTestMagicLinkHost = "test-heco.aw.app"
-    public static let customMagicLinkHost = "custom.aw.app"
-    public static let fantomMagicLinkHost = "fantom.aw.app"
-    public static let fantomTestMagicLinkHost = "test-fantom.aw.app"
-    public static let avalancheMagicLinkHost = "avalanche.aw.app"
-    public static let avalancheTestMagicLinkHost = "test-avalanche.aw.app"
-    public static let maticMagicLinkHost = "polygon.aw.app"
-    public static let mumbaiTestMagicLinkHost = "test-polygon.aw.app"
-    public static let optimisticMagicLinkHost = "optimistic.aw.app"
-    public static let optimisticTestMagicLinkHost = "optimistic-kovan.aw.app"
+    public static let mainnetMagicLinkHost = ""
+    public static let legacyMagicLinkHost = ""
+    public static let classicMagicLinkHost = ""
+    public static let callistoMagicLinkHost = ""
+    public static let kovanMagicLinkHost = ""
+    public static let ropstenMagicLinkHost = ""
+    public static let rinkebyMagicLinkHost = ""
+    public static let poaMagicLinkHost = ""
+    public static let sokolMagicLinkHost = ""
+    public static let xDaiMagicLinkHost = ""
+    public static let goerliMagicLinkHost = ""
+    public static let artisSigma1MagicLinkHost = ""
+    public static let artisTau1MagicLinkHost = ""
+    public static let binanceMagicLinkHost = ""
+    public static let binanceTestMagicLinkHost = ""
+    public static let hecoMagicLinkHost = ""
+    public static let hecoTestMagicLinkHost = ""
+    public static let customMagicLinkHost = ""
+    public static let fantomMagicLinkHost = ""
+    public static let fantomTestMagicLinkHost = ""
+    public static let avalancheMagicLinkHost = ""
+    public static let avalancheTestMagicLinkHost = ""
+    public static let maticMagicLinkHost = ""
+    public static let mumbaiTestMagicLinkHost = ""
+    public static let optimisticMagicLinkHost = ""
+    public static let optimisticTestMagicLinkHost = ""
 
     public enum Currency {
         static let usd = "USD"
     }
     
     // Magic link networks
-    public static let legacyMagicLinkPrefix = "https://app.awallet.io/"
+    public static let legacyMagicLinkPrefix = ""
 
     // fee master
-    public static let paymentServer = "https://paymaster.stormbird.sg/api/claimToken"
-    public static let paymentServerSpawnable = "https://paymaster.stormbird.sg/api/claimSpawnableToken"
-    public static let paymentServerSupportsContractEndPoint = "https://paymaster.stormbird.sg/api/checkContractIsSupportedForFreeTransfers"
-    public static let paymentServerClaimedToken = "https://paymaster.stormbird.sg/api/checkIfSignatureIsUsed"
-    public static let currencyDropServer = "https://paymaster.stormbird.sg/api/claimFreeCurrency"
+    public static let paymentServer = ""
+    public static let paymentServerSpawnable = ""
+    public static let paymentServerSupportsContractEndPoint = ""
+    public static let paymentServerClaimedToken = ""
+    public static let currencyDropServer = ""
 
     // social
     public static let website = "https://bakerytools.io"
     public static let twitterUsername = "bakerytools"
 
     // support
-    public static let dappsBrowserURL = "http://aw.app"
+    public static let dappsBrowserURL = "http://tbake.app"
 
     //Ethereum null variables
     public static let nullTokenId = "0x0000000000000000000000000000000000000000000000000000000000000000"
@@ -68,17 +68,6 @@ public struct Constants {
     
     //TBAKE token
     static let tbakeToken = TBakeWallet.Address(string: "0x26d6e280f9687c463420908740ae59f712419147")!
-    
-    // FIFA hardcoded FIFA token address
-    static let ticketContractAddress = TBakeWallet.Address(string: "0xA66A3F08068174e8F005112A8b2c7A507a822335")!
-    static let ticketContractAddressRopsten = TBakeWallet.Address(string: "0xD8e5F58DE3933E1E35f9c65eb72cb188674624F3")!
-
-    // UEFA hardcoded addresses
-    static let uefaMainnet = TBakeWallet.Address(string: "0x89D142Bef8605646881C68dcD48cDAF17FE597dC")!
-    static let uefaRpcServer = RPCServer.main
-
-    //UEFA 721 balances function hash
-    static let balances165Hash721Ticket = "0xc84aae17"
 
     //OpenSea links for erc721 assets
     public static let openseaAPI = "https://api.opensea.io/"
@@ -105,6 +94,9 @@ public struct Constants {
     static let gasNowEndpointBaseUrl = "https://www.gasnow.org"
     static let highStandardGasThresholdGwei = BigInt(55)
 
+    //UEFA 721 balances function hash
+    static let balances165Hash721Ticket = "0xc84aae17"
+    
     //Misc
     public static let etherReceivedNotificationIdentifier = "etherReceivedNotificationIdentifier"
     static let legacy875Addresses = [TBakeWallet.Address(string: "0x830e1650a87a754e37ca7ed76b700395a7c61614")!,
@@ -115,59 +107,7 @@ public struct Constants {
         TBakeWallet.Address(string: "0x71c118b00759b0851785642541ceb0f4ceea0bd5")!,
         TBakeWallet.Address(string: "0x7fdcd2a1e52f10c28cb7732f46393e297ecadda1")!
     ]
-
-    static let ethDenverXDaiPartnerContracts = [
-        (name: "DEN", contract: TBakeWallet.Address(string: "0x6a814843de5967cf94d7720ce15cba8b0da81967")!),
-        (name: "BURN", contract: TBakeWallet.Address(string: "0x94819805310cf736198df0de856b0ff5584f0903")!),
-        (name: "BURN", contract: TBakeWallet.Address(string: "0xdec31651bec1fbbff392aa7de956d6ee4559498b")!),
-        (name: "BURN", contract: TBakeWallet.Address(string: "0xa95d505e6933cb790ed3431805871efe4e6bbafd")!),
-        (name: "DEN", contract: TBakeWallet.Address(string: "0xbdc3df563a3959a373916b724c683d69ba4097f7")!),
-        (name: "DEN", contract: TBakeWallet.Address(string: "0x6e251ee9cadf0145babfd3b64664a9d7f941fcc3")!),
-        (name: "BUFF", contract: TBakeWallet.Address(string: "0x3e50bf6703fc132a94e4baff068db2055655f11b")!),
-        (name: "ETHD2019", contract: TBakeWallet.Address(string: "0xa16b70E8fAd839E62aBBa2d962E4ca5a28aF9e76")!)
-    ]
-
-    static let partnerContracts = [
-        (name: "DAI", contract: TBakeWallet.Address(string: "0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359")!),
-        (name: "GUSD", contract: TBakeWallet.Address(string: "0x056Fd409E1d7A124BD7017459dFEa2F387b6d5Cd")!),
-        (name: "PAX", contract: TBakeWallet.Address(string: "0x8e870d67f660d95d5be530380d0ec0bd388289e1")!),
-        (name: "TUSD", contract: TBakeWallet.Address(string: "0x8dd5fbce2f6a956c3022ba3663759011dd51e73e")!),
-        (name: "USDC", contract: TBakeWallet.Address(string: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48")!),
-        (name: "USDO", contract: TBakeWallet.Address(string: "0x98f2ab72198f2e64527bdb28931f60c0f77ac2fc")!),
-        (name: "SHANKAI", contract: Self.ticketContractAddress),
-
-        //fTokens
-        (name: "fETH", contract: TBakeWallet.Address(string: "0x5993233d88B4424D9c12e468A39736D5948c2835")!),
-        (name: "fHBTC", contract: TBakeWallet.Address(string: "0x3CE92b88DEAec1037335E614Eb6409C95edcAC76")!),
-        (name: "fWBTC", contract: TBakeWallet.Address(string: "0x93B9B852FcD2f964Faa7E50EC1374e016260718c")!),
-        (name: "fUSDT", contract: TBakeWallet.Address(string: "0x51da0A7340874674C488b67200D007E422667650")!),
-        (name: "fUSDC", contract: TBakeWallet.Address(string: "0xfDD543Ed2701dEB2a172Df4876E60918E28Ba217")!),
-        (name: "fBUSD", contract: TBakeWallet.Address(string: "0x556be90ea81e8abceEc2737cf6AE0a6cfEe58b40")!),
-        (name: "fHUSD", contract: TBakeWallet.Address(string: "0x52d61a0AA88170b6EbDEA25Be1561E5665e6481B")!),
-        (name: "fDAI", contract: TBakeWallet.Address(string: "0xfF5cDA31926CA2Ed79533D6B95Fc6ADbDE0f1015")!),
-        (name: "fFOR", contract: TBakeWallet.Address(string: "0x84ff569ee2E8b9A2C22E79af431fD248fb41D87b")!),
-        (name: "fBNB", contract: TBakeWallet.Address(string: "0x92563b3b8c92B22e37aC956a2B19c40988D25933")!),
-        (name: "fHT", contract: TBakeWallet.Address(string: "0x39527B067B04D43c627FB741848ef2c3f8ead3FE")!),
-        (name: "fOKB", contract: TBakeWallet.Address(string: "0x4316AAa55ab3BD3a7ee3fbC83580521801210225")!),
-        (name: "fyUSD", contract: TBakeWallet.Address(string: "0x66142B3c234C054bA91374732C10cEA0f72390fE")!),
-        (name: "fQC", contract: TBakeWallet.Address(string: "0x161190d29cC015EaEFD6c4ad0AA7519B6b75b9c0")!),
-        (name: "fyWETH", contract: TBakeWallet.Address(string: "0xd136b32330E539aa9411c4e8968eB26b35c5917B")!),
-        (name: "fYFII", contract: TBakeWallet.Address(string: "0x4Ffc92ddD9439c93fc79dD5560e06026A445037D")!),
-        (name: "fNEST", contract: TBakeWallet.Address(string: "0xbd3df917A7E69fBa3e1d912577Be7eCC01bE1d12")!),
-        (name: "fARPA", contract: TBakeWallet.Address(string: "0x0486B8d96789C6938361Ab776D6b27b6FC03C471")!),
-        (name: "fYFI", contract: TBakeWallet.Address(string: "0x8a06bbA4219C3f1Ca705318f5848E62f3beF33d0")!),
-        (name: "fMKR", contract: TBakeWallet.Address(string: "0x9FC5d71FC9b14630a2f198F188450D26Fa5788f7")!),
-        (name: "fLINK", contract: TBakeWallet.Address(string: "0x29B22BeFe0F5362986152a5430d03B446b8e27fB")!),
-        (name: "fUNI", contract: TBakeWallet.Address(string: "0xDb694CB2B58F66C5E79fF272dF37ECb46Dc31ADD")!),
-        (name: "fLRC", contract: TBakeWallet.Address(string: "0x6c2e2cEc8De4A6a071065D4BD5c496636570fDC2")!),
-        (name: "fLEND", contract: TBakeWallet.Address(string: "0x45b4E177B17e2d50dB6D547015A6f9723FF9c1a0")!),
-        (name: "fSNX", contract: TBakeWallet.Address(string: "0x8B2ef6d7d4Cc334D003398007722FdF8ca3f5E55")!),
-    ]
-
-    static let rinkebyPartnerContracts = [
-        (name: "HKS", contract: TBakeWallet.Address(string: "0x75cB2Cc380d1387a79eE64b1b7C9Fa051139a319")!),
-    ]
-
+    
     static let ensContractOnMainnet = TBakeWallet.Address.ethereumAddress(eip55String: "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85")
 
     static let defaultEnabledServers: [RPCServer] = [.binance_smart_chain] //tukar server tauu. //Danial

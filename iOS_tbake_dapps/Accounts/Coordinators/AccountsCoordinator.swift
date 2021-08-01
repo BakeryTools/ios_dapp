@@ -67,7 +67,9 @@ class AccountsCoordinator: Coordinator {
             controller.navigationItem.leftBarButtonItem = UIBarButtonItem.backBarButton(self, selector: #selector(dismiss))
         }
 
-        controller.navigationItem.rightBarButtonItem = UIBarButtonItem.addButton(self, selector: #selector(addWallet))
+        let addTokenButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.addWallet))
+        addTokenButton.tintColor = Colors.tbakeDarkBrown
+        controller.navigationItem.rightBarButtonItem = addTokenButton
         controller.allowsAccountDeletion = self.viewModel.configuration.allowsAccountDeletion
         controller.delegate = self
         controller.hidesBottomBarWhenPushed = true

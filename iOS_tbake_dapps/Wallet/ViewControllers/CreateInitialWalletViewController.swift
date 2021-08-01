@@ -64,8 +64,9 @@ class CreateInitialWalletViewController: UIViewController {
         
         let buttonStackView = [
             self.createWalletButtonBar,
-            UIView.spacer(height: 15),
+            .spacer(height: 15),
             self.buttonsBar,
+            .spacer(height: 15),
         ].asStackView(axis: .vertical)
         
         buttonStackView.translatesAutoresizingMaskIntoConstraints = false
