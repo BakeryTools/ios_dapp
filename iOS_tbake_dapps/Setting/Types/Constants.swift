@@ -39,6 +39,7 @@ public struct Constants {
 
     public enum Currency {
         static let usd = "USD"
+        static let symbol = "$"
     }
     
     // Magic link networks

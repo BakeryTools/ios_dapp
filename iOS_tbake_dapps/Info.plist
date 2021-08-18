@@ -85,6 +85,8 @@
 	<string>BakeryTools access photo library to send QR Code to your contacts.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>BakeryTools access photo library to send QR Code to your contacts.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>BakeryTools want to track application activity to improve BakeryTools application performance.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>LibreFranklin-Regular.ttf</string>
@@ -124,7 +126,5 @@
 	</array>
 	<key>com.apple.security.get-task-allow</key>
 	<true/>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>BakeryTools want to track application activity to improve BakeryTools application performance.</string>
 </dict>
 </plist>

@@ -89,21 +89,21 @@ struct TransactionRowCellViewModel {
     }
 
     var titleFont: UIFont {
-        return Fonts.regular(size: 17)
+        return Screen.TokenCard.Font.title
     }
 
     var subTitleFont: UIFont {
-        return Fonts.regular(size: 13)
+        return Screen.TokenCard.Font.subtitle
     }
 
     var amountFont: UIFont {
-        return Fonts.semibold(size: 14)
+        return Screen.TokenCard.Font.blockChainName
     }
 
     var contentsBackgroundColor: UIColor {
         switch transactionRow.state {
         case .completed, .error, .unknown, .failed:
-            return .white
+            return Colors.appBackground
         case .pending:
             return Colors.veryLightOrange
         }
@@ -128,7 +128,7 @@ struct TransactionRowCellViewModel {
         return NSAttributedString(
                 string: amount,
                 attributes: [
-                    .font: Fonts.light(size: 25),
+                    .font: Screen.TokenCard.Font.subtitle,
                     .foregroundColor: transactionRowViewModel.amountTextColor,
                 ]
         )

@@ -10,32 +10,75 @@ import WebKit
 import JavaScriptCore
 
 protocol ChartViewControllerDelegate: AnyObject {
-    func underConstruction()
+    func openPage(url: URL?, forceReload: Bool)
+    func didCall(action: DappAction, callbackID: Int, inBrowserViewController viewController: ChartViewController)
 }
 
 class ChartViewController: UIViewController {
-    @IBOutlet weak var progressIndicator: UIProgressView!
-    @IBOutlet weak var webView: WKWebView!
+    @IBOutlet weak var parentView: UIView!
     
     weak var delegate: ChartViewControllerDelegate?
     
-    override func loadView() {
-        super.loadView()
+    private let account: Wallet
+    private let server: RPCServer
     
-        self.webView.configuration.userContentController.add(LeakAvoider(delegate: self), name: "nativeCallbackHandler")
+    private struct Keys {
+        static let estimatedProgress = "estimatedProgress"
+        static let developerExtrasEnabled = "developerExtrasEnabled"
+        static let URL = "URL"
+        static let ClientName = "SafeWallet" //Danial
+    }
+
+    private lazy var userClient: String = {
+        return Keys.ClientName + "/" + (Bundle.main.versionNumber ?? "")
+    }()
+    
+    lazy var config: WKWebViewConfiguration = {
+        let config = WKWebViewConfiguration.make(forType: .dappBrowser(server), address: account.address, in: ScriptMessageProxy(delegate: self))
+        config.websiteDataStore = WKWebsiteDataStore.default()
+        return config
+    }()
+    
+    lazy var webView: WKWebView = {
+        let webView = WKWebView(
+            frame: .zero,
+            configuration: self.config
+        )
+        webView.allowsBackForwardNavigationGestures = true
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        webView.navigationDelegate = self
+        if isDebug {
+            webView.configuration.preferences.setValue(true, forKey: Keys.developerExtrasEnabled)
+        }
+        return webView
+    }()
+    
+    init(account: Wallet, server: RPCServer) {
+        self.account = account
+        self.server = server
+        
+        super.init(nibName: nil, bundle: nil)
+        
+        self.injectUserAgent()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("ChartViewController")
         // Do any additional setup after loading the view.
+        self.title = R.string.localizable.chartTabbarItemTitle()
         self.setupWebView()
-        self.urlSetup()
+        self.setupNavigationBar()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        self.presentUnderConstructionNib()
+    func setupNavigationBar() {
+        let refreshButton = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .plain, target: self, action: #selector(self.reloadPage))
+        refreshButton.tintColor = Colors.tbakeDarkBrown
+        self.navigationItem.rightBarButtonItem = refreshButton
     }
     
     func setupWebView() {
@@ -44,89 +87,52 @@ class ChartViewController: UIViewController {
         self.webView.configuration.preferences.javaScriptEnabled = true
         self.webView.isOpaque = false
         self.webView.backgroundColor = UIColor.clear
-        self.progressIndicator.progress = 0
+        
+        self.parentView.addSubview(self.webView)
+        
+        NSLayoutConstraint.activate([
+            webView.anchorsConstraint(to: self.parentView),
+        ])
     }
 
-    func urlSetup() {
-        let headerString = "<head><meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no'></head>"
+    func urlSetup(urlString: String) {
+        let urlStrings = urlString == "" ? "https://chart.bakerytools.io" : urlString
+        guard let url =  URL(string: urlStrings) else { return }
+        let request = URLRequest(url: url)
         
-        let htmlString = """
-            <!-- TradingView Widget BEGIN -->
-            <div class="tradingview-widget-container">
-                  <div id="tradingview_3682d"></div>
-                  <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/symbols/NASDAQ-AAPL/" rel="noopener" target="_blank"><span class="blue-text">AAPL Chart</span></a> by TradingView</div>
-                  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-                  <script type="text/javascript">
-                  new TradingView.widget(
-                  {
-                  "width": 980,
-                  "height": 610,
-                  "symbol": "NASDAQ:AAPL",
-                  "interval": "D",
-                  "timezone": "Etc/UTC",
-                  "theme": "light",
-                  "style": "1",
-                  "locale": "en",
-                  "toolbar_bg": "#f1f3f6",
-                  "enable_publishing": false,
-                  "hide_side_toolbar": false,
-                  "allow_symbol_change": true,
-                  "container_id": "tradingview_3682d"
-                }
-                  );
-                  </script>
-            </div>
-            <!-- TradingView Widget END -->
-        """
-
-        self.webView.loadHTMLString(headerString + htmlString, baseURL: nil)
-        
-//        if !(self.modally ?? false) {
-//            self.setupRefreshControl()
-//            self.presentGIF()
-//        }
-//        
-//        guard let url =  URL(string: (self.urlString?.contains("webview") ?? false) ? (self.urlString ?? "") : "\(self.urlString ?? "")&webview=true&s=customer_app") else { return }
-//        var request = URLRequest(url: url)
-//        
-//        let authValue: String = "Bearer \(getUserToken())"
-//        
-//        if self.cameFrom != "zendesk" && self.cameFrom != "Amazonaws"{
-//            request.setValue(authValue, forHTTPHeaderField: "Authorization")
-//        }
-//        
-//        request.setValue("customer_app", forHTTPHeaderField: "source")
-//        request.setValue("ios", forHTTPHeaderField: "d")
-//        request.setValue("true", forHTTPHeaderField: "webview")
-//        
-//        self.webView.load(request)
-//
-//        self.observation = self.webView.observe(\.estimatedProgress, options: [.new]) { [weak self] webView, _ in
-//            guard let self = self else { return }
-//            self.progressIndicator.progress = Float(webView.estimatedProgress)
-//        }
+        self.webView.load(request)
     }
     
-    private func presentUnderConstructionNib() {
-        let nib = UnderConstructionViewController(nibName: "UnderConstructionViewController", bundle: nil)
-        nib.modalPresentationStyle = .overCurrentContext
-        nib.modalTransitionStyle = .crossDissolve
-        nib.delegate = self
-        DispatchQueue.main.async { self.present(nib, animated: true, completion: nil) }
+    func notifyFinish(callbackID: Int, value: Result<DappCallback, DAppError>) {
+        let script: String = {
+            switch value {
+            case .success(let result):
+                return "executeCallback(\(callbackID), null, \"\(result.value.object)\")"
+            case .failure(let error):
+                return "executeCallback(\(callbackID), \"\(error.message)\", null)"
+            }
+        }()
+        webView.evaluateJavaScript(script, completionHandler: nil)
+    }
+    
+    private func injectUserAgent() {
+        webView.evaluateJavaScript("navigator.userAgent") { [weak self] result, _ in
+            guard let strongSelf = self, let currentUserAgent = result as? String else { return }
+            strongSelf.webView.customUserAgent = currentUserAgent + " " + strongSelf.userClient
+        }
+    }
+    
+    @objc func reloadPage() {
+        self.webView.reload()
     }
 }
 
 //MARK:- WKWebview Navigation Delegate
 extension ChartViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didStartProvisionalNavigation _: WKNavigation!) {
-        
-        if self.progressIndicator.isHidden {
-            // Make sure our animation is visible.
-            self.progressIndicator.isHidden = false
-        }
 
         UIView.animate(withDuration: 0.33, animations: {
-            self.progressIndicator.alpha = 1.0
+//            self.progressIndicator.alpha = 1.0
         })
     }
     
@@ -152,17 +158,12 @@ extension ChartViewController: WKNavigationDelegate {
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!){
-        self.progressIndicator.progress = 1
         
         UIView.animate(withDuration: 0.33, animations: {
-            self.progressIndicator.alpha = 0.0
+//            self.progressIndicator.alpha = 0.0
         }, completion: { done in
             //if got loading presented, dismiss
-            self.progressIndicator.isHidden = done
-            if self.webView.scrollView.refreshControl?.isRefreshing ?? false {
-                self.webView.scrollView.refreshControl?.endRefreshing()
-                self.webView.scrollView.refreshControl?.hideRefreshIndicator()
-            }
+//            self.progressIndicator.isHidden = done
         })
     }
 }
@@ -174,6 +175,20 @@ extension ChartViewController: WKUIDelegate {
             frame.isMainFrame {
             return nil
         }
+        
+        if navigationAction.request.url?.absoluteString.contains("pancakeswap") ?? false {
+            if webView.url?.absoluteString == "https://chart.bakerytools.io/token/0x26D6e280F9687c463420908740AE59f712419147" || webView.url?.absoluteString == "https://chart.bakerytools.io/" {
+                guard let urlToSwap = URL(string: "https://v1exchange.pancakeswap.finance/#/swap?outputCurrency=0x26D6e280F9687c463420908740AE59f712419147") else { return nil }
+                self.delegate?.openPage(url: urlToSwap, forceReload: true)
+            } else {
+                let tokenAddress = webView.url?.absoluteString.replacingOccurrences(of: "https://chart.bakerytools.io/token/", with: "")
+                guard let urlToSwap = URL(string: "https://pancakeswap.finance/swap?outputCurrency=\(tokenAddress ?? "")") else { return nil }
+                self.delegate?.openPage(url: urlToSwap, forceReload: true)
+            }
+        } else {
+            self.delegate?.openPage(url: navigationAction.request.url, forceReload: false)
+        }
+    
         // for _blank target or non-mainFrame target
         
         return nil
@@ -207,7 +222,12 @@ extension ChartViewController: WKUIDelegate {
 //MARK:- WKScriptMessageHandler Delegate
 extension ChartViewController: WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        
+        guard let command = DappAction.fromMessage(message) else { return }
+        let requester = DAppRequester(title: webView.title, url: webView.url)
+        let token = TokensDataStore.token(forServer: server)
+        let action = DappAction.fromCommand(command, server: server, transactionType: .dapp(token, requester))
+
+        delegate?.didCall(action: action, callbackID: command.id, inBrowserViewController: self)
     }
 }
 
@@ -222,11 +242,5 @@ class LeakAvoider : NSObject, WKScriptMessageHandler {
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         self.delegate?.userContentController(userContentController, didReceive: message)
-    }
-}
-
-extension ChartViewController: UnderConstructionViewControllerDelegate {
-    func doDismiss() {
-        self.delegate?.underConstruction()
     }
 }

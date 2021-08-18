@@ -251,7 +251,6 @@ extension TextField: UITextFieldDelegate {
         let borderColor = status.textFieldBorderColor(whileEditing: false)
         let shouldDropShadow = status.textFieldShowShadow(whileEditing: false)
         layer.borderColor = borderColor.cgColor
-        backgroundColor = DataEntry.Color.textFieldBackground
 
         dropShadow(color: shouldDropShadow ? borderColor : .clear, radius: DataEntry.Metric.shadowRadius)
     }
@@ -259,7 +258,6 @@ extension TextField: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         let borderColor = status.textFieldBorderColor(whileEditing: true)
         layer.borderColor = borderColor.cgColor
-        backgroundColor = Colors.appWhite
 
         dropShadow(color: borderColor, radius: DataEntry.Metric.shadowRadius)
     }

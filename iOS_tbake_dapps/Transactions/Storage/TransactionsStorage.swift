@@ -7,7 +7,16 @@ protocol TransactionsStorageDelegate: AnyObject {
     func didAddTokensWith(contracts: [TBakeWallet.Address], inTransactionsStorage: TransactionsStorage)
 }
 
-class TransactionsStorage {
+class TransactionsStorage: Hashable {
+
+    static func == (lhs: TransactionsStorage, rhs: TransactionsStorage) -> Bool {
+        return lhs.server == rhs.server && lhs.realm == rhs.realm
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(server.chainID)
+    }
+
     //TODO if we move this to instance-side, we have to be careful it's the same instance we are accessing, otherwise we wouldn't find the pending transaction information when we need it
     static var pendingTransactionsInformation: [String: (server: RPCServer, data: Data, transactionType: TransactionType, gasPrice: BigInt)] = .init()
 
@@ -63,24 +72,6 @@ class TransactionsStorage {
         if !tokens.isEmpty {
             TokensDataStore.update(in: realm, tokens: tokens)
         }
-    }
-
-    private func addTokensWithContractAddresses(fromTransactions transactions: [Transaction], contractsAndTokenTypes: [TBakeWallet.Address: TokenType]) {
-        let tokens = self.tokens(from: transactions, contractsAndTokenTypes: contractsAndTokenTypes)
-        delegate?.didAddTokensWith(contracts: Array(Set(tokens.map { $0.address })), inTransactionsStorage: self)
-        if !tokens.isEmpty {
-            TokensDataStore.update(in: realm, tokens: tokens)
-        }
-    }
-
-    func add(transactions: [Transaction], transactionsToPullContractsFrom: [Transaction], contractsAndTokenTypes: [TBakeWallet.Address: TokenType]) {
-        guard !transactions.isEmpty else { return }
-        let transactionsToCommit = filterTransactionsToNotOverrideERC20Transactions(transactions, realm: realm)
-        realm.beginWrite()
-        realm.add(transactionsToCommit, update: .all)
-
-        try! realm.commitWrite()
-        addTokensWithContractAddresses(fromTransactions: transactionsToPullContractsFrom, contractsAndTokenTypes: contractsAndTokenTypes)
     }
 
     func transactionObjectsThatDoNotComeFromEventLogs() -> TransactionInstance? {
@@ -271,6 +262,13 @@ class TransactionsStorage {
             NSLog("Written transactions for \(server) to JSON to: \(url.absoluteString)")
         } catch {
             NSLog("Error writing transactions for \(server) to JSON: \(url.absoluteString) error: \(error)")
+        }
+    }
+
+    static func deleteAllTransactions(realm: Realm) {
+        for each in RPCServer.allCases {
+            let transactionsStorage = TransactionsStorage(realm: realm, server: each, delegate: nil)
+            transactionsStorage.deleteAll()
         }
     }
 }

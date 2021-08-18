@@ -15,7 +15,7 @@ class FungibleTokenViewCell: UITableViewCell {
         [titleLabel, apprecation24hoursLabel, priceChangeLabel]
     }
 
-    private lazy var changeValueContainer: UIView = [priceChangeLabel, apprecation24hoursLabel].asStackView(spacing: 5)
+    private lazy var changeValueContainer: UIView = [priceChangeLabel/*, apprecation24hoursLabel*/].asStackView(spacing: 5)
 
     private var tokenIconImageView: TokenImageView = {
         let imageView = TokenImageView()
@@ -56,8 +56,9 @@ class FungibleTokenViewCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         return nil
     }
-
-    func configure(viewModel: FungibleTokenViewCellViewModel) {
+    
+    func configure(viewModel: FungibleTokenViewCellViewModel, token: TokenObject, price: [TokenDetails]) {
+        
         selectionStyle = .none
 
         backgroundColor = viewModel.backgroundColor
@@ -68,14 +69,31 @@ class FungibleTokenViewCell: UITableViewCell {
 
         cryptoValueLabel.attributedText = viewModel.cryptoValueAttributedString
         cryptoValueLabel.baselineAdjustment = .alignCenters
+        
+//            self.apprecation24hoursLabel.attributedText = viewModel.apprecation24hoursAttributedString
+//            self.apprecation24hoursLabel.backgroundColor = viewModel.apprecation24hoursBackgroundColor
+        
+        let temp = price.filter {($0.symbol == token.symbol)}
+        
+        if temp.count > 0 {
+            let tokenPrice = temp[0].price ?? "0.00"
+            let tokenPriceInDouble = (Double(tokenPrice) ?? 0.0)
+            
+            self.priceChangeLabel.attributedText = NSAttributedString(string:  NumberFormatter.usdSymbol.string(from: tokenPriceInDouble) ?? "-", attributes: [
+                .foregroundColor: Screen.TokenCard.Color.valueChangeLabel,
+                .font: Screen.TokenCard.Font.valueChangeLabel
+            ])
 
-        apprecation24hoursLabel.attributedText = viewModel.apprecation24hoursAttributedString
-        apprecation24hoursLabel.backgroundColor = viewModel.apprecation24hoursBackgroundColor
-
-        priceChangeLabel.attributedText = viewModel.priceChangeUSDAttributedString
-
-        fiatValueLabel.attributedText = viewModel.fiatValueAttributedString
-
+            let value = (token.optionalDecimalValue?.doubleValue ?? 0.0) * (Double(tokenPrice) ?? 0.0)
+                self.fiatValueLabel.attributedText =  NSAttributedString(string: NumberFormatter.usdSymbol.string(from: value) ?? "-", attributes: [
+                .foregroundColor: Screen.TokenCard.Color.title,
+                .font: Screen.TokenCard.Font.valueChangeValue
+            ])
+        } else {
+            self.priceChangeLabel.attributedText = viewModel.priceChangeUSDAttributedString
+            self.fiatValueLabel.attributedText =  viewModel.fiatValueAttributedString
+        }
+   
         viewsWithContent.forEach {
             $0.alpha = viewModel.alpha
         }

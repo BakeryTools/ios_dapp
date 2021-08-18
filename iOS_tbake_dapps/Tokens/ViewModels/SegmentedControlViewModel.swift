@@ -30,15 +30,15 @@ struct SegmentedControlViewModel {
 	}
 
 	private var unselectedTitleFont: UIFont {
-		return Fonts.regular(size: 15)
+        return Screen.TokenCard.Font.subtitle
 	}
 
 	private var selectedTitleFont: UIFont {
-		return Fonts.semibold(size: 15)
+        return Screen.TokenCard.Font.title
 	}
 
 	private var unselectedTitleColor: UIColor {
-		return R.color.dove()!
+        return Colors.appText
 	}
 
 	private var selectedTitleColor: UIColor {
@@ -46,7 +46,7 @@ struct SegmentedControlViewModel {
 	}
 
 	var unselectedBarColor: UIColor {
-		return R.color.alto()!
+		return Colors.appBackground
 	}
 
 	var selectedBarColor: UIColor {

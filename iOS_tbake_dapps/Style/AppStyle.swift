@@ -165,7 +165,7 @@ enum DataEntry {
         static let textFieldBackground = Colors.appBackground
         static let placeholder = UIColor(hex: "919191")
         static let ensText = UIColor(red: 117, green: 185, blue: 67)
-        static let searchTextFieldBackground = UIColor(red: 243, green: 244, blue: 245)
+        static let searchTextFieldBackground = Colors.appBackground
     }
 
     enum Metric {
@@ -267,6 +267,7 @@ enum Screen {
     enum TokenCard {
         enum Font {
             static let title = Fonts.medium(size: 15)
+            static let regular15 = Fonts.regular(size: 15)
             static let subtitle = Fonts.regular(size: 14)
             static let blockChainName = Fonts.semibold(size: 15)
             static let valueChangeLabel = Fonts.regular(size: 13)

@@ -85,8 +85,7 @@ final class DappBrowserNavigationBar: UINavigationBar {
         textField.leftViewMode = .always
         textField.keyboardType = .webSearch
         textField.borderStyle = .none
-        textField.backgroundColor = .white
-        textField.textColor = Colors.black
+        textField.textColor = Colors.appText
         textField.attributedPlaceholder = NSAttributedString(string: R.string.localizable.browserUrlTextfieldPlaceholder(), attributes: [NSAttributedString.Key.foregroundColor: Colors.lightGray])
         textField.layer.borderWidth = DataEntry.Metric.borderThickness
         textField.backgroundColor = DataEntry.Color.searchTextFieldBackground
@@ -278,13 +277,11 @@ extension DappBrowserNavigationBar: UITextFieldDelegate {
 
     func textFieldDidEndEditing(_ textField: UITextField) {
         textField.layer.borderColor = UIColor.clear.cgColor
-        textField.backgroundColor = DataEntry.Color.searchTextFieldBackground
 
         textField.dropShadow(color: .clear, radius: DataEntry.Metric.shadowRadius)
     }
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        textField.backgroundColor = Colors.appWhite
         textField.layer.borderColor = DataEntry.Color.textFieldShadowWhileEditing.cgColor
 
         textField.dropShadow(color: DataEntry.Color.textFieldShadowWhileEditing, radius: DataEntry.Metric.shadowRadius)

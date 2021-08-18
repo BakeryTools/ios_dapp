@@ -193,11 +193,12 @@ final class DappBrowserCoordinator: NSObject, Coordinator {
             pushOntoNavigationController(viewController: browserViewController, animated: animated)
         }
         browserNavBar?.display(url: url)
+        
         if browserOnly {
             browserNavBar?.makeBrowserOnly()
         }
 
-        browserViewController.goTo(url: url)
+        browserViewController.goTo(url: url, forceReload: forceReload)
     }
 
     func signMessage(with type: SignMessageType, account: TBakeWallet.Address, callbackID: Int) {
@@ -511,6 +512,10 @@ extension DappBrowserCoordinator: BrowserViewControllerDelegate {
 
     func handleCustomUrlScheme(_ url: URL, inBrowserViewController viewController: BrowserViewController) {
         delegate?.handleCustomUrlScheme(url, forCoordinator: self)
+    }
+    
+    func clearNavbar() {
+        self.browserNavBar?.clearDisplay()
     }
 }
 

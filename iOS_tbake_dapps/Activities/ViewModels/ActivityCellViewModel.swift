@@ -11,7 +11,7 @@ struct ActivityCellViewModel {
     let activity: Activity
 
     var contentsBackgroundColor: UIColor {
-        .white
+        Colors.appBackground
     }
 
     var contentsCornerRadius: CGFloat {

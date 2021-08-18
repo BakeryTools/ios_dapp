@@ -31,7 +31,7 @@ class TokensViewModel {
     }
 
     var backgroundColor: UIColor {
-        return Colors.backgroundClear
+        return Colors.appBackground
     }
 
     var shouldShowBackupPromptViewHolder: Bool {

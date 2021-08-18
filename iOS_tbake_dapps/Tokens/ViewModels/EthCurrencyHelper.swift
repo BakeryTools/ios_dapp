@@ -9,6 +9,7 @@ class EthCurrencyHelper {
         case depreciate(percentageChange24h: Double)
         case none
     }
+    
     private var ticker: CoinTicker?
 
     var change24h: Change24h {

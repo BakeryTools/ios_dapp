@@ -27,11 +27,11 @@ struct FungibleTokenViewCellViewModel {
     }
 
     var backgroundColor: UIColor {
-        return Screen.TokenCard.Color.background
+        return Colors.backgroundClear
     }
 
     var contentsBackgroundColor: UIColor {
-        return Screen.TokenCard.Color.background
+        return Colors.backgroundClear
     }
 
     var titleAttributedString: NSAttributedString {
@@ -76,7 +76,7 @@ struct FungibleTokenViewCellViewModel {
 
     private var priceChangeUSDValue: String {
         if let result = EthCurrencyHelper(ticker: ticker).valueChanged24h(value: token.optionalDecimalValue) {
-            return NumberFormatter.usd.string(from: result) ?? "-"
+            return NumberFormatter.usdSymbol.string(from: result) ?? "-"
         } else {
             return "-"
         }
@@ -91,7 +91,7 @@ struct FungibleTokenViewCellViewModel {
     
     private var fiatValue: String {
         if let fiatValue = EthCurrencyHelper(ticker: ticker).fiatValue(value: token.optionalDecimalValue) {
-            return NumberFormatter.usd.string(from: fiatValue) ?? "-"
+            return NumberFormatter.usdSymbol.string(from: fiatValue) ?? "-"
         } else {
             return "-"
         }

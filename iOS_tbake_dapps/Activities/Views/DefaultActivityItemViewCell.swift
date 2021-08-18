@@ -86,9 +86,9 @@ class DefaultActivityItemViewCell: UITableViewCell {
         separatorInset = .init(top: 0, left: viewModel.leftMargin, bottom: 0, right: 0)
 
         selectionStyle = .none
-        background.backgroundColor = viewModel.contentsBackgroundColor
+        background.backgroundColor = Colors.appBackground
 
-        backgroundColor = viewModel.backgroundColor
+        backgroundColor = Colors.appBackground
 
         titleLabel.textColor = viewModel.titleTextColor
         titleLabel.attributedText = viewModel.title
