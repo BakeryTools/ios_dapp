@@ -57,10 +57,6 @@ struct SendViewModel {
     var recepientLabelTextColor: UIColor {
         return R.color.dove()!
     }
-
-    var recipientsAddress: String {
-        return R.string.localizable.sendRecipientsAddress()
-    }
     
     var amountLbl: String {
         return R.string.localizable.sendAmount()
@@ -82,8 +78,8 @@ struct SendViewModel {
         return R.string.localizable.sendRecipientErrorEmpty()
     }
 
-    var amountTextFieldPair: AmountTextField.Pair {
-        return AmountTextField.Pair(left: .cryptoCurrency(transactionType.tokenObject), right: .usd)
+    var recipientsAddress: String {
+        return R.string.localizable.sendRecipientsAddress()
     }
 
     var selectCurrencyButtonHidden: Bool {

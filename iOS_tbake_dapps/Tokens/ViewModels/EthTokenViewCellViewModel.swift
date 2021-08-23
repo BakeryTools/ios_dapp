@@ -34,11 +34,11 @@ struct EthTokenViewCellViewModel {
     }
 
     var backgroundColor: UIColor {
-        return Screen.TokenCard.Color.background
+        return Colors.backgroundClear
     }
 
     var contentsBackgroundColor: UIColor {
-        return Screen.TokenCard.Color.background
+        return Colors.backgroundClear
     }
 
     var titleAttributedString: NSAttributedString {

@@ -5,8 +5,13 @@ import BigInt
 import PromiseKit
 import web3swift
 
+protocol EventSourceCoordinatorType: AnyObject {
+    func fetchEthereumEvents()
+    func fetchEventsByTokenId(forToken token: TokenObject) -> [Promise<Void>]
+}
+
 //TODO rename this generic name to reflect that it's for event instances, not for event activity
-class EventSourceCoordinator {
+class EventSourceCoordinator: EventSourceCoordinatorType {
     private var wallet: Wallet
     private let config: Config
     private let tokensStorages: ServerDictionary<TokensDataStore>
@@ -36,7 +41,7 @@ class EventSourceCoordinator {
 
             for eachTokenHolder in tokenHolders {
                 guard let tokenId = eachTokenHolder.tokenIds.first else { continue }
-                let promise = fetchEvents(forTokenId: tokenId, token: token, eventOrigin: eventOrigin)
+                let promise = EventSourceCoordinator.functional.fetchEvents(forTokenId: tokenId, token: token, eventOrigin: eventOrigin, wallet: wallet, eventsDataStore: eventsDataStore, queue: queue)
                 fetchPromises.append(promise)
             }
         }
@@ -47,10 +52,8 @@ class EventSourceCoordinator {
     func fetchEthereumEvents() {
         if rateLimitedUpdater == nil {
             rateLimitedUpdater = RateLimiter(name: "Poll Ethereum events for instances", limit: 15, autoRun: true) { [weak self] in
-                guard let strongSelf = self else { return }
-
-                strongSelf.queue.async {
-                    strongSelf.fetchEthereumEventsImpl()
+                self?.queue.async {
+                    self?.fetchEthereumEventsImpl()
                 }
             }
         } else {
@@ -62,7 +65,7 @@ class EventSourceCoordinator {
         guard !isFetching else { return }
         isFetching = true
 
-        let tokensStoragesForEnabledServers = config.enabledServers.map { tokensStorages[$0] }
+        let tokensStoragesForEnabledServers = config.enabledServers.compactMap { tokensStorages[safe: $0] }
         let fetchPromises = tokensStoragesForEnabledServers.flatMap {
             $0.enabledObject.flatMap { fetchEventsByTokenId(forToken: $0) }
         }
@@ -71,35 +74,59 @@ class EventSourceCoordinator {
             self.isFetching = false
         }
     }
+}
 
-    private func fetchEvents(forTokenId tokenId: TokenId, token: TokenObject, eventOrigin: EventOrigin) -> Promise<Void> {
-        let (filterName, filterValue) = eventOrigin.eventFilter
-        let filterParam = eventOrigin.parameters
-                .filter { $0.isIndexed }
-                .map { self.formFilterFrom(fromParameter: $0, tokenId: tokenId, filterName: filterName, filterValue: filterValue) }
+extension EventSourceCoordinator {
+    class functional {}
+}
+
+extension EventSourceCoordinator.functional {
+
+    static func fetchEvents(forTokenId tokenId: TokenId, token: TokenObject, eventOrigin: EventOrigin, wallet: Wallet, eventsDataStore: EventsDataStoreProtocol, queue: DispatchQueue) -> Promise<Void> {
+        //Important to not access `token` in the queue or another thread. Do it outside
+        //TODO better to pass in a non-Realm representation of the TokenObject instead
         let contractAddress = token.contractAddress
         let tokenServer = token.server
-
-        return eventsDataStore.getLastMatchingEventSortedByBlockNumber(forContract: eventOrigin.contract, tokenContract: contractAddress, server: tokenServer, eventName: eventOrigin.eventName).map(on: queue, { oldEvent -> EventFilter.Block in
-            if let newestEvent = oldEvent {
-                return .blockNumber(UInt64(newestEvent.blockNumber + 1))
-            } else {
-                return .blockNumber(0)
+        return Promise<Void> { seal in
+            queue.async {
+                let (filterName, filterValue) = eventOrigin.eventFilter
+                let filterParam = eventOrigin.parameters
+                        .filter { $0.isIndexed }
+                    .map { Self.formFilterFrom(fromParameter: $0, tokenId: tokenId, filterName: filterName, filterValue: filterValue, wallet: wallet) }
+                eventsDataStore.getLastMatchingEventSortedByBlockNumber(forContract: eventOrigin.contract, tokenContract: contractAddress, server: tokenServer, eventName: eventOrigin.eventName).map(on: queue, { oldEvent -> EventFilter.Block in
+                    if let newestEvent = oldEvent {
+                        return .blockNumber(UInt64(newestEvent.blockNumber + 1))
+                    } else {
+                        return .blockNumber(0)
+                    }
+                }).map(on: queue, { fromBlock -> EventFilter in
+                    EventFilter(fromBlock: fromBlock, toBlock: .latest, addresses: [EthereumAddress(address: eventOrigin.contract)], parameterFilters: filterParam.map { $0?.filter })
+                }).then(on: queue, { eventFilter in
+                    getEventLogs(withServer: tokenServer, contract: eventOrigin.contract, eventName: eventOrigin.eventName, abiString: eventOrigin.eventAbiString, filter: eventFilter, queue: queue)
+                }).map(on: queue, { result -> [EventInstanceValue] in
+                    result.compactMap {
+                        Self.convertEventToDatabaseObject($0, filterParam: filterParam, eventOrigin: eventOrigin, contractAddress: contractAddress, server: tokenServer)
+                    }
+                }).then(on: queue, { events -> Promise<Void> in
+                    eventsDataStore.add(events: events, forTokenContract: contractAddress)
+                }).done(on: queue, { _ in
+                    seal.fulfill(())
+                }).catch(on: queue, { e in
+                    seal.reject(e)
+                })
             }
-        }).map(on: queue, { fromBlock -> EventFilter in
-            EventFilter(fromBlock: fromBlock, toBlock: .latest, addresses: [EthereumAddress(address: eventOrigin.contract)], parameterFilters: filterParam.map { $0?.filter })
-        }).then(on: queue, { eventFilter in
-            getEventLogs(withServer: tokenServer, contract: eventOrigin.contract, eventName: eventOrigin.eventName, abiString: eventOrigin.eventAbiString, filter: eventFilter, queue: self.queue)
-        }).map(on: queue, { result -> [EventInstanceValue] in
-            result.compactMap {
-                self.convertEventToDatabaseObject($0, filterParam: filterParam, eventOrigin: eventOrigin, contractAddress: contractAddress, server: tokenServer)
-            }
-        }).then(on: queue, { events -> Promise<Void> in
-            return self.eventsDataStore.add(events: events, forTokenContract: contractAddress)
-        })
+        }
     }
 
-    private func convertEventToDatabaseObject(_ event: EventParserResultProtocol, filterParam: [(filter: [EventFilterable], textEquivalent: String)?], eventOrigin: EventOrigin, contractAddress: TBakeWallet.Address, server: RPCServer) -> EventInstanceValue? {
+    static func convertToImplicitAttribute(string: String) -> AssetImplicitAttributes? {
+        let prefix = "${"
+        let suffix = "}"
+        guard string.hasPrefix(prefix) && string.hasSuffix(suffix) else { return nil }
+        let value = string.substring(with: prefix.count..<(string.count - suffix.count))
+        return AssetImplicitAttributes(rawValue: value)
+    }
+
+    private static func convertEventToDatabaseObject(_ event: EventParserResultProtocol, filterParam: [(filter: [EventFilterable], textEquivalent: String)?], eventOrigin: EventOrigin, contractAddress: TBakeWallet.Address, server: RPCServer) -> EventInstanceValue? {
         guard let blockNumber = event.eventLog?.blockNumber else { return nil }
         guard let logIndex = event.eventLog?.logIndex else { return nil }
         let decodedResult = Self.convertToJsonCompatible(dictionary: event.decodedResult)
@@ -111,29 +138,11 @@ class EventSourceCoordinator {
         return EventInstanceValue(contract: eventOrigin.contract, tokenContract: contractAddress, server: server, eventName: eventOrigin.eventName, blockNumber: Int(blockNumber), logIndex: Int(logIndex), filter: filterText, json: json)
     }
 
-    private static func convertToJsonCompatible(dictionary: [String: Any]) -> [String: Any] {
-        Dictionary(uniqueKeysWithValues: dictionary.compactMap { key, value -> (String, Any)? in
-            switch value {
-            case let address as EthereumAddress:
-                return (key, address.address)
-            case let data as Data:
-                return (key, data.hexEncoded)
-            case let string as String:
-                return (key, string)
-            case let bigUInt as BigUInt:
-                return (key, Int(bigUInt))
-            default:
-                //We only accept known types, otherwise serializing to JSON will crash
-                return nil
-            }
-        })
-    }
-
-    private func formFilterFrom(fromParameter parameter: EventParameter, tokenId: TokenId, filterName: String, filterValue: String) -> (filter: [EventFilterable], textEquivalent: String)? {
+    private static func formFilterFrom(fromParameter parameter: EventParameter, tokenId: TokenId, filterName: String, filterValue: String, wallet: Wallet) -> (filter: [EventFilterable], textEquivalent: String)? {
         guard parameter.name == filterName else { return nil }
         guard let parameterType = SolidityType(rawValue: parameter.type) else { return nil }
         let optionalFilter: (filter: AssetAttributeValueUsableAsFunctionArguments, textEquivalent: String)?
-        if let implicitAttribute = EventSourceCoordinator.convertToImplicitAttribute(string: filterValue) {
+        if let implicitAttribute = Self.convertToImplicitAttribute(string: filterValue) {
             switch implicitAttribute {
             case .tokenId:
                 optionalFilter = AssetAttributeValueUsableAsFunctionArguments(assetAttribute: .uint(tokenId)).flatMap { (filter: $0, textEquivalent: "\(filterName)=\(tokenId)") }
@@ -151,11 +160,23 @@ class EventSourceCoordinator {
         return (filter: [filterValueTypedForEventFilters], textEquivalent: textEquivalent)
     }
 
-    static func convertToImplicitAttribute(string: String) -> AssetImplicitAttributes? {
-        let prefix = "${"
-        let suffix = "}"
-        guard string.hasPrefix(prefix) && string.hasSuffix(suffix) else { return nil }
-        let value = string.substring(with: prefix.count..<(string.count - suffix.count))
-        return AssetImplicitAttributes(rawValue: value)
+    static func convertToJsonCompatible(dictionary: [String: Any]) -> [String: Any] {
+        Dictionary(uniqueKeysWithValues: dictionary.compactMap { key, value -> (String, Any)? in
+            switch value {
+            case let address as EthereumAddress:
+                return (key, address.address)
+            case let data as Data:
+                return (key, data.hexEncoded)
+            case let string as String:
+                return (key, string)
+            case let bigUInt as BigUInt:
+                //Must not do `Int(bigUInt)` because it crashes upon overflow
+                return (key, String(bigUInt))
+            default:
+                //We only accept known types, otherwise serializing to JSON will crash
+                return nil
+            }
+        })
     }
+
 }

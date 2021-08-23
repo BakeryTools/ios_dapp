@@ -64,10 +64,10 @@ class ActivityViewCell: UITableViewCell {
         self.viewModel = viewModel
 
         selectionStyle = .none
-        background.backgroundColor = viewModel.contentsBackgroundColor
+        background.backgroundColor = Colors.appBackground
         background.layer.cornerRadius = viewModel.contentsCornerRadius
 
-        backgroundColor = viewModel.backgroundColor
+        backgroundColor = Colors.appBackground
 
         let (html: html, hash: hash) = viewModel.activity.itemViewHtml
         tokenScriptRendererView.loadHtml(html, hash: hash)

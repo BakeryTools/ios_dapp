@@ -4,78 +4,76 @@ import UIKit
 import PromiseKit
 import Result
 
-protocol TransactionCoordinatorDelegate: AnyObject, CanOpenURL {
+protocol TransactionCoordinatorDelegate: class, CanOpenURL {
 }
 
-class TransactionCoordinator: Coordinator {
+class TransactionCoordinator: NSObject, Coordinator {
     private let analyticsCoordinator: AnalyticsCoordinator
-    private let keystore: Keystore
     private let transactionsCollection: TransactionCollection
-    private let promptBackupCoordinator: PromptBackupCoordinator
     private let sessions: ServerDictionary<WalletSession>
-    private let tokensStorages: ServerDictionary<TokensDataStore>
 
     lazy var rootViewController: TransactionsViewController = {
         return makeTransactionsController()
     }()
 
-    lazy var dataCoordinator: TransactionDataCoordinator = {
-        let coordinator = TransactionDataCoordinator(
-            sessions: sessions,
-            transactionCollection: transactionsCollection,
-            keystore: keystore,
-            tokensStorages: tokensStorages,
-            promptBackupCoordinator: promptBackupCoordinator
-        )
-        return coordinator
-    }()
+    private var dataCoordinator: TransactionDataCoordinator
 
     weak var delegate: TransactionCoordinatorDelegate?
     let navigationController: UINavigationController
     var coordinators: [Coordinator] = []
-
+    private var subscriptionKey: Subscribable<[TransactionInstance]>.SubscribableKey!
     init(
         analyticsCoordinator: AnalyticsCoordinator,
         sessions: ServerDictionary<WalletSession>,
         navigationController: UINavigationController = UINavigationController(),
         transactionsCollection: TransactionCollection,
-        keystore: Keystore,
-        tokensStorages: ServerDictionary<TokensDataStore>,
-        promptBackupCoordinator: PromptBackupCoordinator
+        dataCoordinator: TransactionDataCoordinator
     ) {
         self.analyticsCoordinator = analyticsCoordinator
         self.sessions = sessions
-        self.keystore = keystore
         self.navigationController = navigationController
         self.transactionsCollection = transactionsCollection
-        self.tokensStorages = tokensStorages
-        self.promptBackupCoordinator = promptBackupCoordinator
+        self.dataCoordinator = dataCoordinator
+
+        super.init()
 
         NotificationCenter.default.addObserver(self, selector: #selector(didEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+
+        let subscription = transactionsCollection.subscribableFor(filter: .all)
+        subscriptionKey = subscription.subscribe { [weak self] txs in
+            guard let strongSelf = self else { return }
+
+            //NOTE: avoid filtering events on main queue
+            let values = TransactionsViewModel.mapTransactions(transactions: txs ?? [])
+            
+            DispatchQueue.main.async {
+                strongSelf.rootViewController.configure(viewModel: .init(transactions: values))
+            }
+        }
     }
 
     func start() {
         navigationController.viewControllers = [rootViewController]
     }
 
+    func addSentTransaction(_ transaction: SentTransaction) {
+        dataCoordinator.addSentTransaction(transaction)
+    }
+
     private func makeTransactionsController() -> TransactionsViewController {
         let viewModel = TransactionsViewModel()
-        let controller = TransactionsViewController(
-            dataCoordinator: dataCoordinator,
-            sessions: sessions,
-            viewModel: viewModel
-        )
+        let controller = TransactionsViewController(dataCoordinator: dataCoordinator, sessions: sessions, viewModel: viewModel)
         controller.delegate = self
+
         return controller
     }
 
     private func showTransaction(_ transactionRow: TransactionRow, on navigationController: UINavigationController) {
-        let viewController = TransactionViewController(analyticsCoordinator: analyticsCoordinator, session: sessions[transactionRow.server], transactionRow: transactionRow, delegate: self)
+        let controller = TransactionViewController(analyticsCoordinator: analyticsCoordinator, session: sessions[transactionRow.server], transactionRow: transactionRow, delegate: self)
+        controller.hidesBottomBarWhenPushed = true
+        controller.navigationItem.largeTitleDisplayMode = .never
 
-        viewController.navigationItem.largeTitleDisplayMode = .never
-        viewController.hidesBottomBarWhenPushed = true
-        
-        navigationController.pushViewController(viewController, animated: true)
+        navigationController.pushViewController(controller, animated: true)
     }
 
     //TODO duplicate of method showTransaction(_:) to display in a specific UIViewController because we are now showing transactions from outside the transactions tab. Clean up

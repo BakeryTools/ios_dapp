@@ -31,26 +31,18 @@ class TokenCollection {
 }
 
 extension TokenCollection: TokensDataStoreDelegate {
-    func didUpdate(result: Result<TokensViewModel, TokenError>, refreshImmediately: Bool = false) {
+    func didUpdate(in tokensDataStore: TokensDataStore, refreshImmediately: Bool = false) {
         if refreshImmediately {
-            DispatchQueue.main.async {
-                self.notifySubscribersOfUpdatedTokens()
-            }
-
+            notifySubscribersOfUpdatedTokens()
             return
         }
 
         //The first time, we notify the subscribers and hence load the data in the UI immediately, otherwise the list of tokens in the Wallet tab will be empty for a few seconds after launch
         if rateLimitedUpdater == nil {
             rateLimitedUpdater = RateLimiter(limit: 2) { [weak self] in
-                DispatchQueue.main.async {
-                    self?.notifySubscribersOfUpdatedTokens()
-                }
+                self?.notifySubscribersOfUpdatedTokens()
             }
-
-            DispatchQueue.main.async {
-                self.notifySubscribersOfUpdatedTokens()
-            }
+            notifySubscribersOfUpdatedTokens()
         } else {
             rateLimitedUpdater?.run()
         }
@@ -61,32 +53,12 @@ extension TokenCollection: TokensDataStoreDelegate {
         var tickers: [AddressAndRPCServer: CoinTicker] = [:]
         var tokens: [TokenObject] = []
 
-        //This might slow things down. Especially if it runs too many times unnecessarily
         for each in tokenDataStores {
             for (key, value) in each.tickers {
                 tickers[key] = value
             }
 
             tokens.append(contentsOf: each.enabledObject)
-        }
-
-        let nativeCryptoAddressInDatabase = Constants.nativeCryptoAddressInDatabase.eip55String
-        tokens.sort {
-            //Use `$0.contract` instead of `$0.contractAddress.eip55String` for performance in a loop since we know the former must be in EIP55
-            let contract0 = $0.contract
-            let contract1 = $1.contract
-            //Performance: Don't need to use sameContract(as:) because it's all 0s and we want to be fast
-            if contract0 == nativeCryptoAddressInDatabase && contract1 == nativeCryptoAddressInDatabase {
-                return $0.server.displayOrderPriority < $1.server.displayOrderPriority
-            } else if contract0 == nativeCryptoAddressInDatabase {
-                return true
-            } else if contract1 == nativeCryptoAddressInDatabase {
-                return false
-            } else if $0.server != $1.server {
-                return $0.server.displayOrderPriority < $1.server.displayOrderPriority
-            } else {
-                return $0.name < $1.name
-            }
         }
 
         let tokensViewModel = TokensViewModel(filterTokensCoordinator: filterTokensCoordinator, tokens: tokens, tickers: tickers)

@@ -22,7 +22,7 @@ class TransactionsEmptyView: UIView {
         self.onRetry = onRetry
         super.init(frame: .zero)
 
-        backgroundColor = .white
+        backgroundColor = Colors.appBackground
 
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.text = title

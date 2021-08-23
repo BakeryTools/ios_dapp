@@ -26,6 +26,7 @@ class SelectAssetViewController: UIViewController {
     private let filterTokensCoordinator: FilterTokensCoordinator
     private var selectedToken: TokenObject?
     private let filter: WalletFilter
+    private var tokensPrice: [TokenDetails] = []
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.register(FungibleTokenViewCell.self)
@@ -73,6 +74,15 @@ class SelectAssetViewController: UIViewController {
 
         configure(viewModel: viewModel)
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        self.loadPrice() {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
 
     override func viewWillAppear(_ animated: Bool) {
         print("SelectAssetViewController")
@@ -89,6 +99,29 @@ class SelectAssetViewController: UIViewController {
     private func fetchTokens() {
         startLoading()
         tokenCollection.fetch()
+    }
+    
+    private func loadPrice(completion: @escaping (() ->(Void))) {
+        for token in viewModel.tokens {
+            self.loadPriceFromPancakeswap(address: token.contract) { data in
+                let price = TokenDetails(name: data?.name, symbol: data?.symbol, price: data?.price, price_BNB: data?.price_BNB)
+                self.tokensPrice.append(price)
+            }
+        }
+        completion()
+    }
+    
+    private func loadPriceFromPancakeswap(address: String, completion: @escaping ((_ data: TokenDetails?) -> ())) {
+        let jsonUrlString = "https://api.pancakeswap.info/api/v2/tokens/\(address)"
+        
+        WebService().getData(jsonUrlString){ data in
+            do {
+                let dataJSON = try JSONDecoder().decode(PancakeSwapPrice.self, from: data)
+                completion(dataJSON.data)
+            }catch let error {
+                print(error)
+            }
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -164,8 +197,10 @@ extension SelectAssetViewController: UITableViewDataSource {
             let cell: FungibleTokenViewCell = tableView.dequeueReusableCell(for: indexPath)
             cell.configure(viewModel: .init(token: token,
                 assetDefinitionStore: assetDefinitionStore,
-                ticker: viewModel.ticker(for: token)
-            ))
+                ticker: viewModel.ticker(for: token)),
+                token: token,
+                price: self.tokensPrice
+            )
             cell.accessoryType = viewModel.accessoryType(selectedToken, indexPath: indexPath)
 
             return cell

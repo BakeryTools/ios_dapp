@@ -6,6 +6,7 @@ extension NumberFormatter {
 
     static let currency = Formatter(.currency)
     static let usd = Formatter(.usd)
+    static let usdSymbol = Formatter(.usdSymbol)
     static let percent = Formatter(.percent)
     static let shortCrypto = Formatter(.shortCrypto)
 
@@ -24,6 +25,7 @@ extension NumberFormatter {
 
 private enum NumberFormatterConfiguration {
     case usd
+    case usdSymbol
     case currency
     case percent
     case shortCrypto
@@ -42,10 +44,18 @@ private enum NumberFormatterConfiguration {
         case .usd:
             formatter.positiveFormat = "0.00" + " " + Constants.Currency.usd
             formatter.negativeFormat = "-0.00" + " " + Constants.Currency.usd
+            formatter.minimumFractionDigits = 2
+            formatter.maximumFractionDigits = 10
+            formatter.currencyCode = String()
+        case .usdSymbol:
+            formatter.positiveFormat = "0.00" + " " + Constants.Currency.symbol
+            formatter.negativeFormat = "-0.00" + " " + Constants.Currency.symbol
+            formatter.minimumFractionDigits = 2
+            formatter.maximumFractionDigits = 10
             formatter.currencyCode = String()
         case .percent:
-            formatter.positiveFormat = "0.00%"
-            formatter.negativeFormat = "-0.00%"
+            formatter.positiveFormat = "0.00"
+            formatter.negativeFormat = "-0.00"
             formatter.numberStyle = .percent
         case .shortCrypto:
             formatter.positiveFormat = "0.0000"

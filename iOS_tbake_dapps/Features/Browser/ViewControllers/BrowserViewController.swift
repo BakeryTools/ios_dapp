@@ -13,12 +13,14 @@ protocol BrowserViewControllerDelegate: AnyObject {
     func forceUpdate(url: URL, inBrowserViewController viewController: BrowserViewController)
     func handleUniversalLink(_ url: URL, inBrowserViewController viewController: BrowserViewController)
     func handleCustomUrlScheme(_ url: URL, inBrowserViewController viewController: BrowserViewController)
+    func clearNavbar()
 }
 
 final class BrowserViewController: UIViewController {
     private var myContext = 0
     private let account: Wallet
     private let server: RPCServer
+    private var forceReload: Bool?
 
     private struct Keys {
         static let estimatedProgress = "estimatedProgress"
@@ -37,6 +39,7 @@ final class BrowserViewController: UIViewController {
         errorView.delegate = self
         return errorView
     }()
+    
     private var estimatedProgressObservation: NSKeyValueObservation!
 
     weak var delegate: BrowserViewControllerDelegate?
@@ -92,7 +95,8 @@ final class BrowserViewController: UIViewController {
 
             errorView.anchorsConstraint(to: webView),
         ])
-        view.backgroundColor = .white
+        
+        self.view.backgroundColor = Colors.appBackground
 
         estimatedProgressObservation = webView.observe(\.estimatedProgress) { [weak self] webView, _ in
             guard let strongSelf = self else { return }
@@ -108,7 +112,13 @@ final class BrowserViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
         print("BrowserViewController")
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        self.delegate?.clearNavbar()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -148,9 +158,10 @@ final class BrowserViewController: UIViewController {
         }
     }
 
-    func goTo(url: URL) {
+    func goTo(url: URL, forceReload: Bool) {
         hideErrorView()
-        webView.load(URLRequest(url: url))
+        self.webView.load(URLRequest(url: url))
+        self.forceReload = forceReload
     }
 
     func notifyFinish(callbackID: Int, value: Result<DappCallback, DAppError>) {
@@ -204,6 +215,11 @@ extension BrowserViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         recordURL()
         hideErrorView()
+        
+        if self.forceReload ?? false {
+            self.reload()
+            self.forceReload = nil
+        }
     }
 
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
@@ -227,7 +243,7 @@ extension BrowserViewController: WKNavigationDelegate {
             app.open(url)
             return decisionHandler(.cancel)
         }
-        if url.host == "aw.app" && url.path == UniversalLinkCoordinator.walletConnectPath {
+        if url.host == "tbake.app" && url.path == UniversalLinkCoordinator.walletConnectPath {
             delegate?.handleUniversalLink(url, inBrowserViewController: self)
             return decisionHandler(.cancel)
         }

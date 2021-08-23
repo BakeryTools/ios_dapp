@@ -9,9 +9,11 @@ protocol TokensCoordinatorDelegate: AnyObject, CanOpenURL {
     func shouldOpen(url: URL, shouldSwitchServer: Bool, forTransactionType transactionType: TransactionType, in coordinator: TokensCoordinator)
     func didPress(for type: PaymentFlow, server: RPCServer, in coordinator: TokensCoordinator)
     func didTap(transaction: TransactionInstance, inViewController viewController: UIViewController, in coordinator: TokensCoordinator)
+    func didTap(activity: Activity, inViewController viewController: UIViewController, in coordinator: TokensCoordinator)
     func openConsole(inCoordinator coordinator: TokensCoordinator)
     func didPostTokenScriptTransaction(_ transaction: SentTransaction, in coordinator: TokensCoordinator)
     func blockieSelected(in coordinator: TokensCoordinator)
+    func goToChart(url: String?)
 }
 
 private struct NoContractDetailsDetected: Error {
@@ -19,6 +21,8 @@ private struct NoContractDetailsDetected: Error {
 
 class TokensCoordinator: Coordinator {
     private let sessions: ServerDictionary<WalletSession>
+    private let transactionsStorages: ServerDictionary<TransactionsStorage>
+    private let tokensStorages: ServerDictionary<TokensDataStore>
     private let keystore: Keystore
     private let config: Config
     private let tokenCollection: TokenCollection
@@ -51,7 +55,8 @@ class TokensCoordinator: Coordinator {
         queue.maxConcurrentOperationCount = 1
         return queue
     }()
-
+    
+    private let activitiesService: ActivitiesServiceType
     private lazy var tokensViewController: TokensViewController = {
         let controller = TokensViewController(
             sessions: sessions,
@@ -76,28 +81,32 @@ class TokensCoordinator: Coordinator {
     let navigationController: UINavigationController
     var coordinators: [Coordinator] = []
     weak var delegate: TokensCoordinatorDelegate?
-    private let transactionsStorages: ServerDictionary<TransactionsStorage>
     private let coinTickersFetcher: CoinTickersFetcherType
     lazy var rootViewController: TokensViewController = {
         return tokensViewController
     }()
-
+    
+    private let walletBalanceCoordinator: WalletBalanceCoordinatorType
+    
     init(
-            navigationController: UINavigationController = UINavigationController(),
-            sessions: ServerDictionary<WalletSession>,
-            keystore: Keystore,
-            config: Config,
-            tokenCollection: TokenCollection,
-            nativeCryptoCurrencyPrices: ServerDictionary<Subscribable<Double>>,
-            assetDefinitionStore: AssetDefinitionStore,
-            eventsDataStore: EventsDataStoreProtocol,
-            promptBackupCoordinator: PromptBackupCoordinator,
-            filterTokensCoordinator: FilterTokensCoordinator,
-            analyticsCoordinator: AnalyticsCoordinator,
-            tokenActionsService: TokenActionsServiceType,
-            walletConnectCoordinator: WalletConnectCoordinator,
-            transactionsStorages: ServerDictionary<TransactionsStorage>,
-            coinTickersFetcher: CoinTickersFetcherType
+        navigationController: UINavigationController = UINavigationController(),
+        sessions: ServerDictionary<WalletSession>,
+        keystore: Keystore,
+        config: Config,
+        tokenCollection: TokenCollection,
+        nativeCryptoCurrencyPrices: ServerDictionary<Subscribable<Double>>,
+        assetDefinitionStore: AssetDefinitionStore,
+        eventsDataStore: EventsDataStoreProtocol,
+        promptBackupCoordinator: PromptBackupCoordinator,
+        filterTokensCoordinator: FilterTokensCoordinator,
+        analyticsCoordinator: AnalyticsCoordinator,
+        tokenActionsService: TokenActionsServiceType,
+        walletConnectCoordinator: WalletConnectCoordinator,
+        transactionsStorages: ServerDictionary<TransactionsStorage>,
+        tokensStorages: ServerDictionary<TokensDataStore>,
+        coinTickersFetcher: CoinTickersFetcherType,
+        activitiesService: ActivitiesServiceType,
+        walletBalanceCoordinator: WalletBalanceCoordinatorType
     ) {
         self.filterTokensCoordinator = filterTokensCoordinator
         self.navigationController = navigationController
@@ -114,7 +123,10 @@ class TokensCoordinator: Coordinator {
         self.tokenActionsService = tokenActionsService
         self.walletConnectCoordinator = walletConnectCoordinator
         self.transactionsStorages = transactionsStorages
+        self.tokensStorages = tokensStorages
         self.coinTickersFetcher = coinTickersFetcher
+        self.activitiesService = activitiesService
+        self.walletBalanceCoordinator = walletBalanceCoordinator
         setupSingleChainTokenCoordinators()
     }
 
@@ -132,7 +144,7 @@ class TokensCoordinator: Coordinator {
             let session = sessions[server]
             let price = nativeCryptoCurrencyPrices[server]
             let transactionsStorage = transactionsStorages[server]
-            let coordinator = SingleChainTokenCoordinator(session: session, keystore: keystore, tokensStorage: each, ethPrice: price, assetDefinitionStore: assetDefinitionStore, eventsDataStore: eventsDataStore, analyticsCoordinator: analyticsCoordinator, withAutoDetectTransactedTokensQueue: autoDetectTransactedTokensQueue, withAutoDetectTokensQueue: autoDetectTokensQueue, tokenActionsProvider: tokenActionsService, transactionsStorage: transactionsStorage, coinTickersFetcher: coinTickersFetcher)
+            let coordinator = SingleChainTokenCoordinator(sessions: sessions, session: session, keystore: keystore, tokensStorage: each, ethPrice: price, assetDefinitionStore: assetDefinitionStore, eventsDataStore: eventsDataStore, analyticsCoordinator: analyticsCoordinator, withAutoDetectTransactedTokensQueue: autoDetectTransactedTokensQueue, withAutoDetectTokensQueue: autoDetectTokensQueue, tokenActionsProvider: tokenActionsService, transactionsStorage: transactionsStorage, coinTickersFetcher: coinTickersFetcher, activitiesService: activitiesService)
             coordinator.delegate = self
             addCoordinator(coordinator)
         }
@@ -174,6 +186,13 @@ class TokensCoordinator: Coordinator {
 }
 
 extension TokensCoordinator: TokensViewControllerDelegate {
+    func goToHistory() {
+        let coordinator = ActivitiesCoordinator(analyticsCoordinator: analyticsCoordinator, sessions: self.sessions, navigationController: navigationController, tokensStorages: tokensStorages, assetDefinitionStore: assetDefinitionStore, activitiesService: activitiesService)
+        coordinator.delegate = self
+        addCoordinator(coordinator)
+        coordinator.start()
+    }
+    
     func didPressAddToken(in viewController: UIViewController) {
         let coordinator = NewTokenCoordinator(
             analyticsCoordinator: analyticsCoordinator,
@@ -400,6 +419,13 @@ extension TokensCoordinator: WalletCoordinatorDelegate {
 }
 
 extension TokensCoordinator: SingleChainTokenCoordinatorDelegate {
+    func goToChart(url: String?) {
+        self.delegate?.goToChart(url: url)
+    }
+    
+    func didTap(activity: Activity, inViewController viewController: UIViewController, in coordinator: SingleChainTokenCoordinator) {
+        delegate?.didTap(activity: activity, inViewController: viewController, in: self)
+    }
     
     func didTapSwap(forTransactionType transactionType: TransactionType, service: SwapTokenURLProviderType, in coordinator: SingleChainTokenCoordinator) {
         delegate?.didTapSwap(forTransactionType: transactionType, service: service, in: self)
@@ -443,5 +469,15 @@ extension TokensCoordinator: CanOpenURL {
 extension TokensCoordinator: AddHideTokensCoordinatorDelegate {
     func didClose(coordinator: AddHideTokensCoordinator) {
         removeCoordinator(coordinator)
+    }
+}
+
+extension TokensCoordinator: ActivitiesCoordinatorDelegate {
+    func didPressActivity(activity: Activity, in viewController: ActivitiesViewController) {
+        delegate?.didTap(activity: activity, inViewController: viewController, in: self)
+    }
+
+    func didPressTransaction(transaction: TransactionInstance, in viewController: ActivitiesViewController) {
+        delegate?.didTap(transaction: transaction, inViewController: viewController, in: self)
     }
 }

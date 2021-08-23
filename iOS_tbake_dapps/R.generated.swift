@@ -587,9 +587,16 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
 
-  /// This `R.entitlements` struct is generated, and contains static references to 1 properties.
+  /// This `R.entitlements` struct is generated, and contains static references to 3 properties.
   struct entitlements {
+    static let apsEnvironment = infoPlistString(path: [], key: "aps-environment") ?? "development"
     static let comAppleDeveloperDefaultDataProtection = infoPlistString(path: [], key: "com.apple.developer.default-data-protection") ?? "NSFileProtectionComplete"
+
+    struct comAppleSecurityApplicationGroups {
+      static let groupComBakerytoolsIosNotification = infoPlistString(path: ["com.apple.security.application-groups"], key: "group.com.bakerytools.ios.notification") ?? "group.com.bakerytools.ios.notification"
+
+      fileprivate init() {}
+    }
 
     fileprivate init() {}
   }
@@ -2424,7 +2431,7 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
 
-  /// This `R.nib` struct is generated, and contains static references to 17 nibs.
+  /// This `R.nib` struct is generated, and contains static references to 18 nibs.
   struct nib {
     /// Nib `AddHideTokensViewController`.
     static let addHideTokensViewController = _R.nib._AddHideTokensViewController()
@@ -2452,6 +2459,8 @@ struct R: Rswift.Validatable {
     static let supportViewController = _R.nib._SupportViewController()
     /// Nib `TokenViewController`.
     static let tokenViewController = _R.nib._TokenViewController()
+    /// Nib `TokensViewController`.
+    static let tokensViewController = _R.nib._TokensViewController()
     /// Nib `TransactionConfirmationViewController`.
     static let transactionConfirmationViewController = _R.nib._TransactionConfirmationViewController()
     /// Nib `TransactionViewController`.
@@ -2566,6 +2575,14 @@ struct R: Rswift.Validatable {
     #endif
 
     #if os(iOS) || os(tvOS)
+    /// `UINib(name: "TokensViewController", in: bundle)`
+    @available(*, deprecated, message: "Use UINib(resource: R.nib.tokensViewController) instead")
+    static func tokensViewController(_: Void = ()) -> UIKit.UINib {
+      return UIKit.UINib(resource: R.nib.tokensViewController)
+    }
+    #endif
+
+    #if os(iOS) || os(tvOS)
     /// `UINib(name: "TransactionConfirmationViewController", in: bundle)`
     @available(*, deprecated, message: "Use UINib(resource: R.nib.transactionConfirmationViewController) instead")
     static func transactionConfirmationViewController(_: Void = ()) -> UIKit.UINib {
@@ -2649,6 +2666,10 @@ struct R: Rswift.Validatable {
       return R.nib.tokenViewController.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
     }
 
+    static func tokensViewController(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
+      return R.nib.tokensViewController.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
+    }
+
     static func transactionConfirmationViewController(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
       return R.nib.transactionConfirmationViewController.instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
     }
@@ -2678,7 +2699,7 @@ struct R: Rswift.Validatable {
 
   /// This `R.string` struct is generated, and contains static references to 1 localization tables.
   struct string {
-    /// This `R.string.localizable` struct is generated, and contains static references to 657 localization keys.
+    /// This `R.string.localizable` struct is generated, and contains static references to 679 localization keys.
     struct localizable {
       /// en translation: %@  Start WalletConnect session on:
       ///
@@ -2724,6 +2745,30 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let aWalletTokenSellSingleTokenSelectedTitle = Rswift.StringResource(key: "a.wallet.token.sell.singleTokenSelected.title", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: 1 Day
+      ///
+      /// Locales: en
+      static let tokenInfoFieldStatsDay = Rswift.StringResource(key: "token.info.field.stats.day", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: 1 Month
+      ///
+      /// Locales: en
+      static let tokenInfoFieldStatsMonth = Rswift.StringResource(key: "token.info.field.stats.month", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: 1 Week
+      ///
+      /// Locales: en
+      static let tokenInfoFieldStatsWeek = Rswift.StringResource(key: "token.info.field.stats.week", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: 1 Year
+      ///
+      /// Locales: en
+      static let tokenInfoFieldStatsYear = Rswift.StringResource(key: "token.info.field.stats.year", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: 1 Year High
+      ///
+      /// Locales: en
+      static let tokenInfoFieldPerfomanceYearHigh = Rswift.StringResource(key: "token.info.field.perfomance.year.high", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: 1 Year Low
+      ///
+      /// Locales: en
+      static let tokenInfoFieldPerfomanceYearLow = Rswift.StringResource(key: "token.info.field.perfomance.year.low", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: 100% SECURE
       ///
       /// Locales: en
@@ -2812,6 +2857,14 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let activityEmpty = Rswift.StringResource(key: "activity.empty", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: Activity
+      ///
+      /// Locales: en
+      static let activityTabbarItemTitle = Rswift.StringResource(key: "activity.tabbar.item.title", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: Activity
+      ///
+      /// Locales: en
+      static let tokenTabActivity = Rswift.StringResource(key: "token.tab.activity", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Add
       ///
       /// Locales: en
@@ -2828,6 +2881,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let addrpcServerNavigationTitle = Rswift.StringResource(key: "addrpcServer.navigation.title", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: Add Custom Token
+      ///
+      /// Locales: en
+      static let addCustomTokenTitle = Rswift.StringResource(key: "addCustomToken.title", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Add Custom Token
       ///
       /// Locales: en
@@ -3747,6 +3804,10 @@ struct R: Rswift.Validatable {
       /// en translation: History
       ///
       /// Locales: en
+      static let goToHistoryTitle = Rswift.StringResource(key: "go.to.history.title", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: History
+      ///
+      /// Locales: en
       static let history = Rswift.StringResource(key: "History", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Hold all your Crypto assets in one place
       ///
@@ -3828,6 +3889,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let lockEnterPasscodeViewModelIncorrectPasscode = Rswift.StringResource(key: "lock.enter.passcode.view.model.incorrect.passcode", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: Info
+      ///
+      /// Locales: en
+      static let tokenTabInfo = Rswift.StringResource(key: "token.tab.info", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Insufficient balance
       ///
       /// Locales: en
@@ -4012,6 +4077,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let accountsConfirmDeleteMessage = Rswift.StringResource(key: "accounts.confirm.delete.message", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: Market Cap
+      ///
+      /// Locales: en
+      static let tokenInfoFieldStatsMarket_cap = Rswift.StringResource(key: "token.info.field.stats.market_cap", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Market Price: %@ %@
       ///
       /// Locales: en
@@ -4024,6 +4093,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let sendMax = Rswift.StringResource(key: "send.max", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: Max Supply
+      ///
+      /// Locales: en
+      static let tokenInfoFieldStatsMax_supply = Rswift.StringResource(key: "token.info.field.stats.max_supply", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Message
       ///
       /// Locales: en
@@ -4036,6 +4109,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let browserSettingsNetworkDescriptionTitle = Rswift.StringResource(key: "browser.settings.network.description.title", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: Most Used
+      ///
+      /// Locales: en
+      static let sortTokensParamMostUsed = Rswift.StringResource(key: "sortTokens.param.mostUsed", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Mumbai Testnet
       ///
       /// Locales: en
@@ -4072,6 +4149,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let name = Rswift.StringResource(key: "Name", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: Name
+      ///
+      /// Locales: en
+      static let sortTokensParamName = Rswift.StringResource(key: "sortTokens.param.name", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Name
       ///
       /// Locales: en
@@ -4140,6 +4221,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let browserNoBookmarksLabelTitle = Rswift.StringResource(key: "browser.noBookmarks.label.title", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: No results for token you are searching for
+      ///
+      /// Locales: en
+      static let seachTokenNoresultsTitle = Rswift.StringResource(key: "seachToken.noresults.title", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Nonce
       ///
       /// Locales: en
@@ -4284,6 +4369,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let transactionCellPendingTitle = Rswift.StringResource(key: "transaction.cell.pending.title", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: Perfomance
+      ///
+      /// Locales: en
+      static let tokenInfoHeaderPerfomance = Rswift.StringResource(key: "token.info.header.perfomance", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Personal message
       ///
       /// Locales: en
@@ -4532,6 +4621,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let aWalletAddressScanInstructions = Rswift.StringResource(key: "a.wallet.address.scan.instructions", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: Search Token
+      ///
+      /// Locales: en
+      static let searchbarPlaceholder = Rswift.StringResource(key: "searchbar.placeholder", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Search or enter website URL
       ///
       /// Locales: en
@@ -4720,6 +4813,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let underConstruction = Rswift.StringResource(key: "under.construction", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: Sort: By %@
+      ///
+      /// Locales: en
+      static let sortTokensSortBy = Rswift.StringResource(key: "sortTokens.sortBy", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Speed (Gas)
       ///
       /// Locales: en
@@ -4728,6 +4825,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let activitySpeedup = Rswift.StringResource(key: "activity.speedup", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: Stats
+      ///
+      /// Locales: en
+      static let tokenInfoHeaderStats = Rswift.StringResource(key: "token.info.header.stats", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Status
       ///
       /// Locales: en
@@ -4936,6 +5037,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let aWalletTokenSellTotalCostTitle = Rswift.StringResource(key: "a.wallet.token.sell.totalCost.title", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: Total Supply
+      ///
+      /// Locales: en
+      static let tokenInfoFieldStatsTotal_supply = Rswift.StringResource(key: "token.info.field.stats.total_supply", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Total network fee
       ///
       /// Locales: en
@@ -5052,6 +5157,10 @@ struct R: Rswift.Validatable {
       ///
       /// Locales: en
       static let aWalletTokenVerifiedContract = Rswift.StringResource(key: "a.wallet.token.verifiedContract", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
+      /// en translation: Value
+      ///
+      /// Locales: en
+      static let sortTokensParamValue = Rswift.StringResource(key: "sortTokens.param.value", tableName: "Localizable", bundle: R.hostingBundle, locales: ["en"], comment: nil)
       /// en translation: Value: %@
       ///
       /// Locales: en
@@ -5496,6 +5605,96 @@ struct R: Rswift.Validatable {
         return String(format: format, locale: locale, value1)
       }
 
+      /// en translation: 1 Day
+      ///
+      /// Locales: en
+      static func tokenInfoFieldStatsDay(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("token.info.field.stats.day", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "token.info.field.stats.day"
+        }
+
+        return NSLocalizedString("token.info.field.stats.day", bundle: bundle, comment: "")
+      }
+
+      /// en translation: 1 Month
+      ///
+      /// Locales: en
+      static func tokenInfoFieldStatsMonth(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("token.info.field.stats.month", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "token.info.field.stats.month"
+        }
+
+        return NSLocalizedString("token.info.field.stats.month", bundle: bundle, comment: "")
+      }
+
+      /// en translation: 1 Week
+      ///
+      /// Locales: en
+      static func tokenInfoFieldStatsWeek(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("token.info.field.stats.week", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "token.info.field.stats.week"
+        }
+
+        return NSLocalizedString("token.info.field.stats.week", bundle: bundle, comment: "")
+      }
+
+      /// en translation: 1 Year
+      ///
+      /// Locales: en
+      static func tokenInfoFieldStatsYear(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("token.info.field.stats.year", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "token.info.field.stats.year"
+        }
+
+        return NSLocalizedString("token.info.field.stats.year", bundle: bundle, comment: "")
+      }
+
+      /// en translation: 1 Year High
+      ///
+      /// Locales: en
+      static func tokenInfoFieldPerfomanceYearHigh(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("token.info.field.perfomance.year.high", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "token.info.field.perfomance.year.high"
+        }
+
+        return NSLocalizedString("token.info.field.perfomance.year.high", bundle: bundle, comment: "")
+      }
+
+      /// en translation: 1 Year Low
+      ///
+      /// Locales: en
+      static func tokenInfoFieldPerfomanceYearLow(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("token.info.field.perfomance.year.low", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "token.info.field.perfomance.year.low"
+        }
+
+        return NSLocalizedString("token.info.field.perfomance.year.low", bundle: bundle, comment: "")
+      }
+
       /// en translation: 100% SECURE
       ///
       /// Locales: en
@@ -5828,6 +6027,36 @@ struct R: Rswift.Validatable {
         return NSLocalizedString("activity.empty", bundle: bundle, comment: "")
       }
 
+      /// en translation: Activity
+      ///
+      /// Locales: en
+      static func activityTabbarItemTitle(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("activity.tabbar.item.title", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "activity.tabbar.item.title"
+        }
+
+        return NSLocalizedString("activity.tabbar.item.title", bundle: bundle, comment: "")
+      }
+
+      /// en translation: Activity
+      ///
+      /// Locales: en
+      static func tokenTabActivity(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("token.tab.activity", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "token.tab.activity"
+        }
+
+        return NSLocalizedString("token.tab.activity", bundle: bundle, comment: "")
+      }
+
       /// en translation: Add
       ///
       /// Locales: en
@@ -5886,6 +6115,21 @@ struct R: Rswift.Validatable {
         }
 
         return NSLocalizedString("addrpcServer.navigation.title", bundle: bundle, comment: "")
+      }
+
+      /// en translation: Add Custom Token
+      ///
+      /// Locales: en
+      static func addCustomTokenTitle(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("addCustomToken.title", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "addCustomToken.title"
+        }
+
+        return NSLocalizedString("addCustomToken.title", bundle: bundle, comment: "")
       }
 
       /// en translation: Add Custom Token
@@ -9366,6 +9610,21 @@ struct R: Rswift.Validatable {
       /// en translation: History
       ///
       /// Locales: en
+      static func goToHistoryTitle(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("go.to.history.title", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "go.to.history.title"
+        }
+
+        return NSLocalizedString("go.to.history.title", bundle: bundle, comment: "")
+      }
+
+      /// en translation: History
+      ///
+      /// Locales: en
       static func history(preferredLanguages: [String]? = nil) -> String {
         guard let preferredLanguages = preferredLanguages else {
           return NSLocalizedString("History", bundle: hostingBundle, comment: "")
@@ -9680,6 +9939,21 @@ struct R: Rswift.Validatable {
 
         let format = NSLocalizedString("lock.enter.passcode.view.model.incorrect.passcode", bundle: bundle, comment: "")
         return String(format: format, locale: locale, value1)
+      }
+
+      /// en translation: Info
+      ///
+      /// Locales: en
+      static func tokenTabInfo(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("token.tab.info", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "token.tab.info"
+        }
+
+        return NSLocalizedString("token.tab.info", bundle: bundle, comment: "")
       }
 
       /// en translation: Insufficient balance
@@ -10378,6 +10652,21 @@ struct R: Rswift.Validatable {
         return NSLocalizedString("accounts.confirm.delete.message", bundle: bundle, comment: "")
       }
 
+      /// en translation: Market Cap
+      ///
+      /// Locales: en
+      static func tokenInfoFieldStatsMarket_cap(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("token.info.field.stats.market_cap", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "token.info.field.stats.market_cap"
+        }
+
+        return NSLocalizedString("token.info.field.stats.market_cap", bundle: bundle, comment: "")
+      }
+
       /// en translation: Market Price: %@ %@
       ///
       /// Locales: en
@@ -10425,6 +10714,21 @@ struct R: Rswift.Validatable {
         return NSLocalizedString("send.max", bundle: bundle, comment: "")
       }
 
+      /// en translation: Max Supply
+      ///
+      /// Locales: en
+      static func tokenInfoFieldStatsMax_supply(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("token.info.field.stats.max_supply", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "token.info.field.stats.max_supply"
+        }
+
+        return NSLocalizedString("token.info.field.stats.max_supply", bundle: bundle, comment: "")
+      }
+
       /// en translation: Message
       ///
       /// Locales: en
@@ -10468,6 +10772,21 @@ struct R: Rswift.Validatable {
         }
 
         return NSLocalizedString("browser.settings.network.description.title", bundle: bundle, comment: "")
+      }
+
+      /// en translation: Most Used
+      ///
+      /// Locales: en
+      static func sortTokensParamMostUsed(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("sortTokens.param.mostUsed", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "sortTokens.param.mostUsed"
+        }
+
+        return NSLocalizedString("sortTokens.param.mostUsed", bundle: bundle, comment: "")
       }
 
       /// en translation: Mumbai Testnet
@@ -10605,6 +10924,21 @@ struct R: Rswift.Validatable {
         }
 
         return NSLocalizedString("Name", bundle: bundle, comment: "")
+      }
+
+      /// en translation: Name
+      ///
+      /// Locales: en
+      static func sortTokensParamName(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("sortTokens.param.name", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "sortTokens.param.name"
+        }
+
+        return NSLocalizedString("sortTokens.param.name", bundle: bundle, comment: "")
       }
 
       /// en translation: Name
@@ -10860,6 +11194,21 @@ struct R: Rswift.Validatable {
         }
 
         return NSLocalizedString("browser.noBookmarks.label.title", bundle: bundle, comment: "")
+      }
+
+      /// en translation: No results for token you are searching for
+      ///
+      /// Locales: en
+      static func seachTokenNoresultsTitle(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("seachToken.noresults.title", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "seachToken.noresults.title"
+        }
+
+        return NSLocalizedString("seachToken.noresults.title", bundle: bundle, comment: "")
       }
 
       /// en translation: Nonce
@@ -11408,6 +11757,21 @@ struct R: Rswift.Validatable {
         }
 
         return NSLocalizedString("transaction.cell.pending.title", bundle: bundle, comment: "")
+      }
+
+      /// en translation: Perfomance
+      ///
+      /// Locales: en
+      static func tokenInfoHeaderPerfomance(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("token.info.header.perfomance", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "token.info.header.perfomance"
+        }
+
+        return NSLocalizedString("token.info.header.perfomance", bundle: bundle, comment: "")
       }
 
       /// en translation: Personal message
@@ -12360,6 +12724,21 @@ struct R: Rswift.Validatable {
         return NSLocalizedString("a.wallet.address.scan.instructions", bundle: bundle, comment: "")
       }
 
+      /// en translation: Search Token
+      ///
+      /// Locales: en
+      static func searchbarPlaceholder(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("searchbar.placeholder", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "searchbar.placeholder"
+        }
+
+        return NSLocalizedString("searchbar.placeholder", bundle: bundle, comment: "")
+      }
+
       /// en translation: Search or enter website URL
       ///
       /// Locales: en
@@ -13075,6 +13454,23 @@ struct R: Rswift.Validatable {
         return NSLocalizedString("under.construction", bundle: bundle, comment: "")
       }
 
+      /// en translation: Sort: By %@
+      ///
+      /// Locales: en
+      static func sortTokensSortBy(_ value1: String, preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          let format = NSLocalizedString("sortTokens.sortBy", bundle: hostingBundle, comment: "")
+          return String(format: format, locale: applicationLocale, value1)
+        }
+
+        guard let (locale, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "sortTokens.sortBy"
+        }
+
+        let format = NSLocalizedString("sortTokens.sortBy", bundle: bundle, comment: "")
+        return String(format: format, locale: locale, value1)
+      }
+
       /// en translation: Speed (Gas)
       ///
       /// Locales: en
@@ -13103,6 +13499,21 @@ struct R: Rswift.Validatable {
         }
 
         return NSLocalizedString("activity.speedup", bundle: bundle, comment: "")
+      }
+
+      /// en translation: Stats
+      ///
+      /// Locales: en
+      static func tokenInfoHeaderStats(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("token.info.header.stats", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "token.info.header.stats"
+        }
+
+        return NSLocalizedString("token.info.header.stats", bundle: bundle, comment: "")
       }
 
       /// en translation: Status
@@ -13893,6 +14304,21 @@ struct R: Rswift.Validatable {
         return NSLocalizedString("a.wallet.token.sell.totalCost.title", bundle: bundle, comment: "")
       }
 
+      /// en translation: Total Supply
+      ///
+      /// Locales: en
+      static func tokenInfoFieldStatsTotal_supply(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("token.info.field.stats.total_supply", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "token.info.field.stats.total_supply"
+        }
+
+        return NSLocalizedString("token.info.field.stats.total_supply", bundle: bundle, comment: "")
+      }
+
       /// en translation: Total network fee
       ///
       /// Locales: en
@@ -14336,6 +14762,21 @@ struct R: Rswift.Validatable {
         }
 
         return NSLocalizedString("a.wallet.token.verifiedContract", bundle: bundle, comment: "")
+      }
+
+      /// en translation: Value
+      ///
+      /// Locales: en
+      static func sortTokensParamValue(preferredLanguages: [String]? = nil) -> String {
+        guard let preferredLanguages = preferredLanguages else {
+          return NSLocalizedString("sortTokens.param.value", bundle: hostingBundle, comment: "")
+        }
+
+        guard let (_, bundle) = localeBundle(tableName: "Localizable", preferredLanguages: preferredLanguages) else {
+          return "sortTokens.param.value"
+        }
+
+        return NSLocalizedString("sortTokens.param.value", bundle: bundle, comment: "")
       }
 
       /// en translation: Value: %@
@@ -15362,6 +15803,7 @@ struct _R: Rswift.Validatable {
       try _SendViewController.validate()
       try _SupportViewController.validate()
       try _TokenViewController.validate()
+      try _TokensViewController.validate()
       try _TransactionConfirmationViewController.validate()
       try _TransactionViewController.validate()
     }
@@ -15570,7 +16012,23 @@ struct _R: Rswift.Validatable {
 
       static func validate() throws {
         if UIKit.UIImage(named: "background_img", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'background_img' is used in nib 'TokenViewController', but couldn't be loaded.") }
-        if UIKit.UIImage(named: "token-bnb", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'token-bnb' is used in nib 'TokenViewController', but couldn't be loaded.") }
+        if #available(iOS 11.0, tvOS 11.0, *) {
+        }
+      }
+
+      fileprivate init() {}
+    }
+
+    struct _TokensViewController: Rswift.NibResourceType, Rswift.Validatable {
+      let bundle = R.hostingBundle
+      let name = "TokensViewController"
+
+      func firstView(owner ownerOrNil: AnyObject?, options optionsOrNil: [UINib.OptionsKey : Any]? = nil) -> UIKit.UIView? {
+        return instantiate(withOwner: ownerOrNil, options: optionsOrNil)[0] as? UIKit.UIView
+      }
+
+      static func validate() throws {
+        if UIKit.UIImage(named: "background_img", in: R.hostingBundle, compatibleWith: nil) == nil { throw Rswift.ValidationError(description: "[R.swift] Image named 'background_img' is used in nib 'TokensViewController', but couldn't be loaded.") }
         if #available(iOS 11.0, tvOS 11.0, *) {
         }
       }

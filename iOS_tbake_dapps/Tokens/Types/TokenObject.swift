@@ -297,3 +297,15 @@ func compositeTokenName(forContract contract: TBakeWallet.Address, fromContractN
     compositeName = localizedNameFromAssetDefinition
     return compositeName
 }
+
+extension Wallet {
+    class functional {}
+}
+
+extension Wallet.functional {
+    static func realm(forAccount account: Wallet) -> Realm {
+        let migration = MigrationInitializer(account: account)
+        migration.perform()
+        return try! Realm(configuration: migration.config)
+    }
+}

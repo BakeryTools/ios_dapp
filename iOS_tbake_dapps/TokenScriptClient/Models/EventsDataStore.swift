@@ -5,7 +5,7 @@ import RealmSwift
 import PromiseKit
 
 protocol EventsDataStoreProtocol {
-    func getLastMatchingEventSortedByBlockNumber(forContract contract: TBakeWallet.Address, tokenContract: TBakeWallet.Address, server: RPCServer, eventName: String) -> Promise<EventInstance?>
+    func getLastMatchingEventSortedByBlockNumber(forContract contract: TBakeWallet.Address, tokenContract: TBakeWallet.Address, server: RPCServer, eventName: String) -> Promise<EventInstanceValue?>
     func add(events: [EventInstanceValue], forTokenContract contract: TBakeWallet.Address) -> Promise<Void>
     func deleteEvents(forTokenContract contract: TBakeWallet.Address)
     func getMatchingEvents(forContract contract: TBakeWallet.Address, tokenContract: TBakeWallet.Address, server: RPCServer, eventName: String, filterName: String, filterValue: String) -> [EventInstance]
@@ -37,7 +37,7 @@ class EventsDataStore: EventsDataStoreProtocol {
                 .filter("eventName = '\(eventName)'")
                 //Filter stored as string, so we do a string comparison
                 .filter("filter = '\(filterName)=\(filterValue)'"))
-    } 
+    }
 
     func deleteEvents(forTokenContract contract: TBakeWallet.Address) {
         let events = getEvents(forTokenContract: contract)
@@ -55,7 +55,7 @@ class EventsDataStore: EventsDataStoreProtocol {
         }
     }
 
-    func getLastMatchingEventSortedByBlockNumber(forContract contract: TBakeWallet.Address, tokenContract: TBakeWallet.Address, server: RPCServer, eventName: String) -> Promise<EventInstance?> {
+    func getLastMatchingEventSortedByBlockNumber(forContract contract: TBakeWallet.Address, tokenContract: TBakeWallet.Address, server: RPCServer, eventName: String) -> Promise<EventInstanceValue?> {
         return Promise { seal in
             let event = Array(realm.threadSafe.objects(EventInstance.self)
                 .filter("contract = '\(contract.eip55String)'")
@@ -63,7 +63,8 @@ class EventsDataStore: EventsDataStoreProtocol {
                 .filter("chainId = \(server.chainID)")
                 .filter("eventName = '\(eventName)'")
                 .sorted(byKeyPath: "blockNumber"))
-                .last 
+                .map{ EventInstanceValue(event: $0) }
+                .last
 
             seal.fulfill(event)
         }

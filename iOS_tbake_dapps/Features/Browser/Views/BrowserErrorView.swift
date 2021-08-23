@@ -57,7 +57,7 @@ final class BrowserErrorView: UIView {
     }
 
     private func finishInit() {
-        backgroundColor = .white
+        backgroundColor = Colors.appBackground
         addSubview(textLabel)
         addSubview(reloadButton)
         NSLayoutConstraint.activate([

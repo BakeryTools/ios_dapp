@@ -57,6 +57,7 @@ target 'iOS_tbake_dapps' do
   pod 'PaperTrailLumberjack/Swift'
   pod 'WalletConnectSwift', :git => 'https://github.com/WalletConnect/WalletConnectSwift.git', :commit => 'c86938785303b99ff09d90e32e553ce38eee0aa6'
   pod 'AssistantKit'
+  pod 'Charts'
   
   target 'iOS_tbake_dappsTests' do
     inherit! :search_paths

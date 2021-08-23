@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TokensViewController" customModule="iOS_tbake_dapps" customModuleProvider="target">
+            <connections>
+                <outlet property="searchBar" destination="9Wf-uO-PUH" id="aR5-KE-mXS"/>
+                <outlet property="tableView" destination="EQz-sU-nJW" id="bPi-6B-iRl"/>
+                <outlet property="view" destination="iN0-l3-epB" id="V9x-tB-NvU"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <searchBar contentMode="redraw" searchBarStyle="minimal" translatesAutoresizingMaskIntoConstraints="NO" id="9Wf-uO-PUH">
+                    <rect key="frame" x="0.0" y="44" width="414" height="51"/>
+                    <textInputTraits key="textInputTraits"/>
+                </searchBar>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="EQz-sU-nJW">
+                    <rect key="frame" x="0.0" y="95" width="414" height="767"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                </tableView>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_img" translatesAutoresizingMaskIntoConstraints="NO" id="S9n-9h-fok">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                </imageView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="S9n-9h-fok" secondAttribute="bottom" id="05t-Lz-g3E"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="S9n-9h-fok" secondAttribute="trailing" id="4a8-sZ-0Z8"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="EQz-sU-nJW" secondAttribute="trailing" id="73V-UN-NVr"/>
+                <constraint firstItem="EQz-sU-nJW" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="7FV-rQ-iO1"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="EQz-sU-nJW" secondAttribute="bottom" id="Lp1-dy-zZJ"/>
+                <constraint firstItem="9Wf-uO-PUH" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="Xa3-Qc-gPA"/>
+                <constraint firstItem="S9n-9h-fok" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="ZoH-XR-ngS"/>
+                <constraint firstItem="9Wf-uO-PUH" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="aal-51-eNB"/>
+                <constraint firstItem="S9n-9h-fok" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="pGp-Fv-Set"/>
+                <constraint firstAttribute="trailing" secondItem="9Wf-uO-PUH" secondAttribute="trailing" id="pe7-Re-ACi"/>
+                <constraint firstItem="EQz-sU-nJW" firstAttribute="top" secondItem="9Wf-uO-PUH" secondAttribute="bottom" id="yRO-2M-6sS"/>
+            </constraints>
+            <point key="canvasLocation" x="137.68115942028987" y="89.732142857142847"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="background_img" width="500" height="751"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
