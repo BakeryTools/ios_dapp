@@ -138,6 +138,8 @@
 		296FD66226B2D5C5006DC9D7 /* UnderConstructionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 296FD66026B2D5C5006DC9D7 /* UnderConstructionViewController.swift */; };
 		296FD66326B2D5C5006DC9D7 /* UnderConstructionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 296FD66126B2D5C5006DC9D7 /* UnderConstructionViewController.xib */; };
 		29755C3026CCFD39002377E5 /* TokensViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 29755C2F26CCFD39002377E5 /* TokensViewController.xib */; };
+		29755C3826CD24E9002377E5 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29755C3726CD24E9002377E5 /* NotificationService.swift */; };
+		29755C3C26CD24E9002377E5 /* NotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 29755C3526CD24E8002377E5 /* NotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2976427A26A1760900F60C6B /* InCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976427826A1760700F60C6B /* InCoordinator.swift */; };
 		2976427B26A1760900F60C6B /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976427926A1760900F60C6B /* AppCoordinator.swift */; };
 		2976428026A17F4100F60C6B /* WalletConnectServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976427D26A17F3E00F60C6B /* WalletConnectServer.swift */; };
@@ -820,7 +822,28 @@
 			remoteGlobalIDString = 294302C7265671A900A297B4;
 			remoteInfo = iOS_tbake_dapps;
 		};
+		29755C3A26CD24E9002377E5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 294302C0265671A900A297B4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 29755C3426CD24E8002377E5;
+			remoteInfo = NotificationServiceExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		29755C3D26CD24E9002377E5 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				29755C3C26CD24E9002377E5 /* NotificationServiceExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		058DF0415A2C3EAB2029FAE9 /* Pods-iOS_tbake_dapps.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS_tbake_dapps.release.xcconfig"; path = "Target Support Files/Pods-iOS_tbake_dapps/Pods-iOS_tbake_dapps.release.xcconfig"; sourceTree = "<group>"; };
@@ -962,6 +985,10 @@
 		296FD66026B2D5C5006DC9D7 /* UnderConstructionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnderConstructionViewController.swift; sourceTree = "<group>"; };
 		296FD66126B2D5C5006DC9D7 /* UnderConstructionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UnderConstructionViewController.xib; sourceTree = "<group>"; };
 		29755C2F26CCFD39002377E5 /* TokensViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TokensViewController.xib; sourceTree = "<group>"; };
+		29755C3526CD24E8002377E5 /* NotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		29755C3726CD24E9002377E5 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		29755C3926CD24E9002377E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		29755C4126CD24FA002377E5 /* NotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NotificationServiceExtension.entitlements; sourceTree = "<group>"; };
 		2976427826A1760700F60C6B /* InCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InCoordinator.swift; sourceTree = "<group>"; };
 		2976427926A1760900F60C6B /* AppCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		2976427D26A17F3E00F60C6B /* WalletConnectServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletConnectServer.swift; sourceTree = "<group>"; };
@@ -1659,6 +1686,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		29755C3226CD24E8002377E5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -1961,6 +1995,7 @@
 				294302CA265671A900A297B4 /* iOS_tbake_dapps */,
 				294302E1265671AC00A297B4 /* iOS_tbake_dappsTests */,
 				294302EC265671AC00A297B4 /* iOS_tbake_dappsUITests */,
+				29755C3626CD24E9002377E5 /* NotificationServiceExtension */,
 				294302C9265671A900A297B4 /* Products */,
 				F0EA3079FB28B844EC67ED5E /* Pods */,
 				6BDD59140C3B1F55B006A608 /* Frameworks */,
@@ -1973,6 +2008,7 @@
 				294302C8265671A900A297B4 /* iOS_tbake_dapps.app */,
 				294302DE265671AC00A297B4 /* iOS_tbake_dappsTests.xctest */,
 				294302E9265671AC00A297B4 /* iOS_tbake_dappsUITests.xctest */,
+				29755C3526CD24E8002377E5 /* NotificationServiceExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2052,6 +2088,16 @@
 				296FD66126B2D5C5006DC9D7 /* UnderConstructionViewController.xib */,
 			);
 			path = "Custom Xib";
+			sourceTree = "<group>";
+		};
+		29755C3626CD24E9002377E5 /* NotificationServiceExtension */ = {
+			isa = PBXGroup;
+			children = (
+				29755C4126CD24FA002377E5 /* NotificationServiceExtension.entitlements */,
+				29755C3726CD24E9002377E5 /* NotificationService.swift */,
+				29755C3926CD24E9002377E5 /* Info.plist */,
+			);
+			path = NotificationServiceExtension;
 			sourceTree = "<group>";
 		};
 		2976427C26A17F2100F60C6B /* WalletConnect */ = {
@@ -3787,10 +3833,12 @@
 				294302C6265671A900A297B4 /* Resources */,
 				5764F107E635D8429F0825F3 /* [CP] Embed Pods Frameworks */,
 				4ED3DF2EA57C6BD7079AD335 /* [CP] Copy Pods Resources */,
+				29755C3D26CD24E9002377E5 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				29755C3B26CD24E9002377E5 /* PBXTargetDependency */,
 			);
 			name = iOS_tbake_dapps;
 			productName = iOS_tbake_dapps;
@@ -3837,6 +3885,23 @@
 			productReference = 294302E9265671AC00A297B4 /* iOS_tbake_dappsUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		29755C3426CD24E8002377E5 /* NotificationServiceExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 29755C4026CD24E9002377E5 /* Build configuration list for PBXNativeTarget "NotificationServiceExtension" */;
+			buildPhases = (
+				29755C3126CD24E8002377E5 /* Sources */,
+				29755C3226CD24E8002377E5 /* Frameworks */,
+				29755C3326CD24E8002377E5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NotificationServiceExtension;
+			productName = NotificationServiceExtension;
+			productReference = 29755C3526CD24E8002377E5 /* NotificationServiceExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -3857,6 +3922,9 @@
 						CreatedOnToolsVersion = 12.5;
 						TestTargetID = 294302C7265671A900A297B4;
 					};
+					29755C3426CD24E8002377E5 = {
+						CreatedOnToolsVersion = 12.5.1;
+					};
 				};
 			};
 			buildConfigurationList = 294302C3265671A900A297B4 /* Build configuration list for PBXProject "iOS_tbake_dapps" */;
@@ -3875,6 +3943,7 @@
 				294302C7265671A900A297B4 /* iOS_tbake_dapps */,
 				294302DD265671AC00A297B4 /* iOS_tbake_dappsTests */,
 				294302E8265671AC00A297B4 /* iOS_tbake_dappsUITests */,
+				29755C3426CD24E8002377E5 /* NotificationServiceExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -3929,6 +3998,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		294302E7265671AC00A297B4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		29755C3326CD24E8002377E5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -4875,6 +4951,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		29755C3126CD24E8002377E5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				29755C3826CD24E9002377E5 /* NotificationService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -4887,6 +4971,11 @@
 			isa = PBXTargetDependency;
 			target = 294302C7265671A900A297B4 /* iOS_tbake_dapps */;
 			targetProxy = 294302EA265671AC00A297B4 /* PBXContainerItemProxy */;
+		};
+		29755C3B26CD24E9002377E5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 29755C3426CD24E8002377E5 /* NotificationServiceExtension */;
+			targetProxy = 29755C3A26CD24E9002377E5 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -5022,12 +5111,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 86CB08F984DF661D2D52586A /* Pods-iOS_tbake_dapps.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = iOS_tbake_dapps/iOS_tbake_dapps.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1003;
+				CURRENT_PROJECT_VERSION = 1005;
 				DEVELOPMENT_TEAM = 7KA6NPATXZ;
 				INFOPLIST_FILE = iOS_tbake_dapps/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -5047,12 +5137,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 058DF0415A2C3EAB2029FAE9 /* Pods-iOS_tbake_dapps.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = iOS_tbake_dapps/iOS_tbake_dapps.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1003;
+				CURRENT_PROJECT_VERSION = 1005;
 				DEVELOPMENT_TEAM = 7KA6NPATXZ;
 				INFOPLIST_FILE = iOS_tbake_dapps/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -5156,6 +5247,54 @@
 			};
 			name = Release;
 		};
+		29755C3E26CD24E9002377E5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = NotificationServiceExtension/NotificationServiceExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1005;
+				DEVELOPMENT_TEAM = 7KA6NPATXZ;
+				INFOPLIST_FILE = NotificationServiceExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bakerytools.ios.NotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		29755C3F26CD24E9002377E5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = NotificationServiceExtension/NotificationServiceExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1005;
+				DEVELOPMENT_TEAM = 7KA6NPATXZ;
+				INFOPLIST_FILE = NotificationServiceExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bakerytools.ios.NotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -5191,6 +5330,15 @@
 			buildConfigurations = (
 				294302F9265671AC00A297B4 /* Debug */,
 				294302FA265671AC00A297B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		29755C4026CD24E9002377E5 /* Build configuration list for PBXNativeTarget "NotificationServiceExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				29755C3E26CD24E9002377E5 /* Debug */,
+				29755C3F26CD24E9002377E5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

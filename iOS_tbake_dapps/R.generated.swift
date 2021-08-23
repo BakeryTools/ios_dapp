@@ -587,9 +587,16 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
 
-  /// This `R.entitlements` struct is generated, and contains static references to 1 properties.
+  /// This `R.entitlements` struct is generated, and contains static references to 3 properties.
   struct entitlements {
+    static let apsEnvironment = infoPlistString(path: [], key: "aps-environment") ?? "development"
     static let comAppleDeveloperDefaultDataProtection = infoPlistString(path: [], key: "com.apple.developer.default-data-protection") ?? "NSFileProtectionComplete"
+
+    struct comAppleSecurityApplicationGroups {
+      static let groupComBakerytoolsIosNotification = infoPlistString(path: ["com.apple.security.application-groups"], key: "group.com.bakerytools.ios.notification") ?? "group.com.bakerytools.ios.notification"
+
+      fileprivate init() {}
+    }
 
     fileprivate init() {}
   }

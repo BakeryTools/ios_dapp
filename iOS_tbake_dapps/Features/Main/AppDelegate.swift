@@ -58,6 +58,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             <strong>Mobile ID:</strong> \(mobileId ?? "")<br/>
             """
         )
+        
+        
+        PushNotificationsRegistration()
+        UIApplication.shared.registerForRemoteNotifications()
+        // set app delegate as notification center delegate
+        // this is IMPORTANT for handling notification in background and foreground
+        UNUserNotificationCenter.current().delegate = self
 
         do {
             //NOTE: we move AnalyticsService creation from AppCoordinator.init method to allow easily replace
@@ -78,6 +85,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } catch {
 
         }
+        
         protectionCoordinator.didFinishLaunchingWithOptions()
 
         return true
@@ -146,8 +154,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     // Respond to amazon SNS registration
-    func application(_ application: UIApplication,
-                     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         /// Attach the device token to the user defaults
         var token = ""
         for i in 0..<deviceToken.count {
@@ -206,15 +213,58 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return sns.subscribe(subscribeRequest)
         }
     }
+    
+    func PushNotificationsRegistration() {
+        UNUserNotificationCenter.current() // handles all notification-related activities in the app
+            .requestAuthorization(options: [.alert, .sound, .badge]) {
+                [weak self] granted, error in
+                #if DEBUG
+                print("Permission push notification granted: \(granted)")
+                #endif
+                guard granted else { return }
+                guard let self = self else { return }
+                self.getNotificationSettings()
+        }
+    }
+    
+    func getNotificationSettings() {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            #if DEBUG
+            print("Notification settings: \(settings)")
+            #endif
+            guard settings.authorizationStatus == .authorized else { return }
+            DispatchQueue.main.async {
+                UIApplication.shared.registerForRemoteNotifications()
+            }
+        }
+    }
 
     //TODO Handle SNS errors
-    func application(_ application: UIApplication,
-                     didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        //no op
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        #if DEBUG
+        print("Failed to register: \(error)")
+        #endif
     }
 
     @discardableResult private func handleUniversalLink(url: URL) -> Bool {
         let handled = appCoordinator.handleUniversalLink(url: url)
         return handled
+    }
+}
+
+// MARK: - Extension UNUserNotificationCenterDelegate (User Notifications)
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    
+    // called when user interacts with notification
+    // when app is not killed and quit within 10 mins, app is in foreground, app killed or killed by system will not enter here
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        #if DEBUG
+        print("-->Remote Notification(RECEIVED): \(#function)")
+        // do something with the notification
+        print(response.notification.request.content.userInfo)
+        #endif
+        
+        // the docs say you should execute this asap
+        return completionHandler()
     }
 }
